@@ -1,0 +1,9 @@
+# For standalone library
+# PKG_LIBS = $(BLAS_LIBS) $(FLIBS) $(LAPACK_LIBS) 
+# PKG_CXXFLAGS = -I$(R_HOME)/include -w
+
+
+# For R Library 
+
+ PKG_LIBS = $(BLAS_LIBS) $(FLIBS) $(LAPACK_LIBS) 
+ PKG_CXXFLAGS = -I$(R_HOME)/include -w -D_RDLL_
