@@ -1,10 +1,10 @@
 /***********************************************************
- * RHmm version 0.9.3                                      *
+ * RHmm version 0.9.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2007/11/07                                        *
+ * Date: 2007/11/08                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _CHMMFIT_H_

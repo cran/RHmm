@@ -1219,92 +1219,131 @@ graphicDiag.univariateNormalClass <- function(object, vit, obs, color="green")
 {  
         
     #x11()
-    par(bg="white")
-    split.screen(c(object$nStates,1))
-    for (i in 1:object$nStates)
-    {   screen(i)
-        y <- obs[vit$states==i]
-        m <- object$mean[i]
-        sig <- sqrt(object$var[i])
-        from <- m-3*sig
-        to <- m+ 3*sig
-        x0 <- seq(from, to, (to-from)/512)
-        y0 <- dnorm(x0, mean=m, sd=sig)
-        z <- density(y, from=from, to=to)
-        if (max(z$y) > max(y0))
-        {   plot(z$x, z$y, col=color, type='l', xlab="", ylab="Density", lwd=2)
-            lines(x0, y0)
-        }
-        else
-        {   plot(x0, y0, type='l', xlab="", ylab="Density")
-                lines(z$x, z$y, col=color, lwd=2)    
-        }
-        sub <- sprintf("Estimated Density (%s) - Normal density with estimated parameters (black)\n", color)
-        titre <- sprintf("Graphic diagnostic for state %d", i)
-        title(main=titre, sub=sub)
-    } 
-    invisible(close.screen(all.screens = TRUE))
+     nStates <- max(vit$states)
+     nScreens <- floor(nStates/3)
+    if (nScreens * 3 - nStates != 0)
+    {   nScreens <- nScreens+1
+    }
+    k<-1
+    while (k <= nStates)
+    {   split.screen(c(min(3, nStates),1))
+        par(bg="white")
+        i<-1
+        while ((i <= 3) && (i <= nStates) && (k <= nStates))
+        {   screen(i)
+            y <- obs[vit$states==k]
+            m <- object$mean[k]
+            sig <- sqrt(object$var[k])
+            from <- m-3*sig
+            to <- m+ 3*sig
+            x0 <- seq(from, to, (to-from)/512)
+            y0 <- dnorm(x0, mean=m, sd=sig)
+            z <- density(y, from=from, to=to)
+            if (max(z$y) > max(y0))
+            {   plot(z$x, z$y, col=color, type='l', xlab="", ylab="Density", lwd=2)
+                lines(x0, y0)
+            }
+            else
+            {   plot(x0, y0, type='l', xlab="", ylab="Density")
+                    lines(z$x, z$y, col=color, lwd=2)    
+            }
+            sub <- sprintf("Estimated Density (%s) - Normal density with estimated parameters (black)\n", color)
+            titre <- sprintf("Graphic diagnostic for state %d", k)
+            k <- k + 1
+            title(main=titre, sub=sub)
+            i <- i + 1
+        } 
+        invisible(close.screen(all.screens = TRUE))
+        if (k <= nStates)
+            windows()
+    }
 }
 
 graphicDiag.mixtureUnivariateNormalClass <- function(object, vit, obs, color="green")
 {  
  #   x11()
- par(bg="white")
-    split.screen(c(object$nStates,1))
-    for (i in 1:object$nStates)
-    {   screen(i)
-        y <- obs[vit$states==i]
-        m <- object$mean[[i]]
-        var <- object$var[[i]]
-        prop <- object$proportion[[i]]
-        xbarre <- mean(y)
-        sig <- sd(y)
-        from <- xbarre-3*sig
-        to <- xbarre + 3*sig
-        x0 <- seq(from, to, (to-from)/512)
-        y0 <- dmixt(x0, mean=m, var=var, prop=prop)
-        z <- density(y, from=from, to=to)
-        if (max(z$y) > max(y0))
-        {   plot(z$x, z$y, col=color, type='l', xlab="", ylab="Density", lwd=2)
-            lines(x0, y0)
-        }
-        else
-        {   plot(x0, y0, type='l', xlab="", ylab="Density")
-            lines(z$x, z$y, col=color, lwd=2)    
-        }
-        sub <- sprintf("Estimated Density (%s) - Mixture of univariate normal density with estimated parameters (black)\n", color)
-        titre <- sprintf("Graphic diagnostic for state %d", i)
-        title(main=titre, sub=sub)
-    } 
-    invisible(close.screen(all.screens = TRUE))
+    nStates <- max(vit$states)
+    nScreens <- floor(nStates/3)
+    if (nScreens * 3 - nStates != 0)
+    {   nScreens <- nScreens+1
+    }
+    k<-1
+    while (k <= nStates)
+    {   split.screen(c(min(3, nStates),1))
+        par(bg="white")
+        i<-1
+        while ((i <= 3) && (i <= nStates) && (k <= nStates))
+        {   screen(i)
+            y <- obs[vit$states==k]
+            m <- object$mean[[k]]
+            var <- object$var[[k]]
+            prop <- object$proportion[[k]]
+            xbarre <- mean(y)
+            sig <- sd(y)
+            from <- xbarre-3*sig
+            to <- xbarre + 3*sig
+            x0 <- seq(from, to, (to-from)/512)
+            y0 <- dmixt(x0, mean=m, var=var, prop=prop)
+            z <- density(y, from=from, to=to)
+            if (max(z$y) > max(y0))
+            {   plot(z$x, z$y, col=color, type='l', xlab="", ylab="Density", lwd=2)
+                lines(x0, y0)
+            }
+            else
+            {   plot(x0, y0, type='l', xlab="", ylab="Density")
+                lines(z$x, z$y, col=color, lwd=2)    
+            }
+            sub <- sprintf("Estimated Density (%s) - Mixture of univariate normal density with estimated parameters (black)\n", color)
+            titre <- sprintf("Graphic diagnostic for state %d", k)
+            title(main=titre, sub=sub)
+            i <- i + 1
+            k <- k + 1
+        } 
+        invisible(close.screen(all.screens = TRUE))
+        if (k <= nStates)
+            windows()
+    }
 }
 
 graphicDiag.discreteClass <- function(object, vit, obs, color="green")
 {  
-    par(bg="white")
-    split.screen(c(object$nStates,1))
-    for (i in 1:object$nStates)
-    {   screen(i)
-        y <- obs[vit$states==i]
-        ny <- length(y)
-        y <- table(y) / ny
-        y0 <- object$proba[[i]]
-            
-        if (max(y) > max(y0))
-        {   plot(y, col=color, xlab="", ylab="Probability", lwd=2)
-            lines(y0, type="p", lwd=3)
-        }
-        else
-        {   plot(y, col=color, xlab="", ylab="Probability", lwd=2, type="n")
-            lines(y0, type='p', lwd=3)
-            lines(y, col=color, lwd=2, type="h")    
-        }
-            
-        sub <- sprintf("Frequency (%s) - Estimated parameters (black)\n", color)
-        titre <- sprintf("Graphic diagnostic for state %d", i)
-        title(main=titre, sub=sub) 
+    nStates <- max(vit$states)
+    nScreens <- floor(nStates/3)
+    if (nScreens * 3 - nStates != 0)
+    {   nScreens <- nScreens+1
     }
-    invisible(close.screen(all.screens = TRUE))
+    k<-1
+    while (k <= nStates)
+    {   split.screen(c(min(3, nStates),1))
+        par(bg="white")
+        i<-1
+        while ((i <= 3) && (i <= nStates) && (k <= nStates))
+        {   screen(i)
+            y <- obs[vit$states==k]
+            ny <- length(y)
+            y <- table(y) / ny
+            y0 <- object$proba[[k]]
+                
+            if (max(y) > max(y0))
+            {   plot(y, col=color, xlab="", ylab="Probability", lwd=2)
+                lines(y0, type="p", lwd=3)
+            }
+            else
+            {   plot(y, col=color, xlab="", ylab="Probability", lwd=2, type="n")
+                lines(y0, type='p', lwd=3)
+                lines(y, col=color, lwd=2, type="h")    
+            }
+                
+            sub <- sprintf("Frequency (%s) - Estimated parameters (black)\n", color)
+            titre <- sprintf("Graphic diagnostic for state %d", k)
+            title(main=titre, sub=sub) 
+            k <- k + 1
+            i <- i + 1
+        }
+        invisible(close.screen(all.screens = TRUE))
+        if (k <= nStates)
+            windows()
+    }
 }
 
 HMMGraphicDiag <- function(vit, HMM, obs, color="green")
@@ -1377,19 +1416,30 @@ HMMPlotSerie <- function(obs, states, dis = "NORMAL", color="green")
    
     nStates <- max(states)
     #x11()
-    par(bg="white")
-    split.screen(c(nStates,1))
-    for (i in 1:nStates)
-    {   screen(i)
-        z <- TransformeList(dis, Aux)
-        y <- (z$Zt[[1]]+1)*(states==i)
-        if (dis != 'DISCRETE')
-            plot(y, col=color, type='l', xlab="", ylab="Serie", lwd=1)
-        else
-            plot(y, col=color, type='l', xlab="", ylab="Serie", lwd=1)
-        titre <- sprintf("Serie for state %d", i)
-        title(main=titre)
-    } 
-    invisible(close.screen(all.screens = TRUE))
-    
+    nScreens <- floor(nStates/3)
+    if (nScreens * 3 - nStates != 0)
+    {   nScreens <- nScreens+1
+    }
+    k<-1
+    while (k <= nStates)
+    {   par(bg="white")
+        split.screen(c(min(3, nStates),1))
+        i<-1
+        while ((i <= 3) && (i <= nStates) && (k <= nStates))
+        {   screen(i)
+            z <- TransformeList(dis, Aux)
+            y <- (z$Zt[[1]])*(states==k)
+            if (dis != 'DISCRETE')
+                plot(y, col=color, type='l', xlab="", ylab="Serie", lwd=1)
+            else
+                plot(y, col=color, type='l', xlab="", ylab="Serie", lwd=1)
+            titre <- sprintf("Serie for state %d", k)
+            k <- k + 1
+            i <- i + 1
+            title(main=titre)
+        } 
+        if (k <= nStates)
+            windows()
+        invisible(close.screen(all.screens = TRUE))
+    }
 }
