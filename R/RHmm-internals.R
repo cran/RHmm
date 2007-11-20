@@ -7,7 +7,6 @@ setStorageMode.paramHMM <- function(object)
     storage.mode(x$dimObs) <- "integer"
     storage.mode(x$nMixt) <- "integer"
     storage.mode(x$nLevels) <- "integer"
-    storage.mode(x$noHMM) <-"integer"
     storage.mode(x) <- "list"
     class(x) <- "paramHMM"
     return(x)

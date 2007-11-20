@@ -1,6 +1,5 @@
 \name{viterbi}
 \alias{viterbi}
-\alias{ViterbiClass object}
 \title{Viterbi algorithm}
 \description{This function calculates the optimal hidden states sequence using Viterbi's algorithm}
 \usage{
@@ -8,7 +7,7 @@ viterbi(HMM, obs)
 }
 \arguments{
     \item{HMM}{a HMMClass or a HMMFitClass object}
-    \item{obs}{The vector, matrix, list of vectors or list of matrices of observations}
+    \item{obs}{The vector, matrix, data frame, list of vectors or list of matrices of observations}
 }
 \value{a viterbiClass object which is a list with:
 \item{States}{Sequence of hidden states in 1...nStates}

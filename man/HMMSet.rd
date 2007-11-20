@@ -1,5 +1,6 @@
 \name{HMMSet}
 \alias{HMMSet}
+\alias{HMMClass}
 \title{Set the parameters for the hidden Markov models}
 
 \description{This function is used to create a HMMClass object which contains the parameters of the HMM. An HMM is described by an initial state probability vector,

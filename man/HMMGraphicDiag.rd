@@ -15,7 +15,7 @@ HMMGraphicDiag(vit, HMM, obs, color="green")
 
 \value{none}
 \note{
- HMMGraphicDiag is not implemented for multivariate observations.\cr
+ HMMGraphicDiag is not implemented for multivariate distributions.\cr
 
  The kernel densities of observations for each hidden states of the model are plotting using:\cr
     plot(density(obs[vit$states=i])) and i in 1..HMM$nStates (or HMM$HMM$nStates)

@@ -41,7 +41,6 @@ cRUtil				myRUtil			;
 	myRUtil.GetValSexp(theParamHMM, eObsDim, myDimObs) ;
 	myRUtil.GetValSexp(theParamHMM, eNMixt, myNbMixt) ;
 	myRUtil.GetValSexp(theParamHMM, eNProba, myNbProba) ;
-	myRUtil.GetValSexp(theParamHMM, eNoHmm, myNoHmm) ;
 
 char myStr[255] ;
 char *myString = (char *)myStr ;
@@ -97,7 +96,7 @@ cOTVector* myY = new cOTVector[myNbSample] ;
 		myRUtil.GetValSexp(theYt, n, myAux) ;
 		myY[n].ReAlloc(length(myAux), REAL(myAux)) ;
 	}
-cBaumWelchInParam myParamEntree = cBaumWelchInParam(myNbSample, myDimObs, myY, myDistrType, myNbClasses, myNbMixt, myNbProba, (myNoHmm>0)) ;
+cBaumWelchInParam myParamEntree = cBaumWelchInParam(myNbSample, myDimObs, myY, myDistrType, myNbClasses, myNbMixt, myNbProba) ;
 
 	myParamEntree.mNMaxIter = myNbIterMax ;
 	myParamEntree.mTol = myTol ;

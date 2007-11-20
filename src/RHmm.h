@@ -15,7 +15,6 @@ typedef enum ParamHMMEnum
 	eObsDim,
 	eNMixt,
 	eNProba,
-	eNoHmm,
 	eDistrType
 }ParamHMMEnum ;
 

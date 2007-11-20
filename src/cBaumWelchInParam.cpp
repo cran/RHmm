@@ -10,10 +10,9 @@
 #include "cBaumWelchInParam.h"
 
 
-cBaumWelchInParam::cBaumWelchInParam(uint theNSample,uint theDimObs, cOTVector *theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba, bool theNoHmm):cInParam(theNSample, theDimObs, theY, theDistrType, theNClass, theNMixt, theNProba)
+cBaumWelchInParam::cBaumWelchInParam(uint theNSample,uint theDimObs, cOTVector *theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba):cInParam(theNSample, theDimObs, theY, theDistrType, theNClass, theNMixt, theNProba)
 {	
 	SetDefault() ;
-	mNoHmm = theNoHmm ;
 }
 cBaumWelchInParam::~cBaumWelchInParam()
 {
@@ -35,7 +34,6 @@ cBaumWelchInParam &cBaumWelchInParam::operator =(const cBaumWelchInParam &theSrc
 	mNInitIter = theSrc.mNMaxIterInit ;
 	mNMaxIterInit = theSrc.mNMaxIterInit ;
 	mVerbose = theSrc.mVerbose ;
-	mNoHmm = theSrc.mNoHmm ;
 
 	mDistrType = theSrc.mDistrType ;		
 	mNClass = theSrc.mNClass ;

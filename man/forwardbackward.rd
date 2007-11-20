@@ -60,7 +60,8 @@ forwardbackward(HMM, obs)
     obs <- geyser$duration
     #Fits an 2 states gaussian model for geyser duration
     ResFitGeyser <- HMMFit(obs)
-    fb <- forwardbackward(ResFitGeyser, obs)
+    #Forward-backward procedure
+   fb <- forwardbackward(ResFitGeyser, obs)
 }    
 
 \keyword{htest}

@@ -14,7 +14,7 @@
 
 \value{none}
 \note{
- HMMPlotSerie is not implemented for multivariate observations.\cr
+ HMMPlotSerie is not implemented for multivariate distributions.\cr
 
  The time series of observations for each hidden states of the model are plotted using:\cr
     plot(obs[states=i])) and i in 1..max(States)

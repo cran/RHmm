@@ -52,12 +52,15 @@ cOTMatrix*	myProbaCond = new cOTMatrix[theInParam.mNSample] ;
 	mDistrParam->ComputeCondProba(theInParam.mY, theInParam.mNSample, myProbaCond) ;
 
 	ForwardBackward(myProbaCond, *this) ;
-
 	mLLH = 0.0 ;
 	for (n = 0 ; n < theInParam.mNSample ; n++)
 		mLLH += mLogVrais[n] ;
 	myLogVraisCour = mLLH ;
+
 	myNbIter = 0 ;
+	if (theInParam.mVerbose > 0)
+		Rprintf("Iter num %d - LLH : %10.4lf -  Normalized LLH : %8.6lf\n", myNbIter, mLLH, mLLH/myT) ;
+
 	do
 	{	for (i = 0 ; i < theInParam.mNClass ; i++)
 		{	mInitProba[i] = 0.0 ;
@@ -134,20 +137,8 @@ void cHmmFit::BaumWelchAlgoInit(cBaumWelchInParam &theInParam)
 				myY[t++] = theInParam.mY[k][i] ;
 		}
 		register uint j ;
-		if (!theInParam.mNoHmm)
-		{	mTransMat = 0.0 ;
 		
-			mDistrParam->KMeans(myY, theInParam.mNClass, theInParam.mDimObs, mySeq) ;
-			for (t = 1 ; t < myT ; t++)
-			{	i = mySeq[t-1] ;
-				j = mySeq[t] ;
-				mTransMat[i][j]++ ;
-			}
-		
-			mTransMat /= (double)(myT - 1) ;
-		}
-		else
-			mTransMat = 1.0L/(double)(theInParam.mNClass) ;
+		mTransMat = 1.0L/(double)(theInParam.mNClass) ;
 		
 		mInitProba = 1.0/(double)(theInParam.mNClass) ;
 		

@@ -1,5 +1,6 @@
 \name{distributionSet}
 \alias{distributionSet}
+\alias{distributionClass}
 \title{Set the parameters for the distributions of observations}
 \description{This function is used to create a distributionClass object which contains the parameters of the distribution of the observations
     for each hidden state. Since distributions can be univariate or multivariate, discrete or continuous,
@@ -40,7 +41,7 @@ distributionSet(dis="DISCRETE", proba, labels=NULL)
 \value{ an object of class distributionClass with some of the following elements
     \item{dis}{the name of the distribution}
     \item{nStates}{number of hidden states}
-    \item{dimObs}{dimension of observations (for gaussian distributions and mixture of gaussian distributions)}
+    \item{dimObs}{dimension of observations}
     \item{nMixt}{number of mixtures for mixture of gaussian distributions}
     \item{nLevels}{number of levels for discrete distributions}
     \item{mean}{the 'mean' argument for univariate normal, mixture of univariate normal and multivariate normal distributions}

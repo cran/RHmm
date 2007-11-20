@@ -1,5 +1,8 @@
 \name{HMMFit}
 \alias{HMMFit}
+\alias{HMMFitClass}
+\alias{summary.HMMFitClass}
+\alias{print.summary.HMMFitClass}
 \title{Fit a Hidden Markov Model}
 \description{This function returns an HMMFitClass object which contains the results
 of the Baum-Welch algorithm for the user's data}
@@ -12,7 +15,7 @@ of the Baum-Welch algorithm for the user's data}
     HMMFit(obs, dis="MIXTURE", nStates=, nMixt=, ...)
 }
 \arguments{
-    \item{obs}{A vector, a matrix, a list of vectors or a list of matrices of observations. See section \bold{obs parameter}.}
+    \item{obs}{A vector, a matrix, a data frame, a list of vectors or a list of matrices of observations. See section \bold{obs parameter}.}
     \item{dis}{Distribution name = 'NORMAL', 'DISCRETE' or 'MIXTURE'. Default 'NORMAL'.}
     \item{nStates}{Number of hidden states. Default 2.}
     \item{nMixt}{Number of mixtures of normal distributions if dis ='MIXTURE'}
@@ -26,13 +29,14 @@ of the Baum-Welch algorithm for the user's data}
     \item{BIC}{BIC criterium}
     \item{nIter}{Number of iterations of the Baum-Welch algorithm}
     \item{relVariation}{last relative variation of the LLH function}
+    \item{asymptVar}{an HMMClass object with asymtotic variance of the parameters. See \bold{asymptotic variance}}
     \item{call}{The call object of the function call}
     }
 
 \section{obs parameter}{
         If you fit the model with only one sample, obs is
-        either a vector (for univariate distributions) or a matrix (for multivariate distributions).
-        In this last case, the number of columns of obs defines the dimension of observations.\cr\cr
+        either a vector (for univariate distributions) or a matrix (for multivariate distributions) or a data frame.
+        In the two last cases, the number of columns of obs defines the dimension of observations.\cr\cr
 
         If you fit the model with more than one sample, obs is a list of samples. Each element of obs is then a vector
         (for univariate distributions) or a matrix (for multivariate distributions). The samples do not need to have the same length.\cr\cr
@@ -78,9 +82,17 @@ of the Baum-Welch algorithm for the user's data}
     ensure that they can represent probabilities vectors or transition matrices.
 }
 
+\section{asymptotic variance}{
+    The asymptotic variance of estimates is computed using finite difference approximation.\cr
+    The summary and print.summary methods display the results.
+}
+
 \references{
     Jeff A. Bilmes (1997) \emph{ A Gentle Tutorial of the EM Algorithm and its Application to Parameter
     Estimation for Gaussian Mixture and Hidden Markov Models} \url{http://ssli.ee.washington.edu/people/bilmes/mypapers/em.ps.gz}
+    
+    Ingmar Visser, Maartje E. J. Raijmakers and Peter C. M. Molenaar (2000) \emph{Confidence intervals for hidden Markov
+    model parameters}, British Journal of Mathematical and Statistical Psychology, 53, 317-327.
 }
 
 \examples{
@@ -91,9 +103,11 @@ of the Baum-Welch algorithm for the user's data}
     # fit a 3 states gaussian HMM for geyser duration
     # with iterations printing and kmeans initialization
     ResGeyser2 <- HMMFit(obs, nStates=3, paramBW=list(verbose=1, init="KMEANS"))
-    # fit a 2 states of a mixture of 2 normal distributions
-    # for daily returns of CAC 40
-    ResGeyser3 <- HMMFit(obs, nStates=2, nMixt=2, dis="MIXTURE")
+    # fit a 2 states of a mixture of 3 normal distributions
+    # for data_mixture
+    data(data_mixture)
+    ResMixture <- HMMFit(data_mixture, nStates=2, nMixt=3, dis="MIXTURE")
+    summary(ResMixture)
     # geyser data - 3 states HMM with bivariate normal distribution
     ResGeyser<-HMMFit(obs=as.matrix(geyser), nStates=3)
     # multiple samples discrete observations
