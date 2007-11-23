@@ -586,17 +586,17 @@ rdiscrete <- function(nSim, proba)
     return(Res) 
 }
 
-sim <- function(object, nSim, ...)
+sim <- function(object, nSim, lastState=NULL)
 UseMethod("sim")
 
-sim.univariateNormalClass <- function(object, nSim)
+sim.univariateNormalClass <- function(object, nSim, lastState=NULL)
 {   value <- NULL
     for (i in 1:object$nStates)
         value <- cbind(value, rnorm(nSim, object$mean[i], sqrt(object$var[i])))
     return(value)
 }
 
-sim.multivariateNormalClass <- function(object, nSim)
+sim.multivariateNormalClass <- function(object, nSim, lastState=NULL)
 {   value <- array(dim=c(nSim, object$dimObs, object$nStates))
     for (i in 1:object$nStates)
             value[, , i] <- mvrnorm(nSim, mu=object$mean[[i]], Sigma=object$cov[[i]])
@@ -653,14 +653,14 @@ dmixt <- function(x, mean, var, prop)
 }
     
 
-sim.mixtureUnivariateNormalClass <- function(object, nSim)
+sim.mixtureUnivariateNormalClass <- function(object, nSim, lastState=NULL)
 {   value <- NULL
     for (i in 1:object$nStates)
         value<- cbind(value, rmixt(nSim, object$mean[[i]], sqrt(object$var[[i]]), object$proportion[[i]]))
     return(value)
 }
 
-sim.mixtureMultivariateNormalClass <-  function(object, nSim)
+sim.mixtureMultivariateNormalClass <-  function(object, nSim, lastState=NULL)
 {
     value <- array(dim=c(nSim, object$dimObs, object$nStates))
     for (i in 1:object$nStates)
@@ -680,7 +680,7 @@ rdiscrete <- function(nSim, proba)
     return(value)
 }
 
-sim.discreteClass <- function(object, nSim)
+sim.discreteClass <- function(object, nSim, lastState=NULL)
 {   
     value <- NULL
     for (i in 1:object$nStates)
@@ -689,35 +689,42 @@ sim.discreteClass <- function(object, nSim)
     return(value)
 }
 
-sim.distributionClass <- function(object, nSim)
+sim.distributionClass <- function(object, nSim, lastState=NULL)
 {
     return(NextMethod("sim", object))
 }
 
-sim.markovChainClass <- function(object, nSim)
+sim.markovChainClass <- function(object, nSim, lastState=NULL)
 {
-    probaCum <- rep(0, object$nStates)
-    Aux <- runif(nSim)
-    value <- as.integer(rep(0, nSim))
-    for (i in 1:object$nStates)
-        probaCum[i] <- sum(object$initProb[1:i])
-    value[1] <- trouve_indice(Aux[1], probaCum)
+    value <- as.integer(rep(0, nSim+1))
+    Aux <- runif(nSim+1)
+    if (is.null(lastState))
+    {   probaCum <- rep(0, object$nStates)
+        for (i in 1:object$nStates)
+            probaCum[i] <- sum(object$initProb[1:i])
+        value[1] <- trouve_indice(Aux[1], probaCum)
+     }
+    else
+    {   value[1] = lastState
+    }
+    
     probaCum <- matrix(0, nrow=object$nStates, ncol=object$nStates)
     for (i in 1:object$nStates)
         for (j in 1:object$nStates)
             probaCum[i,j] <- sum(object$transMat[i,1:j])
   
-    for (t in 2:nSim)
+    for (t in 2:(nSim+1))
         value[t] <- trouve_indice(Aux[t], probaCum[value[t-1],])
     
-    return(as.integer(value))
+    return(as.integer(value[2:(nSim+1)]))
 }
 
-sim.HMMClass <- function(object, nSim)
+sim.HMMClass <- function(object, nSim, lastState=NULL)
 {
+     
     mc <- list(nStates = object$distribution$nStates, initProb=object$initProb, transMat=object$transMat)
     class(mc) <- "markovChainClass" 
-    Eps <- sim(mc, nSim)
+    Eps <- sim(mc, nSim, lastState)
     obs <- sim(object$distribution, nSim)
     if (all(is.na(match(c("multivariateNormalClass","mixtureMultivariateNormalClass"), class(object$distribution)))))
     {   value <- rep(0, nSim)
@@ -738,7 +745,7 @@ sim.HMMClass <- function(object, nSim)
     
 }
 
-HMMSim <- function(nSim, HMM)
+HMMSim <- function(nSim, HMM, lastState=NULL)
 {
     if (nSim %% 1 != 0)
         stop("nSim must be a positive integer\n")
@@ -747,7 +754,7 @@ HMMSim <- function(nSim, HMM)
     if (class(HMM) != "HMMClass")
         stop("HMM be be a HMMClass object. See HMMSet")
             
-    return(sim(HMM, nSim))
+    return(sim(HMM, nSim, lastState))
 }
 
 incr <- function(x)
