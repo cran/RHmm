@@ -1,10 +1,10 @@
 /***********************************************************
- * RHmm version 0.9.4                                      *
+ * RHmm version 1.0.3                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2007/11/08                                        *
+ * Date: 2008/06/26                                        *
  *                                                         *
  ***********************************************************/
 #include "cOTMatrix.h"
@@ -269,6 +269,7 @@ cOTMatrix* myRes = new cOTMatrix(theRight.mNRow, theRight.mNCol) ;
 
 
 
+#ifndef _RDLL_
 std::ostream& operator <<(std::ostream& theStream, cOTMatrix& theMat)
 {
 register uint	i,
@@ -280,6 +281,8 @@ register uint	i,
 	}
 	return theStream ;
 }
+#endif //_RDLL_
+
 cOTVector& operator *(cOTMatrix& theLeft, cOTVector& theVect)
 {
 cOTVector* myVect=(cOTVector *)NULL ;
@@ -426,8 +429,8 @@ int myInfo,
 	myN = (int)(theMatrix.mNCol),
 	myldz = (int)(theMatrix.mNCol) ;
 
-	for (register int i = 0 ; i < theMatrix.mNCol ; i++)
-		for (register int j = i ; j < theMatrix.mNCol ; j++)
+	for (register uint i = 0 ; i < theMatrix.mNCol ; i++)
+		for (register uint j = i ; j < theMatrix.mNCol ; j++)
 			myAP[i+(j+1)*j/2]  = theMatrix[i][j] ;
 
 	F77_NAME(dspev)("V", "U", &myN, myAP, myW, myZ, &myldz, myWork, &myInfo) ;
@@ -441,7 +444,7 @@ cOTMatrix myEigenVector = cOTMatrix(theMatrix.mNCol, theMatrix.mNCol) ;
 	for (register uint i = 0 ; i < theMatrix.mNCol ; i++)
 	{	theDet *= myW[i] ;
 		myInvEigenValue[i] = 1.0 /myW[i] ;
-		for (register int j = 0 ; j < theMatrix.mNCol ; j++)
+		for (register uint j = 0 ; j < theMatrix.mNCol ; j++)
 			myEigenVector[i][j] = myZ[i + j*theMatrix.mNCol] ;
 	}
 	theInvMatrix =  myEigenVector * diag(myInvEigenValue) * transpose(myEigenVector);

@@ -1,10 +1,10 @@
 /***********************************************************
- * RHmm version 0.9.4                                      *
+ * RHmm version 1.0.3                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2007/11/08                                        *
+ * Date: 2008/06/26                                        *
  *                                                         *
  ***********************************************************/
 #include "cUnivariateNormal.h"

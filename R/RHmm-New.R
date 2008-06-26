@@ -1,4 +1,4 @@
-tolMin <- (.Machine$double.eps)*1000
+tolMin <- .Machine$double.eps*100
 AsymptProbaVector <-function(probVector, obs, indDeb, HMM, Delta=1e-4)
 {
     if (is.list(obs))

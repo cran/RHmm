@@ -1,10 +1,10 @@
 /***********************************************************
- * RHmm version 0.9.4                                      *
+ * RHmm version 1.0.3                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2007/11/08                                        *
+ * Date: 2008/06/26                                        *
  *                                                         *
  ***********************************************************/
 #include "cOTVector.h"
@@ -297,12 +297,14 @@ bool operator <=(cOTVector& theVect1, cOTVector& theVect2)
 
 
 
+#ifndef _RDLL_
 std::ostream& operator <<(std::ostream& theStream, cOTVector& theVect)
 {
 	for (register uint i = 0 ; i < theVect.mSize ; i++)
 		theStream << theVect[i] << std::endl ;
 	return theStream ;
 }
+#endif // _RDLL_
 
 cOTVector& zeros(uint theN) 
 {

@@ -1,10 +1,10 @@
 /***********************************************************
- * RHmm version 0.9.4                                      *
+ * RHmm version 1.0.3                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2007/11/08                                        *
+ * Date: 2008/06/26                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _COTMATRIX_H_
@@ -18,7 +18,13 @@
 	typedef unsigned int uint ;
 #endif //uint
 
-#include <iostream>
+#ifndef _RDLL_
+	#include <iostream>
+#else
+	#include <R.h>
+	#include <Rinternals.h>
+	#include <Rmath.h>
+#endif _RDLL_
 #include <math.h>
 #include "R_ext/Lapack.h"
 #include "cOTError.h"
@@ -53,8 +59,9 @@ public :
 	cOTMatrix& operator *=(double theLambda) ;
 	cOTMatrix& operator /(double theLambda) ;
 	cOTMatrix& operator /=(double theLambda) ;
+#ifndef _RDLL_
 	friend std::ostream& operator <<(std::ostream& theStream, cOTMatrix &theMat) ;
-	friend cOTMatrix& transpose(cOTMatrix &theMatrix) ;
+#endif // _RDLL_	friend cOTMatrix& transpose(cOTMatrix &theMatrix) ;
 	friend cOTMatrix& zeros(uint theN, uint theP) ;
 	friend cOTMatrix& identity(uint theN) ;
 //	friend void svd(cOTMatrix &theMatrix, cOTMatrix &theU, cOTVector &theS, cOTMatrix &theV) ;
