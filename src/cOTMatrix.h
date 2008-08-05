@@ -1,10 +1,10 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _COTMATRIX_H_
@@ -27,8 +27,8 @@
 #endif _RDLL_
 #include <math.h>
 #include "R_ext/Lapack.h"
-#include "cOTError.h"
-#include "cOTVector.h"
+#include "coterror.h"
+#include "cotvector.h"
 
 class cOTMatrix
 {

@@ -1,18 +1,18 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _KMEANS_H_
 #define _KMEANS_H_
 #ifndef _RDLL_
 
-#include "OTMathUtil.h"
-#include "R_Equivalents.h"
+#include "otmathutil.h"
+#include "r_equivalents.h"
 #ifndef uint
 	typedef unsigned int uint ;
 #endif //uint

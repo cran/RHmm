@@ -1,15 +1,15 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _CUNIVARIATENORMAL_H_
 #define _CUNIVARIATENORMAL_H_
-#include "cDistribution.h"
+#include "cdistribution.h"
 
 class cUnivariateNormal : public cDistribution
 {	public :

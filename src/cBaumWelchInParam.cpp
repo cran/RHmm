@@ -1,13 +1,13 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
-#include "cBaumWelchInParam.h"
+#include "cbaumwelchinparam.h"
 
 
 cBaumWelchInParam::cBaumWelchInParam(uint theNSample,uint theDimObs, cOTVector *theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba):cInParam(theNSample, theDimObs, theY, theDistrType, theNClass, theNMixt, theNProba)

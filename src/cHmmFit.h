@@ -1,18 +1,18 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _CHMMFIT_H_
 #define _CHMMFIT_H_
-#include "cBaumWelchInParam.h"
-#include "cBaumWelch.h"
-#include "cDistribution.h"
-#include "cHmm.h"
+#include "cbaumwelchinparam.h"
+#include "cbaumwelch.h"
+#include "cdistribution.h"
+#include "chmm.h"
 
 class cHmmFit : public cBaumWelch, public cHmm
 {	public :	

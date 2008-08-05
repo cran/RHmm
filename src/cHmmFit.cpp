@@ -1,13 +1,13 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
-#include "cHmmFit.h"
+#include "chmmfit.h"
 
 cHmmFit::cHmmFit(distrDefinitionEnum theDistrType, uint theNClass, uint theDimObs, uint theNMixt, uint theNProba, uint theNSample, uint* myT):cBaumWelch(theNSample, myT, theDimObs), cHmm(theDistrType, theNClass, theDimObs, theNMixt, theNProba)
 {	mNIter = 0 ;

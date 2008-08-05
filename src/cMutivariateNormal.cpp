@@ -1,14 +1,14 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
-#include "MultivariateNormalUtil.h"
-#include "cMultivariateNormal.h"
+#include "multivariatenormalutil.h"
+#include "cmultivariatenormal.h"
 
 
 cMultivariateNormal::cMultivariateNormal(uint theNClass, uint theDimObs)

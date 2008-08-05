@@ -1,18 +1,18 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _MULTIVARIATENORMALUTIL_H_
 #define _MULTIVARIATENORMALUTIL_H_
-#include "OTMathUtil.h"
+#include "otmathutil.h"
 
 #ifndef _RDLL_
-	#include "R_Equivalents.h"
+	#include "r_equivalents.h"
 #else
 	#include <stdio.h>
 	#include <stdlib.h>

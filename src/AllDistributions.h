@@ -1,19 +1,19 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _ALLDISTRIBUTIONS_H_
 #define _ALLDISTRIBUTIONS_H_
 
-#include "cUnivariateNormal.h"
-#include "cMultivariateNormal.h"
-#include "cMixtUnivariateNormal.h"
-#include "cMixtMultivariateNormal.h"
-#include "cDiscrete.h"
+#include "cunivariatenormal.h"
+#include "cmultivariatenormal.h"
+#include "cmixtunivariatenormal.h"
+#include "cmixtmultivariatenormal.h"
+#include "cdiscrete.h"
 
 #endif// _ALLDISTRIBUTIONS_H_

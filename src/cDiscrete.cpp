@@ -1,13 +1,13 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
-#include "cDiscrete.h"
+#include "cdiscrete.h"
 
 cDiscrete::cDiscrete(uint theDimObs, uint theNProba) 
 {	if ( (theDimObs > 0) && (theNProba > 0) )

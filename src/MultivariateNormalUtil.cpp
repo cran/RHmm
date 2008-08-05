@@ -1,13 +1,13 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
-#include "MultivariateNormalUtil.h"
+#include "multivariatenormalutil.h"
 
 void SymetricInverseAndDet	(	cOTMatrix&	theMat,
 								double&		theDet,
@@ -34,7 +34,7 @@ double			myAux,
 				myRapport		;
 
 uint myDimObs = theMu.mSize ;	
-	myRapport = pow(SQRT_TWO_PI*sqrt(theDet), (int)myDimObs) ;
+	myRapport = pow(SQRT_TWO_PI, (int)myDimObs)*sqrt(theDet) ;
 
 uint myT = thex.mSize / myDimObs ;
 

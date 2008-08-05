@@ -1,16 +1,16 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _HMM_H_
 #define _HMM_H_
 
-#include "OTMathUtil.h"
+#include "otmathutil.h"
 
 
 #ifdef _RDLL_
@@ -19,7 +19,7 @@
 	#include <Rmath.h>
 #else
 	#include "kmeans.h"
-	#include "R_Equivalents.h"
+	#include "r_equivalents.h"
 	#include "cRandomGenerator.h"
 #endif //_RDLL_
 

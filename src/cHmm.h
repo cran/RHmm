@@ -1,16 +1,16 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifndef _CHMM_H_
 #define _CHMM_H_
-#include "Hmm.h"
-#include "cInParam.h"
+#include "hmm.h"
+#include "cinparam.h"
 
 class cDistribution ;
 class cHmm

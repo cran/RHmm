@@ -1,14 +1,14 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifdef _RDLL_
-#include "cRUtils.h"
+#include "crutils.h"
 /*
  *	Récupérer une seule valeur à partir d'une liste SEXP à la place n° theNum
  */

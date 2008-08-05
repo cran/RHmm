@@ -1,25 +1,25 @@
 /***********************************************************
- * RHmm version 1.0.3                                      *
+ * RHmm version 1.0.4                                      *
  *                                                         *
  *                                                         *
  * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
  *                                                         *
- * Date: 2008/06/26                                        *
+ * Date: 2008/08/08                                        *
  *                                                         *
  ***********************************************************/
 #ifdef _RDLL_
 
-#include "OTMathUtil.h"
-#include "cRUtils.h"
-#include "Hmm.h"
-#include "cInParam.h"
-#include "cBaumWelchInParam.h"
-#include "cBaumWelch.h"
-#include "AllDistributions.h"
-#include "cHmm.h"
-#include "cHmmFit.h"
-#include "cViterbi.h"
-#include "RHmm.h"
+#include "otmathutil.h"
+#include "crutils.h"
+#include "hmm.h"
+#include "cinparam.h"
+#include "cbaumwelchinparam.h"
+#include "cbaumwelch.h"
+#include "alldistributions.h"
+#include "chmm.h"
+#include "chmmfit.h"
+#include "cviterbi.h"
+#include "rhmm.h"
 
 
 extern "C" {
@@ -33,8 +33,8 @@ distrDefinitionEnum	myDistrType		;
 uint				myNbClasses,
 					myDimObs,
 					myNbMixt,
-					myNbProba,
-					myNoHmm			;
+//					myNoHmm,
+					myNbProba		;
 cRUtil				myRUtil			;
 // Récupération des paramètres d'entrée
 	myRUtil.GetValSexp(theParamHMM, eNClasses, myNbClasses) ;
