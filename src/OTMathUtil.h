@@ -1,18 +1,19 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#ifndef _OTMATHUTIL_H_
-#define _OTMATHUTIL_H_
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: OTMathUtil.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
 
-#include "coterror.h"
-#include "cotvector.h"
-#include "cotmatrix.h"
+#ifndef _OTMathUtil_H_
+#define _OTMathUtil_H_
 
-#endif //_OTMATHUTIL_H_
+#include "cOTError.h"
+#include "cOTVector.h"
+#include "cOTMatrix.h"
 
+#endif //_OTMathUtil_H_

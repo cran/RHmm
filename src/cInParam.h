@@ -1,15 +1,17 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cInParam.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _CINPARAM_H_
 #define _CINPARAM_H_
-#include "hmm.h"
+#include "Hmm.h"
 
 
 class cInParam

@@ -1,13 +1,15 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "kmeans.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: Kmeans.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "Kmeans.h"
 #ifndef _RDLL_
 void mkmeans(cOTVector& theYt, uint theNClass, int* theSeq)
 { 

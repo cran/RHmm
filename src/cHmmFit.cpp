@@ -1,27 +1,31 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "chmmfit.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cHmmFit.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "cHmmFit.h"
 
 cHmmFit::cHmmFit(distrDefinitionEnum theDistrType, uint theNClass, uint theDimObs, uint theNMixt, uint theNProba, uint theNSample, uint* myT):cBaumWelch(theNSample, myT, theDimObs), cHmm(theDistrType, theNClass, theDimObs, theNMixt, theNProba)
-{	mNIter = 0 ;
+{	MESS_CREAT("cHmmFit")
+	mNIter = 0 ;
 	mTol = 1e100 ;
 	mBic = -1e100 ;
 }
 cHmmFit::cHmmFit(cInParam& theInParam):cBaumWelch(theInParam), cHmm(theInParam)
-{	mNIter = 0 ;
+{	MESS_CREAT("cHmmFit")
+	mNIter = 0 ;
 	mTol = 1e100 ;
 	mBic = -1e100 ;
 }
 
 cHmmFit::~cHmmFit()
-{
+{	MESS_DESTR("cHmmFit")
 }
 
 cHmmFit & cHmmFit::operator = (cHmmFit &theSrc)
@@ -78,7 +82,7 @@ cOTMatrix*	myProbaCond = new cOTMatrix[theInParam.mNSample] ;
 			for (j = 0 ; j < theInParam.mNClass ; j++)
 			{	mTransMat[i][j] = 0.0 ;
 				for (n = 0 ; n < theInParam.mNSample ; n++)
-					mTransMat[i][j] += mXsi[n][i][j] ;
+					mTransMat[i][j] += mSumXsi[n][i][j] ;
 				mTransMat[i][j] /= myDenominateur ;
 			}
 		}
@@ -202,6 +206,7 @@ register uint	t											;
 		myHMM.mDistrParam->Print() ;
 		Rprintf("\n") ;
 	}
+
 	*this = myHMM ;
 	
 }
@@ -294,11 +299,11 @@ double myLLHInit = ComputeLLH(theInParam, myProbaCond) ;
 cOTVector	myValFunctGrad(myNParam),
 			myh(myNParam) ;
 	ComputeFunction(theInParam, myValFunctGrad, myh, myProbaCond, theDelta) ;
-cOTMatrix myValFunctHess(myNParam, myNParam) ;
-	ComputeFunction(theInParam, myValFunctHess, myh, myProbaCond, theDelta) ;
+cOTMatrix myValFuncthess(myNParam, myNParam) ;
+	ComputeFunction(theInParam, myValFuncthess, myh, myProbaCond, theDelta) ;
 	for (register uint n = 0 ; n < myNParam ; n++)
 		for (register uint p = n ; p < myNParam ; p++)
-			theHess[n][p] = theHess[p][n] = (myValFunctHess[n][p] - myValFunctGrad[n] - myValFunctGrad[p] + myLLHInit)/(myh[n]*myh[p]) ;
+			theHess[n][p] = theHess[p][n] = (myValFuncthess[n][p] - myValFunctGrad[n] - myValFunctGrad[p] + myLLHInit)/(myh[n]*myh[p]) ;
 
 	for (register uint n = 0 ; n < theInParam.mNSample ; n++)
 		myProbaCond[n].Delete() ;

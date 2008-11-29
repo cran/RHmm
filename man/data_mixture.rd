@@ -9,28 +9,32 @@ Model:\cr
 2 states HMM with gaussian mixture distribution\cr
 \cr
 Initial probabilities:\cr
-  Pi1 Pi2\cr
-  0.4 0.6\cr
-
+  \tabular{rr}{
+ Pi1 \tab Pi2\cr
+  0.4 \tab 0.6\cr
+}
 Transition matrix:\cr
-        State 1 State 2\cr
-State 1     0.8     0.2\cr
-State 2     0.4     0.6\cr
-\cr
+   \tabular{crr}{
+      \tab State 1 \tab State 2\cr
+State 1 \tab 0.8 \tab 0.2\cr
+State 2 \tab 0.4 \tab 0.6\cr
+}
 Conditionnal distribution parameters:\cr
-\cr
-Distribution parameters:\cr
-  State 1\cr
-        mean var prop\cr
-mixt. 1    1   2  0.1\cr
-mixt. 2    2   3  0.2\cr
-mixt. 3    3   4  0.7\cr
-\cr
-  State 2\cr
-        mean var prop\cr
-mixt. 1   -1   4  0.4\cr
-mixt. 2   -2   2  0.3\cr
-mixt. 3   -3   1  0.3\cr
+
+State 1\cr
+\tabular{crrr}{ 
+\tab mean \tab var \tab prop\cr
+mixt. 1 \tab 1 \tab 2 \tab 0.1\cr
+mixt. 2 \tab 2 \tab 3 \tab 0.2\cr
+mixt. 3 \tab 3 \tab 4 \tab 0.7\cr
+}
+State 2\cr
+\tabular{crrr}{ 
+\tab mean \tab var \tab prop\cr
+mixt. 1 \tab 1 -1 \tab 1 4 \tab 1 0.4\cr
+mixt. 2 \tab 1 -2 \tab 1 2 \tab 1 0.3\cr
+mixt. 3 \tab 1 -3 \tab 1 1 \tab 1 0.3\cr
+}
 }
 
 \usage{data(data_mixture)}

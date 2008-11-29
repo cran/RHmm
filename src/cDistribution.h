@@ -1,16 +1,18 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cDistribution.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _CDISTRIBUTION_H_
 #define _CDISTRIBUTION_H_
-#include "cbaumwelchinparam.h"
-#include "cbaumwelch.h"
+#include "cBaumWelchInParam.h"
+#include "cBaumWelch.h"
 
 
 class cDistribution  

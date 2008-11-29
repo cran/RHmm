@@ -1,18 +1,20 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "multivariatenormalutil.h"
-#include "cmultivariatenormal.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cMultivariateNormal.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "MultivariateNormalUtil.h"
+#include "cMultivariateNormal.h"
 
 
 cMultivariateNormal::cMultivariateNormal(uint theNClass, uint theDimObs)
-{
+{	MESS_CREAT("cMultivariateNormal")
 	mvNClass = theNClass ;
 	if ( (mvNClass > 0) && (theDimObs > 0) )
 	{	mMean = new cOTVector[mvNClass] ;
@@ -30,7 +32,8 @@ cMultivariateNormal::cMultivariateNormal(uint theNClass, uint theDimObs)
 }
 
 cMultivariateNormal::~cMultivariateNormal()
-{	if (mvNClass > 0)
+{	MESS_DESTR("cMultivariateNormal")
+	if (mvNClass > 0)
 	{	
 	register uint i	;
 		for (i = 0 ; i < mvNClass ; i++)

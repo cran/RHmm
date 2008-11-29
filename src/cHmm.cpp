@@ -1,18 +1,21 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "chmm.h"
-#include "alldistributions.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cHmm.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "cHmm.h"
+#include "AllDistributions.h"
 
 
 cHmm::cHmm(distrDefinitionEnum theDistrType, uint theNClass, uint theDimObs, uint theNMixture, uint theNProba)
-{	mDistrType = theDistrType ;
+{	MESS_CREAT("cHmm")
+	mDistrType = theDistrType ;
 	mInitProba.ReAlloc(theNClass) ;
 	mTransMat.ReAlloc(theNClass, theNClass) ;
 
@@ -38,7 +41,7 @@ cHmm::cHmm(distrDefinitionEnum theDistrType, uint theNClass, uint theDimObs, uin
 	}
 }
 cHmm::cHmm(const cInParam &theInParam)
-{
+{	MESS_CREAT("cHmm")
 	mInitProba.ReAlloc(theInParam.mNClass);
 	mTransMat.ReAlloc(theInParam.mNClass, theInParam.mNClass) ;
 	mDistrType = theInParam.mDistrType ;
@@ -64,38 +67,51 @@ cHmm::cHmm(const cInParam &theInParam)
 	}
 }
 cHmm::~cHmm()
-{
+{	MESS_DESTR("cHmm")
 	mInitProba.Delete() ;
 	mTransMat.Delete() ;
-	delete mDistrParam ;
-	/*
-	switch(mDistrType)
-	{	case eNormalDistr :
-		{	cUnivariateNormal *myLoi = (cUnivariateNormal *)mDistrParam ;
-			myLoi->~cUnivariateNormal() ;
+	delete mDistrParam ;	
+/*	if (mDistrParam != NULL)
+	{	switch(mDistrType)
+		{	case eNormalDistr :
+			{	
+			cUnivariateNormal* myDistr = dynamic_cast<cUnivariateNormal *>(mDistrParam) ;
+				delete myDistr ;
+			}
+			break ;
+			case eMultiNormalDistr :
+			{
+			cMultivariateNormal* myDistr = dynamic_cast<cMultivariateNormal *>(mDistrParam) ;
+				delete myDistr ;
+			}
+			break ;
+			case eMixtUniNormalDistr :
+			{
+			cMixtUnivariateNormal* myDistr = dynamic_cast<cMixtUnivariateNormal *>(mDistrParam) ;
+				delete myDistr ;
+			}
+			break ;
+			case eMixtMultiNormalDistr :
+			{	
+			cMixtUnivariateNormal* myDistr = dynamic_cast<cMixtUnivariateNormal *>(mDistrParam) ;
+				delete myDistr ;
+			}
+			break ;
+			case eDiscreteDistr :
+			{
+			cDiscrete* myDistr = dynamic_cast<cDiscrete *>(mDistrParam) ;
+				delete myDistr ;
+			}
+			break ;
+			case eUnknownDistr :
+				mDistrParam = (cDistribution *)NULL ;
+			break ;
 		}
-		break ;
-		case eMultiNormalDistr :
-		{	cMultivariateNormal *myLoi = (cMultivariateNormal *)mDistrParam ;
-			myLoi->~cMultivariateNormal() ;
-		}
-		break ;
-		case eMixtNormalDistr :
-		{	cMixtUnivariateNormal *myLoi = (cMixtUnivariateNormal *)mDistrParam ;
-			myLoi->~cMixtUnivariateNormal() ;
-		}
-		break ;
-		case eDiscreteDistr :
-		{	cDiscrete *myLoi = (cDiscrete *)mDistrParam ;
-			myLoi->~cDiscrete() ;
-		}
-		break ;
-		case eUnknownDistr :
-			mDistrParam = (cDistribution *)NULL ;
-		break ;
 	}
-	*/
+*/
+	mDistrParam = (cDistribution *)NULL ;
 }
+
 cHmm & cHmm::operator = (cHmm &theSrc)
 {	/*mvQ = theSrc.mvQ ;
 	mvN = theSrc.mvN ;

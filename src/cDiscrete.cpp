@@ -1,20 +1,23 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "cdiscrete.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cDiscrete.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
 
-cDiscrete::cDiscrete(uint theDimObs, uint theNProba) 
-{	if ( (theDimObs > 0) && (theNProba > 0) )
-	{	mvNClass = theDimObs ;
+#include "cDiscrete.h"
+
+cDiscrete::cDiscrete(uint theNClass, uint theNProba) 
+{	MESS_CREAT("cDiscrete")
+	if ( (theNClass > 0) && (theNProba > 0) )
+	{	mvNClass = theNClass ;
 		mProba = new cOTVector[mvNClass] ;
 		for (register uint i = 0 ; i < mvNClass ; i++)
-			mProba[i].ReAlloc(theNProba) ;
+			mProba[i].ReAlloc(theNProba, 0.0L) ;
 	}
 	else
 	{	mvNClass = 0 ; 
@@ -23,12 +26,14 @@ cDiscrete::cDiscrete(uint theDimObs, uint theNProba)
 }
 
 cDiscrete::~cDiscrete()
-{	if ( mvNClass > 0)
+{	MESS_DESTR("cDiscrete")
+	if ( mvNClass > 0)
 	{	for (register uint i = 0 ; i < mvNClass ; i++)
 			mProba[i].Delete() ;
-		delete mProba ;
+		delete [] mProba ;
 		mProba = NULL ;
 	}
+	mvNClass = 0 ;
 }
 uint cDiscrete::GetNProba(void)
 {
@@ -78,7 +83,10 @@ uint myNProba = GetNProba() ;
 			for (n = 0 ; n < theInParam.mNSample ; n++)
 				for ( t = 0 ; t < theInParam.mY[n].mSize ; t++)
 					mProba[i][k] += theBaumWelch.mGamma[n][i][t]*(theInParam.mY[n][t]==k) ;
-			mProba[i][k] /= myDenominateur ;
+			if (myDenominateur > MIN_DBLE)
+				mProba[i][k] /= myDenominateur ;
+			else
+				mProba[i][k] = 0.0L ;
 		}
 	}
 }

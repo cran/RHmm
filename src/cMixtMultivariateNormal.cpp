@@ -1,14 +1,16 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "multivariatenormalutil.h"
-#include "cmixtmultivariatenormal.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cMixtMultivariateNormal.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "MultivariateNormalUtil.h"
+#include "cMixtMultivariateNormal.h"
 
 static void MixtMultivariateNormalDensity(cOTVector& theY, uint theNMixt, cOTVector* theMean, cOTMatrix* theInvCov, cOTVector& theDet, cOTVector& thep, double* theDens)
 {
@@ -28,7 +30,8 @@ double* myDens = new double[myT] ;
 	delete[] myDens ;
 }
 cMixtMultivariateNormal::cMixtMultivariateNormal(uint theNClass, uint theNMixt, uint theDimObs)
-{	mvNClass = theNClass ;
+{	MESS_CREAT("cMixtMultivariateNormal")
+	mvNClass = theNClass ;
 	mvNMixt = theNMixt ;
 	mvDimObs = theDimObs ;
 	if ( (theNClass > 0) && (theNMixt > 0) && (theDimObs > 0) )
@@ -54,7 +57,8 @@ cMixtMultivariateNormal::cMixtMultivariateNormal(uint theNClass, uint theNMixt, 
 }
 
 cMixtMultivariateNormal::~cMixtMultivariateNormal()
-{	for (register uint i = 0 ; i < mvNClass ; i++)
+{	MESS_DESTR("cMixtMultivariateNormal")
+	for (register uint i = 0 ; i < mvNClass ; i++)
 	{	for (register uint j = 0 ; j < mvNMixt ; j++)
 		{	mMean[i][j].Delete() ;
 			mCov[i][j].Delete() ;
@@ -140,7 +144,7 @@ double*		myDet = new double[mvNMixt] ;
 			mp[i][l] = mySumGammail / mySumGammai ;
 			mMean[i][l] = myMoy/mySumGammail ;
 			for (register int m = 0 ; m < (int)mvDimObs-1 ; m++)
-				for (register int l = m+1 ; l < mvDimObs ; l++)
+				for (register int l = m+1 ; l < (int)mvDimObs ; l++)
 					myCov[l][m] = myCov[m][l] ;
 			mCov[i][l] = myCov/mySumGammail ;
 			mCov[i][l] -= mMean[i][l] * transpose(mMean[i][l]) ;

@@ -1,16 +1,19 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "cinparam.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cInParam.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "cInParam.h"
 
 cInParam::cInParam(uint theNSample, uint theDimObs, cOTVector* theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba)
-{	mDistrType = theDistrType ;
+{	MESS_CREAT("cInParam")
+	mDistrType = theDistrType ;
 	mNClass = theNClass ;
 	mNMixt = theNMixt ;
 	mNProba = theNProba ;
@@ -25,7 +28,8 @@ cInParam::cInParam(uint theNSample, uint theDimObs, cOTVector* theY, distrDefini
 		mY = (cOTVector *)NULL ;
 }
 cInParam::~cInParam()
-{	if (mNSample != 0)
+{	MESS_DESTR("cInParam")
+	if (mNSample != 0)
 	{	for (register uint i = 0 ; i < mNSample ; i++)
 			mY[i].Delete() ;
 		delete [] mY ;

@@ -1,4 +1,4 @@
-RHmm package version 1.0.4
+RHmm package version 1.2.0
 
 
 Make instructions
@@ -6,9 +6,13 @@ Make instructions
 
 
 Somme source and header files are used only for the R shared library (for example, RHmm.*pp or RUtil.*pp) 
-RHmm can be used as a standalone library : don't define _RDLL_ in your Makefile, but still needs RLapack library and access to R_Ext/RLapack.h
+RHmm can be used as a standalone library (don't define _RDLL_ in your Makefile), but still needs RLapack library and access to R_Ext/RLapack.h
 
-Thanks to Mait Raag who finds a bug in may Multivariate Normal Density function (version <= 1.03).
+Thanks to: 
+- Mait Raag who found a bug in may Multivariate Normal Density function (version <= 1.03).
+- Tarmo Leinonen who found some problems in the forwardbackward procedure
+- Matteo Re who found bugs in Viterbi path procedure (for discrete distributions)
+
 
 Ollivier TARAMASCO
 Ollivier.Taramasco@imag.fr

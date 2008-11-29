@@ -1,16 +1,18 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cMultivariateNormal.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _CMULTIVARIATENORMAL_H_
 #define _CMULTIVARIATENORMAL_H_
-#include "cdistribution.h"
-#include "samplesutil.h"
+#include "cDistribution.h"
+#include "SamplesUtil.h"
 
 class cMultivariateNormal : public cDistribution
 {	private :

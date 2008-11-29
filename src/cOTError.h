@@ -1,22 +1,18 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cOTError.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _COTERROR_H_
 #define _COTERROR_H_
-#ifndef _RDLL_
-	#include <iostream>
-	using namespace std ;
-#else
-	#include <R.h>
-	#include <Rinternals.h>
-	#include <Rmath.h>
-#endif _RDLL_
+#include <cstdlib>
+#include <iostream>
 
 #ifndef NULL
 	#define NULL 0

@@ -1,22 +1,24 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "cunivariatenormal.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cUnivariateNormal.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "cUnivariateNormal.h"
 
 cUnivariateNormal::cUnivariateNormal(uint theDimObs)
-{	//mvQ = theDimObs ;
+{	MESS_CREAT("cUnivariateNormal")
 	mMean.ReAlloc(theDimObs) ;
 	mVar.ReAlloc(theDimObs) ;
 }
 
 cUnivariateNormal::~cUnivariateNormal()
-{	
+{	MESS_DESTR("cUnivariateNormal")
 	mMean.Delete() ;
 	mVar.Delete() ;
 }

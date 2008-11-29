@@ -1,18 +1,18 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cOTVector.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _COTVECTOR_H_
 #define _COTVECTOR_H_
-#ifndef _RDLL_
-	#include <iostream>
-#endif //_RDLL_
-#include "coterror.h"
+#include <iostream>
+#include "cOTError.h"
 
 class cOTMatrix ;
 
@@ -52,9 +52,7 @@ class cOTVector
 		friend bool operator <=(cOTVector& theVect1, cOTVector& theVect2) ;
 		friend bool operator >(cOTVector& theVect1, cOTVector& theVect2) ;
 		friend bool operator >=(cOTVector& theVect1, cOTVector& theVect2) ;
-#ifndef _RDLL_
 		friend std::ostream& operator <<(std::ostream& theStream, cOTVector &theVect) ;
-#endif // -RDLL_
 		friend cOTMatrix& transpose(cOTVector &theVect) ;
 		friend cOTVector& zeros(uint theN) ;
 		friend cOTVector& copy_double(double* theVect, uint theSize) ;

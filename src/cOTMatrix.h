@@ -1,12 +1,14 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cOTMatrix.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _COTMATRIX_H_
 #define _COTMATRIX_H_
 #ifndef MIN_DBLE
@@ -18,17 +20,11 @@
 	typedef unsigned int uint ;
 #endif //uint
 
-#ifndef _RDLL_
-	#include <iostream>
-#else
-	#include <R.h>
-	#include <Rinternals.h>
-	#include <Rmath.h>
-#endif _RDLL_
+#include <iostream>
 #include <math.h>
 #include "R_ext/Lapack.h"
-#include "coterror.h"
-#include "cotvector.h"
+#include "cOTError.h"
+#include "cOTVector.h"
 
 class cOTMatrix
 {
@@ -59,9 +55,8 @@ public :
 	cOTMatrix& operator *=(double theLambda) ;
 	cOTMatrix& operator /(double theLambda) ;
 	cOTMatrix& operator /=(double theLambda) ;
-#ifndef _RDLL_
 	friend std::ostream& operator <<(std::ostream& theStream, cOTMatrix &theMat) ;
-#endif // _RDLL_	friend cOTMatrix& transpose(cOTMatrix &theMatrix) ;
+	friend cOTMatrix& transpose(cOTMatrix &theMatrix) ;
 	friend cOTMatrix& zeros(uint theN, uint theP) ;
 	friend cOTMatrix& identity(uint theN) ;
 //	friend void svd(cOTMatrix &theMatrix, cOTMatrix &theU, cOTVector &theS, cOTMatrix &theV) ;

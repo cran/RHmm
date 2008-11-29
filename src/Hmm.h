@@ -1,26 +1,38 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: Hmm.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _HMM_H_
 #define _HMM_H_
 
-#include "otmathutil.h"
+#include "OTMathUtil.h"
 
+#ifdef _DEBOGAGE_
+#include "Debogage.h"
+	#define MESS_CREAT(p){Rprintf("Creation de %s\n", (p)) ;}
+	#define MESS_DESTR(p){Rprintf("Destruction de %s\n", (p)) ;}
+	#define MESS(p) {Rprintf("%s\n", (p)) ;}
+#else
+	#define MESS_CREAT(p)
+	#define MESS_DESTR(p)
+	#define MESS(p)
+#endif //_DEBOGAGE
 
 #ifdef _RDLL_
 	#include <R.h>
 	#include <Rinternals.h>
 	#include <Rmath.h>
 #else
-	#include "kmeans.h"
-	#include "r_equivalents.h"
-	#include "cRandomGenerator.h"
+	#include "Kmeans.h"
+	#include "REquivalents.h"
+	#include "crandomgenerator.h"
 #endif //_RDLL_
 
 

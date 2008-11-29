@@ -1,3 +1,14 @@
+ ###############################################################
+ #### RHmm version 1.2.0                                      
+ ####                                                         
+ #### File: RHmm.R 
+ ####                                                         
+ #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ####                                                         
+ #### Date: 2008/11/29                                        
+ ####                                                         
+ ###############################################################
+
 tol <- .Machine$double.eps
 min_eigen_value <- function(x)
 {
@@ -586,17 +597,16 @@ rdiscrete <- function(nSim, proba)
     return(Res) 
 }
 
-sim <- function(object, nSim, lastState=NULL)
-UseMethod("sim")
+sim <- function(object, nSim, lastState=NULL) UseMethod("sim")
 
-sim.univariateNormalClass <- function(object, nSim, lastState=NULL)
+sim.univariateNormalClass <- function(object, nSim, lastState)
 {   value <- NULL
     for (i in 1:object$nStates)
         value <- cbind(value, rnorm(nSim, object$mean[i], sqrt(object$var[i])))
     return(value)
 }
 
-sim.multivariateNormalClass <- function(object, nSim, lastState=NULL)
+sim.multivariateNormalClass <- function(object, nSim, lastState)
 {   value <- array(dim=c(nSim, object$dimObs, object$nStates))
     for (i in 1:object$nStates)
             value[, , i] <- mvrnorm(nSim, mu=object$mean[[i]], Sigma=object$cov[[i]])
@@ -653,14 +663,14 @@ dmixt <- function(x, mean, var, prop)
 }
     
 
-sim.mixtureUnivariateNormalClass <- function(object, nSim, lastState=NULL)
+sim.mixtureUnivariateNormalClass <- function(object, nSim, lastState)
 {   value <- NULL
     for (i in 1:object$nStates)
         value<- cbind(value, rmixt(nSim, object$mean[[i]], sqrt(object$var[[i]]), object$proportion[[i]]))
     return(value)
 }
 
-sim.mixtureMultivariateNormalClass <-  function(object, nSim, lastState=NULL)
+sim.mixtureMultivariateNormalClass <-  function(object, nSim, lastState)
 {
     value <- array(dim=c(nSim, object$dimObs, object$nStates))
     for (i in 1:object$nStates)
@@ -680,7 +690,7 @@ rdiscrete <- function(nSim, proba)
     return(value)
 }
 
-sim.discreteClass <- function(object, nSim, lastState=NULL)
+sim.discreteClass <- function(object, nSim, lastState)
 {   
     value <- NULL
     for (i in 1:object$nStates)
@@ -689,23 +699,26 @@ sim.discreteClass <- function(object, nSim, lastState=NULL)
     return(value)
 }
 
-sim.distributionClass <- function(object, nSim, lastState=NULL)
+sim.distributionClass <- function(object, nSim, lastState)
 {
-    return(NextMethod("sim", object))
+    return(NextMethod("sim", object, lastState))
 }
 
-sim.markovChainClass <- function(object, nSim, lastState=NULL)
+sim.markovChainClass <- function(object, nSim, lastState)
 {
-    value <- as.integer(rep(0, nSim+1))
-    Aux <- runif(nSim+1)
+    value <- as.integer(rep(0, nSim))
+    Aux <- runif(nSim)
     if (is.null(lastState))
     {   probaCum <- rep(0, object$nStates)
         for (i in 1:object$nStates)
             probaCum[i] <- sum(object$initProb[1:i])
-        value[1] <- trouve_indice(Aux[1], probaCum)
-     }
+        val <- trouve_indice(Aux[1], probaCum)
+        value[1] <- val
+        k <- 2
+    }
     else
-    {   value[1] = lastState
+    {   val <- lastState
+        k <- 1
     }
     
     probaCum <- matrix(0, nrow=object$nStates, ncol=object$nStates)
@@ -713,13 +726,13 @@ sim.markovChainClass <- function(object, nSim, lastState=NULL)
         for (j in 1:object$nStates)
             probaCum[i,j] <- sum(object$transMat[i,1:j])
   
-    for (t in 2:(nSim+1))
-        value[t] <- trouve_indice(Aux[t], probaCum[value[t-1],])
+    for (tt in k:nSim)
+        val <- value[tt] <- trouve_indice(Aux[tt], probaCum[val,])
     
-    return(as.integer(value[2:(nSim+1)]))
+    return(as.integer(value))
 }
 
-sim.HMMClass <- function(object, nSim, lastState=NULL)
+sim.HMMClass <- function(object, nSim, lastState)
 {
      
     mc <- list(nStates = object$distribution$nStates, initProb=object$initProb, transMat=object$transMat)
@@ -787,7 +800,7 @@ HMMKMeans <- function(obs, nClass)
         }
     }
     else
-    {    x <- obs
+    {   x <- obs
         dimObs <- dim(x)[2]
         if (is.null(dimObs))
             dimObs <- 1
@@ -843,15 +856,20 @@ HMMKMeans <- function(obs, nClass)
 
 BaumWelch<-function(paramHMM, obs, paramAlgo)
 {   
-    paramAlgo <- setStorageMode(paramAlgo)
-        
-    maListe <- TransformeList(paramHMM$dis, obs)
-    paramHMM$nLevels <- maListe$nLevels
-    paramHMM <- setStorageMode(paramHMM)
+    paramAlgo1 <-paramAlgo[1:7]
+    class(paramAlgo1) <- "paramAlgoBW"
+    paramAlgo1 <- setStorageMode(paramAlgo1)
+    maListe <- TransformeListe(paramHMM, obs)
+    nLevels <- maListe$nLevels
+    paramHMM1 <- list(nStates=paramHMM$nStates, dimObs=paramHMM$dimObs, nMixt = paramHMM$nMixt, nLevels = nLevels, 
+        dis=paramHMM$dis)
+    class(paramHMM1) <- "paramHMM"
+ 
+    paramHMM1 <- setStorageMode(paramHMM1)
     
-    Res1 <- .Call("RBaumWelch", paramHMM, maListe$Zt, paramAlgo)
-    
-    if (paramHMM$dis=="NORMAL") 
+    Res1 <- .Call("RBaumWelch", paramHMM1, maListe$Zt, paramAlgo1)
+
+     if (paramHMM$dis=="NORMAL") 
     {   if (paramHMM$dimObs == 1)
             distribution <- distributionSet(dis="NORMAL", mean=Res1[[3]], var=Res1[[4]], verif=FALSE)
         else
@@ -884,20 +902,19 @@ BaumWelch<-function(paramHMM, obs, paramAlgo)
         else
             convergence <- TRUE
     }    
-    Res3 <- NULL
-    if (convergence)
-    {   if (Res2$distribution$dimObs ==1)
-        {    Res3 <- AsymptVar(Res2, obs)   
-        }
-    }
     
-    Res <- list(HMM=Res2, LLH=Autres[1], BIC=Autres[2], nIter=as.integer(Autres[3]), relVariation=relVariation, convergence=convergence, asymptVar=Res3)
+    Res3 <- NULL
+    if ( (convergence) && (paramAlgo$asymptCov))
+    {   cat(sprintf("... Computing the asymptotic covariance matrix ...\n"))
+        Res3 <- asymptoticCovMat(Res2, obs, paramAlgo$asymptMethod)   
+    }
+    Res <- list(HMM=Res2, LLH=Autres[1], BIC=Autres[2], nIter=as.integer(Autres[3]), relVariation=relVariation, convergence=convergence, asymptCov=Res3, obs=obs)
         
     class(Res) <- "HMMFitClass"
     return(Res)
 }
 
-HMMFit <- function(obs, dis="NORMAL", nStates = 2,...)
+HMMFit <- function(obs, dis="NORMAL", nStates = 2, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
 {  
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
@@ -906,8 +923,27 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2,...)
         else
             obs <- as.matrix(obs[,1:dimObs])
     }   
-     
+ 
+    if (is.list(obs))
+    {   Aux <- dim(obs[[1]])
+        if (is.null(Aux))
+        {    dimObs <- 1
+        }
+        else
+        {    dimObs <- Aux[2]
+        }
+        for (i in 1:length(obs))
+        {   if (is.data.frame(obs[[i]]))
+            {   if (dimObs > 1)
+                    obs[[i]] <- as.matrix(obs[[i]])
+                else
+                    obs[[i]] <- as.vector(obs[[i]])
+            }
+        }
+    }
+    
     nMixt <- NULL
+    Levels <- NULL
     control <- NULL
     args <- list(...)
     extras <- match.call(expand.dots=FALSE)$...
@@ -943,7 +979,39 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2,...)
             stop("'control' parameter must be a list.\n")
     }
     
-    if (dis != "MIXTURE")
+    if (dis == 'DISCRETE')
+    {   if (lextras > 2)
+            stop("too many parameters.\n")
+        if (lextras == 0)
+        {   Levels <- NULL
+        }
+        else
+        {
+            if (is.list(args[[1]]))
+            {   control <- args[[1]]
+                if (lextras != 2)
+                    Levels <- NULL # Pas de vecteur des niveaux entré
+                else
+                    Levels <- args[[2]]
+            }
+            else
+            {   Levels <- args[[1]]
+                if (lextras == 2)
+                    control <- args[[2]]
+            }
+        
+            nextras <- names(extras)
+            for (nn in nextras)
+                if ( !(nn %in% c("Levels", "control")) && (nn != '') )
+                    {   nerror <- sprintf("unknown '%s' parameter.\n", nn)
+                        stop(nerror)
+                    }
+            if ( !(is.null(control)) && (!is.list(control)) )
+                stop("'control' parameter must be a list.\n")
+        }
+    }
+    
+    if ( (dis != "MIXTURE") && (dis != 'DISCRETE') )
     {   if (lextras > 1)
             stop("too many parameters.\n")
         
@@ -988,9 +1056,7 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2,...)
         control$nInit <- 5
     if (is.null(control$nIterInit))
         control$nIterInit <- 5
-   
-    
-    
+     
     if (is.na(match(dis, c('NORMAL', 'MIXTURE', 'DISCRETE'))))
         stop("'dis' parameter must be in 'NORMAL', 'MIXTURE', 'DISCRETE'\n")
     
@@ -1074,15 +1140,26 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2,...)
         init='USER'
     }
         
-    paramAlgo <- list(init=init, iter=iter, tol=tol, verbose=verbose, nInit=nInit, nIterInit=nIterInit, initPoint=initPoint)
+    if (! is.logical(asymptCov))
+    {   stop('asymptCov must be a boolean (TRUE if the asymptotic covariance matrix must be computed)')
+    } 
+    
+    if (is.null(asymptMethod))
+        asymptMethod <- 'nlme'
+    asymptMethod <- asymptMethod[1]
+        
+    if (is.na(match(asymptMethod, c('nlme', 'optim'))))
+        stop("asymptMethod must be in 'nlme', 'optim'")
+        
+    paramAlgo <- list(init=init, iter=iter, tol=tol, verbose=verbose, nInit=nInit, nIterInit=nIterInit, initPoint=initPoint, asymptCov=asymptCov, asymptMethod=asymptMethod[1])
 
-   class(paramAlgo) <- "paramAlgoBW"
+    class(paramAlgo) <- "paramAlgoBW"
     if (is.list(obs))
         dimObs <- ncol(as.matrix(obs[[1]]))
     else
         dimObs <- ncol(as.matrix(obs))
     
-    paramHMM <- list(nStates=nStates, dimObs=dimObs, nMixt = nMixt, nLevels = 0, dis=dis) 
+    paramHMM <- list(nStates=nStates, dimObs=dimObs, nMixt = nMixt, Levels = Levels, dis=dis) 
     class(paramHMM) <- "paramHMM"
    
     Res<-BaumWelch(paramHMM, obs, paramAlgo)
@@ -1144,7 +1221,7 @@ print.HMMFitClass <- function(x, ...)
    cat("BIC criterium: ",format(round(x$BIC, 2)), "\n", sep="")
 }
 
-forwardbackward<-function(HMM, obs)
+forwardBackward<-function(HMM, obs)
 {   if ( ( class(HMM) != "HMMFitClass" ) && (class(HMM) != "HMMClass") )
         stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
     if (class(HMM) == "HMMFitClass")
@@ -1159,14 +1236,15 @@ forwardbackward<-function(HMM, obs)
     }
 
     HMM <- setStorageMode(HMM)
-    maListe <- TransformeList(HMM$distribution$dis, obs)
+    maListe <- TransformeListe(HMM$distribution, obs)
     Res1 <- .Call("Rforwardbackward", HMM, maListe$Zt)
     names(Res1) <- c("Alpha", "Beta", "Gamma", "Xsi", "Rho", "LLH")
     if (!is.list(obs))
     {   Res1$Alpha <- t(Res1$Alpha[[1]])
         Res1$Beta <- t(Res1$Beta[[1]])
         Res1$Gamma <- t(Res1$Gamma[[1]])
-        Res1$Xsi <- t(Res1$Xsi[[1]])
+        Res1$Xsi <- Res1$Xsi[[1]]
+        Res1$Xsi[[length(Res1$Xsi)]] <- NaN
         Res1$Rho <- Res1$Rho[[1]]
         Res1$LLH <- Res1$LLH[[1]]
     }
@@ -1175,10 +1253,16 @@ forwardbackward<-function(HMM, obs)
         {   Res1$Alpha[[n]] <- t(Res1$Alpha[[n]])
             Res1$Beta[[n]] <- t(Res1$Beta[[n]])
             Res1$Gamma[[n]] <- t(Res1$Gamma[[n]])
-            Res1$Xsi[[n]] <- t(Res1$Xsi[[n]])
-         }
-    }   
+            Res1$Xsi[[n]][length(Res1$Xsi[[n]])] <- NaN
+          }
+    }
+    
     return(Res1)
+}
+
+forwardbackward<-function(HMM, obs)
+{
+    return(forwardBackward(HMM, obs))
 }
 
 inc <- function(x)
@@ -1192,6 +1276,7 @@ inc <- function(x)
     return(x)
 }
 
+
 viterbi<-function(HMM, obs)
 {   if ( ( class(HMM) != "HMMFitClass" ) && (class(HMM) != "HMMClass") )
         stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
@@ -1200,8 +1285,7 @@ viterbi<-function(HMM, obs)
         HMM <- HMM$HMM
 
    
-    HMM <- setStorageMode(HMM)
-   
+    
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
         if (dimObs == 1)
@@ -1210,16 +1294,17 @@ viterbi<-function(HMM, obs)
             obs <- as.matrix(obs[,1:dimObs])
     }
 
-    maListe <- TransformeList(HMM$distribution$dis, obs)
-    
+    maListe <- TransfListe(HMM$distribution, obs)
+    HMM <- setStorageMode(HMM)
+   
     Res1 <- .Call("RViterbi", HMM, maListe$Zt)
     names(Res1) <- c("states", "logViterbiScore")
     Res1$states <- inc(Res1$states)
-    Aux <- forwardbackward(HMM, obs)
+    Aux <- forwardBackward(HMM, obs)
     LLH <- Aux$LLH
  
-     if (is.list(obs))
-    {    probSeq <- sapply(Res1$logViterbiScore, sum) - sapply(LLH, sum)
+    if (is.list(obs))
+    {   probSeq <- sapply(Res1$logViterbiScore, sum) - sapply(LLH, sum)
         Res<-list(states=Res1$states, logViterbiScore = Res1$logViterbiScore, logProbSeq=as.list(probSeq))
     }
     else
@@ -1483,6 +1568,23 @@ HMMPlotSerie <- function(obs, states, dis = "NORMAL", color="green")
             stop("Not yet implemented for this kind of distribution\n")
    
     nStates <- max(states)
+    if (dis == 'NORMAL')
+    {    distribution<-distributionSet(dis, rep(0,nStates), rep(1, nStates))
+    }
+    else
+    {   if (dis == 'MIXTURE')
+        {   distribution<-distributionSet(dis, rep(0,nStates), rep(1, nStates), c(1,rep(0,nStates-1)))
+        }
+        else
+        {   proba <- rep(list(1), nStates)
+            labels <- levels(factor(Aux))
+            nLevels <- length(levels(factor(Aux)))
+            for (j in 1:nStates)
+                proba[[j]] <- rep(1,nLevels)/as.double(nLevels)            
+            distribution<-distributionSet(dis="DISCRETE", proba, labels)
+
+        }
+    }            
     #x11()
     nScreens <- floor(nStates/3)
     if (nScreens * 3 - nStates != 0)
@@ -1495,12 +1597,12 @@ HMMPlotSerie <- function(obs, states, dis = "NORMAL", color="green")
         i<-1
         while ((i <= 3) && (i <= nStates) && (k <= nStates))
         {   screen(i)
-            z <- TransformeList(dis, Aux)
+            z <- TransformeListe(distribution, Aux)
             y <- (z$Zt[[1]])*(states==k)
             if (dis != 'DISCRETE')
                 plot(y, col=color, type='l', xlab="", ylab="Serie", lwd=1)
             else
-                plot(y, col=color, type='l', xlab="", ylab="Serie", lwd=1)
+                plot(y+1, col=color, type='l', xlab="", ylab="Serie", lwd=1)
             titre <- sprintf("Serie for state %d", k)
             k <- k + 1
             i <- i + 1

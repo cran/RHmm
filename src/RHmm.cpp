@@ -1,39 +1,41 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: RHmm.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifdef _RDLL_
 
-#include "otmathutil.h"
-#include "crutils.h"
-#include "hmm.h"
-#include "cinparam.h"
-#include "cbaumwelchinparam.h"
-#include "cbaumwelch.h"
-#include "alldistributions.h"
-#include "chmm.h"
-#include "chmmfit.h"
-#include "cviterbi.h"
-#include "rhmm.h"
+#include "OTMathUtil.h"
+#include "cRUtils.h"
+#include "Hmm.h"
+#include "cInParam.h"
+#include "cBaumWelchInParam.h"
+#include "cBaumWelch.h"
+#include "cLogBaumWelch.h"
+#include "AllDistributions.h"
+#include "cHmm.h"
+#include "cHmmFit.h"
+#include "cViterbi.h"
+#include "RHmm.h"
 
 
-extern "C" {
+BEG_EXTERN_C
 DECL_DLL_EXPORT SEXP RBaumWelch	(	SEXP theParamHMM, 
 									SEXP theYt, 
 									SEXP theParamBW
 								)
 {
-initEnum		myTypeInit		;
+initEnum		myTypeInit			;
 distrDefinitionEnum	myDistrType		;
 uint				myNbClasses,
 					myDimObs,
 					myNbMixt,
-//					myNoHmm,
 					myNbProba		;
 cRUtil				myRUtil			;
 // Récupération des paramètres d'entrée
@@ -96,6 +98,7 @@ cOTVector* myY = new cOTVector[myNbSample] ;
 		myRUtil.GetValSexp(theYt, n, myAux) ;
 		myY[n].ReAlloc(length(myAux), REAL(myAux)) ;
 	}
+
 cBaumWelchInParam myParamEntree = cBaumWelchInParam(myNbSample, myDimObs, myY, myDistrType, myNbClasses, myNbMixt, myNbProba) ;
 
 	myParamEntree.mNMaxIter = myNbIterMax ;
@@ -117,33 +120,33 @@ cHmmFit myParamSortie = cHmmFit(myParamEntree) ;
 		myRUtil.GetValSexp(myAux1, 2, myAux) ; // $distribution
 		switch (myDistrType)
 		{	case eNormalDistr :
-			{	cUnivariateNormal* myParam = (cUnivariateNormal *)(myHMM.mDistrParam) ;			
+			{	cUnivariateNormal* myParam = dynamic_cast<cUnivariateNormal *>(myHMM.mDistrParam) ;			
 				myRUtil.GetVectSexp(myAux, 3, myParam->mMean) ;
 				myRUtil.GetVectSexp(myAux, 4, myParam->mVar) ;
 			}
 			break ;
 			case eMultiNormalDistr :
-			{	cMultivariateNormal *myParam = (cMultivariateNormal *)(myHMM.mDistrParam) ;
+			{	cMultivariateNormal *myParam = dynamic_cast<cMultivariateNormal *>(myHMM.mDistrParam) ;
 				myRUtil.GetListVectSexp(myAux, 3, myNbClasses, myParam->mMean) ; 
 				myRUtil.GetListMatSexp(myAux, 4, myNbClasses, myParam->mCov) ;
 			}
 			break ;
 			case eMixtUniNormalDistr :
-			{	cMixtUnivariateNormal *myParam = (cMixtUnivariateNormal *)(myHMM.mDistrParam) ;
+			{	cMixtUnivariateNormal *myParam = dynamic_cast<cMixtUnivariateNormal *>(myHMM.mDistrParam) ;
 				myRUtil.GetListVectSexp(myAux, 4, myNbClasses, myParam->mMean) ;
 				myRUtil.GetListVectSexp(myAux, 5, myNbClasses, myParam->mVar) ;
 				myRUtil.GetListVectSexp(myAux, 6, myNbClasses, myParam->mp) ;
 			}
 			break ;
 			case eMixtMultiNormalDistr :
-			{	cMixtMultivariateNormal *myParam = (cMixtMultivariateNormal *)(myHMM.mDistrParam) ;
+			{	cMixtMultivariateNormal *myParam = dynamic_cast<cMixtMultivariateNormal *>(myHMM.mDistrParam) ;
 				myRUtil.GetListListVectSexp(myAux, 4, myNbClasses, myNbMixt, myParam->mMean) ;
 				myRUtil.GetListListMatSexp(myAux, 5, myNbClasses, myNbMixt, myParam->mCov) ;
 				myRUtil.GetListVectSexp(myAux, 6, myNbClasses, myParam->mp) ;
 			}
 			break ;
 			case eDiscreteDistr :
-			{	cDiscrete *myParam = (cDiscrete *)(myHMM.mDistrParam) ;
+			{	cDiscrete *myParam = dynamic_cast<cDiscrete *>(myHMM.mDistrParam) ;
 				myRUtil.GetListVectSexp(myAux, 3, myNbClasses, myParam->mProba) ;
 			}
 			break ;
@@ -151,14 +154,43 @@ cHmmFit myParamSortie = cHmmFit(myParamEntree) ;
 		myParamSortie.CopyHmm(myHMM) ;
 	}
 	else
-		myParamSortie.BaumWelchAlgoInit(myParamEntree) ;
-	
+		myParamSortie.BaumWelchAlgoInit(myParamEntree) ;	
 	myParamSortie.BaumWelchAlgo(myParamEntree) ;
-
+	
 	for (register uint n = 0 ; n < myNbSample ; n++)
 		myY[n].Delete() ;
 	delete[] myY ;
 
+/*
+#ifdef _DEBOGAGE_
+SEXP myRes1 ;
+SEXP myAux1[6] ;
+uint ourNProtect = 0 ;
+	MESS("JE SUIS ICI 1\n") 
+	myParamSortie.Print() ;
+	SETVECTSEXP(myParamSortie.mInitProba, myAux1[0]) ;	
+	SETMATSEXP(myParamSortie.mTransMat, myAux1[1]) ;
+cDiscrete *myParam = dynamic_cast<cDiscrete *>(myParamSortie.mDistrParam) ;
+	if (myParam == NULL)
+		cOTError("Probleme de casting") ;
+	else
+		MESS("cDiscrete Fait\n") ;
+	SETLISTVECTSEXP(myParam->mProba, myNbClasses, myAux1[2]) ;
+	PROTECT(myAux1[5] = allocVector(REALSXP, 4)) ;
+	REAL(myAux1[5])[0] = myParamSortie.mLLH ;
+	REAL(myAux1[5])[1] = myParamSortie.mBic ;
+	REAL(myAux1[5])[2] = (double)( myParamSortie.mNIter) ;
+	REAL(myAux1[5])[3] =  myParamSortie.mTol ;
+	PROTECT(myRes1 = allocVector(VECSXP, 4)) ;
+	for (register uint i = 0 ; i < 3 ; i++)
+		SET_VECTOR_ELT(myRes1, i, myAux1[i]) ;
+	SET_VECTOR_ELT(myRes1, 3, myAux1[5]) ;
+	MESS("JE SUIS ICI 2\n") 
+	UNPROTECT(2 + ourNProtect) ;
+	MESS("JE SUIS ICI 3\n") 
+	return(myRes1);
+#endif //DEBOGAGE_
+*/
 SEXP myRes,
 	 myAux[6]	;
 
@@ -166,33 +198,33 @@ SEXP myRes,
 	myRUtil.SetMatSexp(myParamSortie.mTransMat, myAux[1]) ;
 	switch (myDistrType)
 	{	case eNormalDistr :
-		{	cUnivariateNormal *myParam = (cUnivariateNormal *)(myParamSortie.mDistrParam) ;
+		{	cUnivariateNormal* myParam =  dynamic_cast<cUnivariateNormal *>(myParamSortie.mDistrParam) ;
 			myRUtil.SetVectSexp(myParam->mMean, myAux[2]) ;
 			myRUtil.SetVectSexp(myParam->mVar, myAux[3]) ;
 		}
 		break ;
 		case eMultiNormalDistr :
-		{	cMultivariateNormal *myParam = (cMultivariateNormal *)(myParamSortie.mDistrParam) ;
+		{	cMultivariateNormal *myParam = dynamic_cast<cMultivariateNormal *>(myParamSortie.mDistrParam) ;
 			myRUtil.SetListVectSexp(myParam->mMean, myNbClasses, myAux[2]) ;
 			myRUtil.SetListMatSexp(myParam->mCov, myNbClasses, myAux[3]) ;
 		}
 		break ;
 		case eDiscreteDistr :
-		{	cDiscrete *myParam = (cDiscrete *)(myParamSortie.mDistrParam) ;
+		{	cDiscrete *myParam = dynamic_cast<cDiscrete *>(myParamSortie.mDistrParam) ;
 			myRUtil.SetListVectSexp(myParam->mProba, myNbClasses, myAux[2]) ;
 		}
 		break ;
 		case eMixtUniNormalDistr :
-		{	cMixtUnivariateNormal *myParam = (cMixtUnivariateNormal *)(myParamSortie.mDistrParam) ;
+		{	cMixtUnivariateNormal *myParam = dynamic_cast<cMixtUnivariateNormal *>(myParamSortie.mDistrParam) ;
 			myRUtil.SetListVectSexp(myParam->mMean, myNbClasses, myAux[2]) ;
 			myRUtil.SetListVectSexp(myParam->mVar, myNbClasses, myAux[3]) ;
 			myRUtil.SetListVectSexp(myParam->mp, myNbClasses,myAux[4]) ;
 		}
 		break ;
 		case eMixtMultiNormalDistr :
-		{	cMixtMultivariateNormal *myParam = (cMixtMultivariateNormal *)(myParamSortie.mDistrParam) ;
+		{	cMixtMultivariateNormal *myParam = dynamic_cast<cMixtMultivariateNormal *>(myParamSortie.mDistrParam) ;
 			myRUtil.SetListListVectSexp(myParam->mMean, myNbClasses, myNbMixt, myAux[2]) ;
-			myRUtil.SetListListVectSexp(myParam->mCov, myNbClasses, myNbMixt, myAux[3]) ;
+			myRUtil.SetListListMatSexp(myParam->mCov, myNbClasses, myNbMixt, myAux[3]) ;
 			myRUtil.SetListVectSexp(myParam->mp, myNbClasses, myAux[4]) ;
 		}
 		break ;
@@ -204,6 +236,7 @@ SEXP myRes,
 	REAL(myAux[5])[1] = myParamSortie.mBic ;
 	REAL(myAux[5])[2] = (double)( myParamSortie.mNIter) ;
 	REAL(myAux[5])[3] =  myParamSortie.mTol ;
+
 	switch (myDistrType)
 	{	case eNormalDistr :
 		case eMultiNormalDistr :
@@ -247,9 +280,9 @@ SEXP myRes,
 	myRUtil.EndProtect() ;
 	return(myRes) ;
 }
-} // Fin du extern "C"
+END_EXTERN_C
 
-extern "C" {
+BEG_EXTERN_C
 DECL_DLL_EXPORT SEXP RViterbi	(	SEXP theHMM, 
 									SEXP theYt
 								)
@@ -294,7 +327,6 @@ uint	myNbSample = length(theYt) ;
 uint*	myT = new uint[myNbSample]	;
 //double	**myY	;
 cOTVector* myY = new cOTVector[myNbSample] ;
-
 for (register uint n = 0 ; n < myNbSample ; n++)
 	{	SEXP myAux ;
 		myRUtil.GetValSexp(theYt, n, myAux) ;
@@ -352,7 +384,7 @@ cInParam myParamEntree(myNbSample, myDimObs, myY) ;
 	myParamEntree.mNProba = myNbProba ;
 	myParamEntree.mNClass = myNbClasses ;
 	myParamEntree.mDistrType = myDistrType ;
-	cViterbi myViterbi = cViterbi(myParamEntree) ;
+cViterbi myViterbi = cViterbi(myParamEntree) ;
 	myViterbi.ViterbiPath(myParamEntree, myHMM) ;
 
 SEXP myAux[2] ;
@@ -367,40 +399,9 @@ SEXP myAux[2] ;
 	UNPROTECT(1) ;
 	return(myRes) ;
 }
-} // EndProtect du extern "C"
+END_EXTERN_C
 
-/*
- OLD RKMeans
-
-extern "C" {
-DECL_DLL_EXPORT SEXP Rkmeans	(	SEXP theYt,
-									SEXP theNClass,
-									SEXP theDimObs
-								)
-{
-uint	myQ = INTEGER(theNClass)[0] ;
-cOTVector myYt ;
-		myYt.mSize = length(theYt) ;
-		myYt.mVect = REAL(theYt) ;
-uint	myN = INTEGER(theDimObs)[0] ;
-uint	myT = length(theYt)/myN ;
-int		*mySeq	= new int[myT];
-cRUtil	myRUtil ;
-	if (myN == 1)
-		mkmeans(myYt, myQ, mySeq) ;
-	else
-		mkmeans(myYt, myQ, myN, mySeq) ;
-	
-SEXP myRes ; 
-	myRUtil.SetVectSexp(mySeq, myT, myRes) ;
-	delete mySeq ;
-	myRUtil.EndProtect() ;
-	return(myRes) ;
-}
-}
-*/
-
-extern "C" {
+BEG_EXTERN_C
 DECL_DLL_EXPORT SEXP Rforwardbackward	(	SEXP theHMM, 
 											SEXP theYt
 										)
@@ -509,6 +510,18 @@ cOTMatrix* myProbaCond = new cOTMatrix[myNbSample] ;
 
 cBaumWelch myBaumWelch=cBaumWelch(myNbSample, myT, myNbClasses) ;
 	myBaumWelch.ForwardBackward(myProbaCond, myHMM) ;
+// On enlève le scale	
+	for (register uint n = 0 ; n < myNbSample ; n++)
+	{	for (register uint t = 0 ; t < myT[n] ; t++)
+			for (register uint j = 0 ; j < myNbClasses ; j++)
+				myBaumWelch.mAlpha[n][j][t] *= myBaumWelch.mRho[n][t] ;	
+		double myScale = 1.0L ;
+		for (register int t = (int)myT[n]-1 ; t >= 0 ; t--)
+		{	myScale *= myBaumWelch.mRho[n][t] ;
+			for (register uint j = 0 ; j < myNbClasses ; j++)
+				myBaumWelch.mBeta[n][j][t] *= myScale ;	
+		}
+	}
 
 	for (register uint n = 0 ; n < myNbSample ; n++)
 	{	myProbaCond[n].Delete() ;
@@ -529,7 +542,7 @@ uint*	myLigne = new uint[myNbSample] ;
 	myRUtil.SetListMatSexp(myBaumWelch.mAlpha, myNbSample,myAux[0]) ;
 	myRUtil.SetListMatSexp(myBaumWelch.mBeta, myNbSample, myAux[1]) ;
 	myRUtil.SetListMatSexp(myBaumWelch.mGamma, myNbSample, myAux[2]) ;
-	myRUtil.SetListMatSexp(myBaumWelch.mXsi, myNbSample, myAux[3]) ;
+	myRUtil.SetListListMatSexp(myBaumWelch.mXsi, myNbSample, myT, myAux[3]) ;
 	myRUtil.SetListVectSexp(myBaumWelch.mRho, myNbSample, myAux[4]) ;
 	myRUtil.SetListValSexp(myBaumWelch.mLogVrais, myAux[5]) ;
 
@@ -544,6 +557,146 @@ SEXP myRes ;
 UNPROTECT(1) ;
 	return(myRes) ;
 }
-} // End du extern "C"
+END_EXTERN_C
 
+BEG_EXTERN_C
+DECL_DLL_EXPORT SEXP RLogforwardbackward	(	SEXP theHMM, 
+												SEXP theYt
+											)
+{
+distrDefinitionEnum		myDistrType	;
+uint					myDimObs=1,
+						myNbClasses,
+						myNbProba=0,
+						myNbMixt=0	;
+cRUtil					myRUtil			;
+
+
+SEXP myDistSEXP ;
+
+	myRUtil.GetValSexp(theHMM, fDistr, myDistSEXP) ; // Loi de proba	
+char myString[255] ;
+char *myStr = (char *)myString ;
+	myRUtil.GetValSexp(myDistSEXP, gType, myStr) ;
+	myRUtil.GetValSexp(myDistSEXP, gNClasses, myNbClasses) ;
+	if (strcmp(myStr, "NORMAL") == 0)
+	{	myRUtil.GetValSexp(myDistSEXP, 2, myDimObs) ;
+		if (myDimObs == 1)
+			myDistrType = eNormalDistr ;
+		else
+			myDistrType = eMultiNormalDistr ;
+	}
+	else
+	{	if (strcmp(myStr, "DISCRETE") == 0)
+		{	myDistrType = eDiscreteDistr ;
+			myRUtil.GetValSexp(myDistSEXP, 2, myNbProba) ;
+		}
+		else
+		{	if (strcmp(myStr, "MIXTURE") == 0)
+			{	myRUtil.GetValSexp(myDistSEXP, 2, myNbMixt) ;
+				myRUtil.GetValSexp(myDistSEXP, 3, myDimObs) ;
+				if (myDimObs == 1)
+					myDistrType = eMixtUniNormalDistr ;
+				else
+					myDistrType = eMixtMultiNormalDistr ;
+			}
+		}
+	}
+uint	myNbSample = length(theYt) ;	
+uint*	myT = new uint[myNbSample] ;
+
+cOTVector* myY = new cOTVector[myNbSample] ;
+
+
+	for (register uint n = 0 ; n < myNbSample ; n++)
+	{	SEXP myAux ;
+		myRUtil.GetValSexp(theYt, n, myAux) ;
+		myT[n] = length(myAux) / myDimObs ;
+		myY[n].ReAlloc(myT[n]*myDimObs) ;
+		myY[n]= REAL(myAux) ;
+	}
+
+cHmm myHMM = cHmm(myDistrType, myNbClasses, myDimObs, myNbMixt, myNbProba) ;
+	myRUtil.GetVectSexp(theHMM, fInitProba, myHMM.mInitProba) ;
+	myRUtil.GetMatSexp(theHMM, fTransMat, myHMM.mTransMat) ;
+
+	switch (myDistrType)
+	{	case eNormalDistr :
+		{	cUnivariateNormal *myLoi = (cUnivariateNormal *)(myHMM.mDistrParam) ;
+			myRUtil.GetVectSexp(myDistSEXP, 3, myLoi->mMean) ;
+			myRUtil.GetVectSexp(myDistSEXP, 4, myLoi->mVar) ;
+		}
+		break ;
+		case eMultiNormalDistr :
+		{	cMultivariateNormal *myLoi = (cMultivariateNormal *)(myHMM.mDistrParam) ;
+			myRUtil.GetListVectSexp(myDistSEXP, 3, myNbClasses, myLoi->mMean) ; 
+			myRUtil.GetListMatSexp(myDistSEXP, 4, myNbClasses, myLoi->mCov) ;
+		}
+		break ;
+		case  eMixtUniNormalDistr :
+		{	cMixtUnivariateNormal *myParam = (cMixtUnivariateNormal *)(myHMM.mDistrParam) ;
+			myRUtil.GetListVectSexp(myDistSEXP, 4, myNbClasses, myParam->mMean) ;
+			myRUtil.GetListVectSexp(myDistSEXP, 5, myNbClasses, myParam->mVar) ;
+			myRUtil.GetListVectSexp(myDistSEXP, 6, myNbClasses, myParam->mp) ;
+		}
+		break ;
+
+		case eMixtMultiNormalDistr :
+		{	cMixtMultivariateNormal *myParam = (cMixtMultivariateNormal *)(myHMM.mDistrParam) ;
+			myRUtil.GetListListVectSexp(myDistSEXP, 4, myNbClasses, myNbMixt, myParam->mMean) ;
+			myRUtil.GetListListMatSexp(myDistSEXP, 5, myNbClasses, myNbMixt, myParam->mCov) ;
+			myRUtil.GetListVectSexp(myDistSEXP, 6, myNbClasses, myParam->mp) ;
+		}
+		break ;
+
+		case eDiscreteDistr :
+		{	cDiscrete *myParam = (cDiscrete *)(myHMM.mDistrParam) ;
+			myRUtil.GetListVectSexp(myDistSEXP, 3, myNbClasses, myParam->mProba) ;
+		}
+		break ;
+		case eUnknownDistr :
+		default :
+		break ;
+	}
+
+cOTMatrix* myProbaCond = new cOTMatrix[myNbSample] ;
+
+	for (register uint n = 0 ; n < myNbSample ; n++)
+		myProbaCond[n].ReAlloc(myNbClasses, myT[n]) ;
+
+		myHMM.mDistrParam->ComputeCondProba(myY, myNbSample, myProbaCond) ;
+
+cLogBaumWelch myLogBaumWelch=cLogBaumWelch(myNbSample, myT, myNbClasses) ;
+	myLogBaumWelch.LogForwardBackward(myProbaCond, myHMM) ;
+
+	for (register uint n = 0 ; n < myNbSample ; n++)
+	{	myProbaCond[n].Delete() ;
+		myY[n].Delete() ;
+	}
+
+	delete [] myY ;
+
+	delete [] myProbaCond ;
+
+SEXP	myAux[1] ;
+uint*	myLigne = new uint[myNbSample] ;
+
+
+	for (register uint n = 0 ; n < myNbSample ; n++)
+		myLigne[n] = myNbClasses ;
+
+	myRUtil.SetListValSexp(myLogBaumWelch.mLogVrais, myAux[0]) ;
+
+	delete [] myLigne ;
+	delete [] myT ;
+SEXP myRes ;
+	PROTECT(myRes = allocVector(VECSXP, 1)) ;
+	for (register int i = 0 ; i < 1 ; i++)
+		SET_VECTOR_ELT(myRes, i, myAux[i]) ;
+	myRUtil.EndProtect() ;
+
+UNPROTECT(1) ;
+	return(myRes) ;
+}
+END_EXTERN_C
 #endif //_RDLL_

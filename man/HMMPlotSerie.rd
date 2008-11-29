@@ -21,13 +21,12 @@
 
   }
 \examples{
-data(geyser)
-obs <- geyser$duration
-#Fits an 3 states gaussian model for geyser duration
-ResFitGeyser <- HMMFit(obs, nStates=3)
-VitGeyser <- viterbi(ResFitGeyser, obs)
+data(n1d_3s)
+#Fits an 3 states gaussian model
+ResFit <- HMMFit(obs_n1d_3s, nStates=3)
+VitPath <- viterbi(ResFit, obs_n1d_3s)
 #plot the series
-HMMPlotSerie(obs, VitGeyser)
+HMMPlotSerie(obs_n1d_3s, VitPath)
 }
 \seealso{viterbi, plot}
 \keyword{htest}

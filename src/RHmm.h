@@ -1,12 +1,14 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: RHmm.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _RHMM_H_
 #define _RHMM_H_
 
@@ -44,6 +46,11 @@ typedef enum DistEnum
 #else
 	#define DECL_DLL_EXPORT 
 #endif // WIN32
+
+#ifndef BEG_EXTERN_C
+	#define BEG_EXTERN_C extern "C" {
+	#define END_EXTERN_C }
+#endif //BEG_EXTERN_C
 
 #endif //_RHMM_H_
 

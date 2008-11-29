@@ -1,17 +1,19 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cViterbi.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _CVITERBI_H_
 #define _CVITERBI_H_
-#include "cinparam.h"
-#include "chmm.h"
-#include "cdistribution.h"
+#include "cInParam.h"
+#include "cHmm.h"
+#include "cDistribution.h"
 
 class cViterbi
 {	public :

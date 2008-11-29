@@ -1,21 +1,23 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "cbaumwelchinparam.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cBaumWelchInParam.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "cBaumWelchInParam.h"
 
 
-cBaumWelchInParam::cBaumWelchInParam(uint theNSample,uint theDimObs, cOTVector *theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba):cInParam(theNSample, theDimObs, theY, theDistrType, theNClass, theNMixt, theNProba)
-{	
+cBaumWelchInParam::cBaumWelchInParam(uint theNSample, uint theDimObs, cOTVector* theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba):cInParam(theNSample, theDimObs, theY, theDistrType, theNClass, theNMixt, theNProba)
+{	MESS_CREAT("cBaumWelchInParam") 
 	SetDefault() ;
 }
 cBaumWelchInParam::~cBaumWelchInParam()
-{
+{	MESS_DESTR("cBaumWelchInParam")
 }
 void cBaumWelchInParam::SetDefault(void)
 {

@@ -1,3 +1,14 @@
+ ###############################################################
+ #### RHmm version 1.2.0                                      
+ ####                                                         
+ #### File: RHmm-internals.R 
+ ####                                                         
+ #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ####                                                         
+ #### Date: 2008/11/29                                        
+ ####                                                         
+ ###############################################################
+
 ########## RHmm-Internals
 setStorageMode <- function(object) UseMethod("setStorageMode")
 
@@ -39,6 +50,8 @@ setStorageMode.HMMClass <- function(object)
 setStorageMode.distributionClass <- function(object)
 {   x<-NextMethod("setStorageMode", object)
     storage.mode(x$nStates) <- "integer"
+    storage.mode(x$dis) <-"character"
+    class(x) <- c("distributionClass", class(x))
     return(x)
 }
 
@@ -48,7 +61,7 @@ setStorageMode.univariateNormalClass <- function(object)
     storage.mode(x$mean) <- "double"
     storage.mode(x$var) <- "double"
     storage.mode(x) <- "list"
-    class(x) <- c("distributionClass", "univariateNormalClass")
+    class(x) <- "univariateNormalClass"
     return(x)
 }
 
@@ -58,7 +71,7 @@ setStorageMode.multivariateNormalClass <- function(object)
     storage.mode(x$mean) <- "list"
     storage.mode(x$cov) <- "list"
     storage.mode(x) <- "list"
-    class(x) <- c("distributionClass", "multivariateNormalClass")
+    class(x) <- "multivariateNormalClass"
     return(x)
 }
 
@@ -70,6 +83,7 @@ setStorageMode.mixtureUnivariateNormalClass <- function(object)
     storage.mode(x$var) <- "list"
     storage.mode(x$proportion) <- "list"
     storage.mode(x) <- "list"
+    class(x) <- "mixtureUnivariateNormalClass"
     return(x)        
 }
 
@@ -81,60 +95,94 @@ setStorageMode.mixtureMultivariateNormalClass <- function(object)
     storage.mode(x$cov) <- "list"
     storage.mode(x$proportion) <- "list"
     storage.mode(x) <- "list"
+    class(x) <- "mixtureMultivariateNormalClass"
     return(x)        
 }
 
 setStorageMode.discreteClass <- function(object)
 {  x <- object
    storage.mode(x$nLevels) <- "integer"
+   storage.mode(x$proba) <- "list"
+   storage.mode(x$dimObs) <- "integer"
    storage.mode(x) <- "list"
+   class(x) <- "discreteClass"
    return(x)        
 }    
 
-make_labels <- function(factorlist)
-{   l <- length(factorlist)
-    Aux <- as.vector(factorlist[[1]])
-    Res <- list(1)
-    for (i in 2:l)
-    {   x <- as.vector(factorlist[[i]])
-        Aux <- c(Aux, x)
-        Res <- c(Res, list(1))
-    }
-    
-    Aux <- factor(Aux)
-    labels <- levels(Aux)
-    nLevels <- length(labels)
-    for (i in 1:l)
-        Res[[i]] <- factor(factorlist[[i]], levels=labels)
-    
-    return(list(labels = labels, nLevels=nLevels, obs=Res))
-}
-
-TransformeList <- function(dis, obs)
-{   labels <- NULL
-    nLevels <- 0
+GetAllLevels <- function(obs)
+{
     if (is.list(obs))
-    {   if (dis == "DISCRETE")
-        {   Aux <- make_labels(obs)
-            nLevels <- Aux$nLevels
-            labels <- Aux$labels
-            Zt <- list(as.double(Aux$obs[[1]])-1)
-            for (i in 2:length(obs))
-                Zt <- c(Zt, list(as.double(Aux$obs[[i]])-1))
+    {   if (is.factor(obs[[1]]))
+        {   Aux1 <- unlist(lapply(obs, levels))
+            Aux2 <- sort(Aux1)
+            lAux <- length(Aux2)
+            Aux3 <- c(T,(Aux2[2:lAux]!=Aux2[1:(lAux-1)]))
+            return(Aux2[Aux3])
         }
         else
-            Zt <- obs
+        {   Y <- obs
+            lY <- length(Y)
+            for ( i in 1:lY)
+                Y[[i]] <- as.factor(Y[[i]])
+            return(GetAllLevels(Y))
+        }
     }
     else
-    {   if (dis == "DISCRETE")
-        {   Aux <- factor(obs)
-            labels <- levels(Aux)
-            nLevels <- length(labels)
-            Zt <- list(as.double(factor(obs))-1) 
+    {   if (is.factor(obs))
+            return(levels(obs))
+        else
+            return(levels(as.factor(obs)))
+    }
+}
+
+TransformeListe <- function(paramHMM, obs)
+{   
+    if (paramHMM$dis=='DISCRETE')
+    {   if (is.null(paramHMM$Levels))
+            labels <- GetAllLevels(obs)
+        else
+            labels <- paramHMM$Levels
+        nLevels <- length(labels)
+        if (is.list(obs))
+        {   Z <- obs
+            lZ <- length(Z)
+            Zt <- rep(list(0), lZ)
+            for (i in 1:lZ)
+            {   Aux1 <- as.character(Z[[i]])
+                Aux2 <- factor(Aux1, levels=labels)
+                Zt[[i]] <- as.double(Aux2)-1.0
+            }
         }
         else
-            Zt <- list(obs)
+        {   Z <- as.character(obs)
+            Z <- factor(Z, levels=labels)
+            Zt <- list(as.double(Z) - 1.0)
+        }
+        return(list(Zt=Zt, nLevels=nLevels, labels=labels))         
     }
-    return(list(Zt=Zt, nLevels = nLevels, labels = labels))
+    else 
+    {    if (is.list(obs))
+         {   return(list(Zt=obs, nLevels=0, labels=NULL))
+         }
+         else
+         {  return(list(Zt=list(obs), nLevels=0, labels=NULL))
+         }
+    }
 }
+
+TransfListe <- function(distribution, obs)
+{
+    if (distribution$dis == 'DISCRETE')
+    {   Levels <- names(distribution$proba[[1]])
+    }
+    else
+        Levels <- NULL
+    paramHMM <- list(dis=distribution$dis, Levels=Levels)
+    return(TransformeListe(paramHMM, obs))
+}
+
+
+
+
+
 ########## end of RHmm_internals

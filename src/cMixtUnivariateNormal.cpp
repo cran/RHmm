@@ -1,15 +1,15 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "cmixtunivariatenormal.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cMixtUnivariateNormal.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
 
-
+#include "cMixtUnivariateNormal.h"
 static void MixtUnivariateNormalDensity(cOTVector& theY, uint theNMixt, cOTVector& theMean, cOTVector& theVar, cOTVector& thep, double* theDens)
 {
 cOTVector mySigma(theNMixt) ;
@@ -29,7 +29,8 @@ cOTVector mySigma(theNMixt) ;
 }
 
 cMixtUnivariateNormal::cMixtUnivariateNormal(uint theNClass, uint theNMixt)
-{	mvNClass = theNClass ;
+{	MESS_CREAT("cMixtUnivariateNormal")
+	mvNClass = theNClass ;
 	mvNMixt = theNMixt ;
 	if ( (theNClass > 0) && (theNMixt > 0) )
 	{	mMean = new cOTVector[theNClass] ;
@@ -48,7 +49,8 @@ cMixtUnivariateNormal::cMixtUnivariateNormal(uint theNClass, uint theNMixt)
 }
 
 cMixtUnivariateNormal::~cMixtUnivariateNormal()
-{	for (register uint i = 0 ; i < mvNClass ; i++)
+{	MESS_DESTR("cMixtUnivariateNormal")
+	for (register uint i = 0 ; i < mvNClass ; i++)
 	{	mMean[i].Delete() ;
 		mVar[i].Delete() ;
 		mp[i].Delete() ;

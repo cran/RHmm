@@ -3,22 +3,25 @@
 \alias{HMMFitClass}
 \alias{summary.HMMFitClass}
 \alias{print.summary.HMMFitClass}
-\title{Fit a Hidden Markov Model}
+\title{Fit an Hidden Markov Model}
 \description{This function returns an HMMFitClass object which contains the results
 of the Baum-Welch algorithm for the user's data}
 \synopsis{
-   HMMFit(obs, dis="NORMAL", nStates=2, ...)
+   HMMFit(obs, dis="NORMAL", nStates=2, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
 }
 \usage{
-    HMMFit(obs, dis="NORMAL", nStates=,  ...)
-    HMMFit(obs, dis="DISCRETE", nStates=,  ...)
-    HMMFit(obs, dis="MIXTURE", nStates=, nMixt=, ...)
+    HMMFit(obs, dis="NORMAL", nStates=, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
+    HMMFit(obs, dis="DISCRETE", nStates=, levels=NULL, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
+    HMMFit(obs, dis="MIXTURE", nStates=, nMixt=, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
 }
 \arguments{
     \item{obs}{A vector, a matrix, a data frame, a list of vectors or a list of matrices of observations. See section \bold{obs parameter}.}
     \item{dis}{Distribution name = 'NORMAL', 'DISCRETE' or 'MIXTURE'. Default 'NORMAL'.}
     \item{nStates}{Number of hidden states. Default 2.}
     \item{nMixt}{Number of mixtures of normal distributions if dis ='MIXTURE'}
+    \item{levels}{A character vector of all different levels of 'obs'. By Default (levels=NULL), this vector is computed from 'obs'.}
+    \item{asymptCov}{A boolean. asymptCov=TRUE if the asymptotic covariance matrix is computed. Default FALSE.}
+    \item{asymptMethod}{A string which indicates the numerical method for computing the Hessian of parameters. Default 'nlme'.}
     \item{...}{optional parameter:
         \item{control}{A list of control parameters for the Baum-Welch algorithm. See \bold{control parameter}}
         }
@@ -29,7 +32,8 @@ of the Baum-Welch algorithm for the user's data}
     \item{BIC}{BIC criterium}
     \item{nIter}{Number of iterations of the Baum-Welch algorithm}
     \item{relVariation}{last relative variation of the LLH function}
-    \item{asymptVar}{an HMMClass object with asymtotic variance of the parameters. See \bold{asymptotic variance}}
+    \item{asymptCov}{Asymptotic covariance matrix of independant parameters. NULL if not computed.}
+    \item{obs}{the observations.}
     \item{call}{The call object of the function call}
     }
 
@@ -83,35 +87,46 @@ of the Baum-Welch algorithm for the user's data}
 }
 
 \section{asymptotic variance}{
-    The asymptotic variance of estimates is computed using finite difference approximation.\cr
+    The asymptotic covariance matrix of estimates is computed by finite difference approximations 
+    using either function 'fdHess' from nlme package if 'asymptMethod=='nlme'' 
+    or internal function 'optimhess' of function 'optim' from stat package if 'asymptMethod=='optim''.
+    \cr
     The summary and print.summary methods display the results.
 }
 
 \references{
-    Jeff A. Bilmes (1997) \emph{ A Gentle Tutorial of the EM Algorithm and its Application to Parameter
+    Bilmes Jeff A. (1997) \emph{ A Gentle Tutorial of the EM Algorithm and its Application to Parameter
     Estimation for Gaussian Mixture and Hidden Markov Models} \url{http://ssli.ee.washington.edu/people/bilmes/mypapers/em.ps.gz}
     
-    Ingmar Visser, Maartje E. J. Raijmakers and Peter C. M. Molenaar (2000) \emph{Confidence intervals for hidden Markov
+    Visser Ingmar, Raijmakers Maartje E. J. and  Molenaar Peter C. M.(2000) \emph{Confidence intervals for hidden Markov
     model parameters}, British Journal of Mathematical and Statistical Psychology, 53, 317-327.
-}
+ }
 
 \examples{
-    data(geyser)
-    obs <- geyser$duration
-    #Fits an 2 states gaussian model for geyser duration
-    ResGeyser1 <- HMMFit(obs)
-    # fit a 3 states gaussian HMM for geyser duration
+    # Fit a 3 states 1D-gaussian model
+    data(n1d_3s)
+    HMMFit(obs_n1d_3s, nStates=3)
+    
+    # Fit a 3 states gaussian HMM for obs_n1d_3s
     # with iterations printing and kmeans initialization
-    ResGeyser2 <- HMMFit(obs, nStates=3, paramBW=list(verbose=1, init="KMEANS"))
-    # fit a 2 states of a mixture of 3 normal distributions
+    Res_n1d_3s <- HMMFit(obs=obs_n1d_3s, nStates=3, 
+		paramBW=list(verbose=1, init="KMEANS"), 
+		asymptCov=TRUE, asymptMethod='optim')
+    summary(Res_n1d_3s)
+    
+    # Fit a 2 states 3D-gaussian model
+    data(n3d_2s)
+    summary(HMMFit(obs_n3d_2s, asymptCov=TRUE, 
+				asymptMethod='optim'))
+    
+    # Fit a 2 states mixture of 3 normal distributions HMM
     # for data_mixture
     data(data_mixture)
-    ResMixture <- HMMFit(data_mixture, nStates=2, nMixt=3, dis="MIXTURE")
-    summary(ResMixture)
-    # geyser data - 3 states HMM with bivariate normal distribution
-    ResGeyser<-HMMFit(obs=as.matrix(geyser), nStates=3)
-    # multiple samples discrete observations
+    ResMixture <- HMMFit(data_mixture, nStates=2, nMixt=3, 
+		dis="MIXTURE")
+
+    # Fit a 3 states discrete HMM for weather data
     data(weather)
-    ResDiscrete <- HMMFit(obs=weather, nStates=3, dis="DISCRETE")
-}
+    ResWeather <- HMMFit(weather, dis='DISCRETE', nStates=3) 
+ }
 \keyword{htest}

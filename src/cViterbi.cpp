@@ -1,16 +1,18 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "cviterbi.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cViterbi.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "cViterbi.h"
 
 cViterbi::cViterbi(cInParam& theInParam)
-{
+{	MESS_CREAT("cViterbi")
 	if (theInParam.mNSample > 0)
 	{
 	register uint n ;
@@ -29,7 +31,8 @@ cViterbi::cViterbi(cInParam& theInParam)
 }
 
 cViterbi::~cViterbi()
-{	if (mLogProb.mSize > 0)
+{	MESS_DESTR("cViterbi")
+	if (mLogProb.mSize > 0)
 	{	for (register uint n = 0 ; n < mLogProb.mSize ; n++)
 			delete mSeq[n] ;
 		delete mSeq ;
@@ -94,6 +97,7 @@ int** myPsi = new int*[theInParam.mNClass] ;
 
 		for (register int t =  (int)(mySize-2) ; t >= 0 ; t--)
 			mSeq[n][t] = myPsi[mSeq[n][t+1]][t+1] ;
+
 /*		for (register uint j = 0 ; j < theInParam.mNClass ; j++)
 		{	myPsi[j] = new int[theInParam.mY[n].mSize] ;
 			myDelta[j].ReAlloc(theInParam.mY[n].mSize) ;

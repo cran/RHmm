@@ -1,17 +1,20 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
-#include "cbaumwelch.h"
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cBaumWelch.cpp 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
+#include "cBaumWelch.h"
 
 
-cBaumWelch::cBaumWelch(uint theNSample, uint* theT, uint TheNClass)
-{	mvNSample = theNSample ;
+cBaumWelch::cBaumWelch(uint theNSample, uint* theT, uint theNClass)
+{	MESS_CREAT("cBaumWelch") 
+	mvNSample = theNSample ;
 	if (mvNSample == 0)
 	{	mvT = NULL ;
 		mLogVrais.Delete() ;
@@ -19,6 +22,7 @@ cBaumWelch::cBaumWelch(uint theNSample, uint* theT, uint TheNClass)
 		mBeta = NULL ;
 		mGamma = NULL ;
 		mXsi = NULL ;
+		mSumXsi = NULL ;
 		mRho = NULL ;
 		return ;
 	}
@@ -28,20 +32,25 @@ cBaumWelch::cBaumWelch(uint theNSample, uint* theT, uint TheNClass)
 	mAlpha = new cOTMatrix[mvNSample] ;
 	mBeta = new cOTMatrix[mvNSample] ;
 	mGamma = new cOTMatrix[mvNSample] ;
-	mXsi = new cOTMatrix[mvNSample] ;
+	mXsi = new cOTMatrix*[mvNSample] ;
+	mSumXsi = new cOTMatrix[mvNSample] ;
 	mRho = new cOTVector[mvNSample] ;
 	for (register uint n = 0 ; n < mvNSample ; n++)
 	{	mvT[n] = theT[n] ;
-		mAlpha[n].ReAlloc(TheNClass, mvT[n]) ;
-		mBeta[n].ReAlloc(TheNClass, mvT[n]) ;
-		mGamma[n].ReAlloc(TheNClass, mvT[n]) ;
-		mXsi[n].ReAlloc(TheNClass, TheNClass) ;
+		mAlpha[n].ReAlloc(theNClass, mvT[n]) ;
+		mBeta[n].ReAlloc(theNClass, mvT[n]) ;
+		mGamma[n].ReAlloc(theNClass, mvT[n]) ;
+		mXsi[n] = new cOTMatrix[mvT[n]] ;
+		for (register uint t = 0 ; t < mvT[n] ; t++)
+			mXsi[n][t].ReAlloc(theNClass, theNClass) ;
+		mSumXsi[n].ReAlloc(theNClass, theNClass) ;
 		mRho[n].ReAlloc(mvT[n]) ;
 	}	
 }
 
 cBaumWelch::cBaumWelch(const cInParam &theInParam)
-{	mvNSample = theInParam.mNSample ;
+{	MESS_CREAT("cBaumWelch") 
+	mvNSample = theInParam.mNSample ;
 	if (mvNSample == 0)
 	{	mvT = NULL ;
 		mLogVrais.Delete() ;
@@ -58,35 +67,42 @@ cBaumWelch::cBaumWelch(const cInParam &theInParam)
 	mAlpha = new cOTMatrix[mvNSample] ;
 	mBeta = new cOTMatrix[mvNSample] ;
 	mGamma = new cOTMatrix[mvNSample] ;
-	mXsi = new cOTMatrix[mvNSample] ;
+	mXsi = new cOTMatrix*[mvNSample] ;
+	mSumXsi = new cOTMatrix[mvNSample] ;
 	mRho = new cOTVector[mvNSample] ;
 	for (register uint n = 0 ; n < mvNSample ; n++)
 	{	mvT[n] = (theInParam.mY[n].mSize)/theInParam.mDimObs ;
 		mAlpha[n].ReAlloc(theInParam.mNClass, mvT[n]) ;
 		mBeta[n].ReAlloc(theInParam.mNClass, mvT[n]) ;
 		mGamma[n].ReAlloc(theInParam.mNClass, mvT[n]) ;
-		mXsi[n].ReAlloc(theInParam.mNClass, theInParam.mNClass) ;
+		mXsi[n] = new cOTMatrix[mvT[n]] ;
+		for (register uint t=0 ; t < mvT[n] ; t++)
+			mXsi[n][t].ReAlloc(theInParam.mNClass, theInParam.mNClass) ;
+		mSumXsi[n].ReAlloc(theInParam.mNClass, theInParam.mNClass) ;
 		mRho[n].ReAlloc(mvT[n]) ;
 	}	
 }
 
 cBaumWelch::~cBaumWelch()
-{	if (mvNSample > 0)
-	{	delete [] mvT ;
-		//mLogVrais.Delete() ;
-		for (register uint n = 0 ; n < mvNSample ; n++)
+{	MESS_DESTR("cBaumWelch") 
+	if (mvNSample > 0)
+	{	for (register uint n = 0 ; n < mvNSample ; n++)
 		{	mAlpha[n].Delete() ;
 			mBeta[n].Delete() ;
 			mGamma[n].Delete() ;
-			mXsi[n].Delete() ;
+			for (register uint t = 0 ; t < mvT[n] ; t++)
+				mXsi[n][t].Delete() ;
+			delete [] mXsi[n] ;
+			mSumXsi[n].Delete() ;
 			mRho[n].Delete() ;
 		}
-		delete  [] mRho ;
-		delete  [] mXsi ;
-		delete  [] mGamma ;
-		delete  [] mBeta ;
-		delete  [] mAlpha ;
-		
+		delete [] mvT ;
+		delete [] mRho ;
+		delete [] mXsi ;
+		delete [] mSumXsi ;
+		delete [] mGamma ;
+		delete [] mBeta ;
+		delete [] mAlpha ;
 	}
 }
 
@@ -102,7 +118,7 @@ uint myNClass = theHMM.mInitProba.mSize ;
 	for (register uint n = 0 ; n < mvNSample ; n++)
 	{
 	int myT = (int)mvT[n] ;
-		mRho[n][0] = 0.0 ;
+		mRho[n][0] = 0.0L ;
 		for (i = 0 ; i < myNClass ; i++)
 		{	mAlpha[n][i][0] = theHMM.mInitProba[i] * theCondProba[n][i][0] ;
 			mRho[n][0] += mAlpha[n][i][0] ;	
@@ -154,10 +170,13 @@ uint myNClass = theHMM.mInitProba.mSize ;
 	// Calcul des Xsi
 		for (i = 0 ; i < myNClass ; i++)
 			for (j = 0 ; j < myNClass ; j++)
-			{	mXsi[n][i][j] = 0.0 ;
+			{	mSumXsi[n][i][j] = 0.0 ;
 				for (t = 0 ; t < myT - 1 ; t++)
-					mXsi[n][i][j] += mAlpha[n][i][t] * theHMM.mTransMat[i][j] * theCondProba[n][j][t+1] * mBeta[n][j][t+1] ;
+				{	mXsi[n][t][i][j] = mAlpha[n][i][t] * theHMM.mTransMat[i][j] * theCondProba[n][j][t+1] * mBeta[n][j][t+1] ;
+					mSumXsi[n][i][j] += mXsi[n][t][i][j] ;
+				}
 			}
 	}
 }
+
 

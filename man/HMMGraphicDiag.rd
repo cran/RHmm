@@ -22,26 +22,13 @@ HMMGraphicDiag(vit, HMM, obs, color="green")
 
   }
 \examples{
-data(geyser)
-obs <- as.matrix(geyser)
-#Fits an 3 states gaussian model for geyser duration
-ResFitGeyser <- HMMFit(obs, dis='MIXTURE', nStates=3, nMixt=2)
-VitGeyser <- viterbi(ResFitGeyser, obs)
-m1Duration <- c(ResFitGeyser$HMM$distribution$mean[[1]][[1]][1], ResFitGeyser$HMM$distribution$mean[[1]][[2]][1])
-m2Duration <- c(ResFitGeyser$HMM$distribution$mean[[2]][[1]][1], ResFitGeyser$HMM$distribution$mean[[2]][[2]][1])
-m3Duration <- c(ResFitGeyser$HMM$distribution$mean[[3]][[1]][1], ResFitGeyser$HMM$distribution$mean[[3]][[2]][1])
-v1Duration <- c(ResFitGeyser$HMM$distribution$cov[[1]][[1]][1,1], ResFitGeyser$HMM$distribution$cov[[1]][[2]][1,1])
-v2Duration <- c(ResFitGeyser$HMM$distribution$cov[[2]][[1]][1,1], ResFitGeyser$HMM$distribution$cov[[2]][[2]][1,1])
-v3Duration <- c(ResFitGeyser$HMM$distribution$cov[[3]][[1]][1,1], ResFitGeyser$HMM$distribution$cov[[3]][[2]][1,1])
-prop <- list(ResFitGeyser$HMM$distribution$proportion[[1]], ResFitGeyser$HMM$distribution$proportion[[2]], 
-    ResFitGeyser$HMM$distribution$proportion[[3]])
-prop[[1]] <- prop[[1]] / sum(prop[[1]])
-prop[[2]] <- prop[[2]] / sum(prop[[2]])
-
-HMMDuration <- HMMSet(dis='MIXTURE', transMat=ResFitGeyser$HMM$transMat, initProb=ResFitGeyser$HMM$initProb, 
-    mean=list(m1Duration, m2Duration, m3Duration), var=list(v1Duration, v2Duration, v3Duration), proportion=prop) 
+data(n1d_3s)
+obs <- obs_n1d_3s
+#Fits an 3 states gaussian model 
+ResFit <- HMMFit(obs, nStates=3)
+VitPath <- viterbi(ResFit, obs)
 # Graphic diagnostic
-HMMGraphicDiag(VitGeyser, HMMDuration, obs[,1])
+HMMGraphicDiag(VitPath, ResFit, obs)
 }
 \seealso{HMMFit, viterbi}
 \keyword{htest}

@@ -1,7 +1,7 @@
 /**************************************************************
  *** RHmm version 1.2.0                                      
  ***                                                         
- *** File: cBaumWelch.h 
+ *** File: cLogBaumWelch.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ***                                                         
@@ -9,30 +9,27 @@
  ***                                                         
  **************************************************************/
 
-#ifndef _CBAUMWELCH_H_
-#define _CBAUMWELCH_H_
+#ifndef _CLOGBAUMWELCH_H_
+#define _CLOGBAUMWELCH_H_
 #include "cInParam.h"
 #include "cHmm.h"
+#include "logprob.h"
 
-class cBaumWelch
+class cLogBaumWelch
 {	private :
 			uint	mvNSample		;
 			uint*	mvT				;
 	public :						;
-			cOTMatrix*	mAlpha		;
-			cOTMatrix*	mBeta		;
-			cOTVector*	mRho		;
-			cOTMatrix*	mGamma		;
-			cOTMatrix**	mXsi		;
-			cOTMatrix*	mSumXsi		;
+			cOTMatrix*	mLogAlpha	;
+			cOTVector*	mLogRho		;
 			cOTVector	mLogVrais	;
 	public :
-		cBaumWelch(uint theNSample, uint* theT, uint theNClass) ;
-		cBaumWelch(const cInParam &theInParam) ;
-		void ForwardBackward(cOTMatrix* theCondProba, cHmm& theHMM) ;
+		cLogBaumWelch(uint theNSample, uint* theT, uint theNClass) ;
+		cLogBaumWelch(const cInParam &theInParam) ;
+		void LogForwardBackward(cOTMatrix* theCondProba, cHmm& theHMM) ;
 		uint GetSampleSize(uint theN){ return mvT[theN] ;}
-		virtual ~cBaumWelch() ;
+		virtual ~cLogBaumWelch() ;
 } ;
 
 
-#endif // _CBAUMWELCH_H_
+#endif // _CLOGBAUMWELCH_H_

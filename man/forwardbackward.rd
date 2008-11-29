@@ -1,9 +1,10 @@
-\name{forwardbackward}
+\name{forwardBackward}
 \alias{forwardbackward}
+\alias{forwardBackward}
 \title{forward-backward procedure}
 \description{The forward-backward procedure is used to compute quantities used in the Baum-Welch algorithm.}
 \usage{
-forwardbackward(HMM, obs)
+forwardBackward(HMM, obs)
 }
 \arguments{
     \item{HMM}{a HMMClass or a HMMFitClass object}
@@ -56,12 +57,11 @@ forwardbackward(HMM, obs)
     Estimation for Gaussian Mixture and Hidden Markov Models} \url{http://ssli.ee.washington.edu/people/bilmes/mypapers/em.ps.gz}
 }
 \examples{
-    data(geyser)
-    obs <- geyser$duration
+    data(n1d_3s)
     #Fits an 2 states gaussian model for geyser duration
-    ResFitGeyser <- HMMFit(obs)
+    Res_n1d_3s <- HMMFit(obs_n1d_3s, nStates=3)
     #Forward-backward procedure
-   fb <- forwardbackward(ResFitGeyser, obs)
+    fb <- forwardBackward(Res_n1d_3s, obs_n1d_3s)
 }    
 
 \keyword{htest}

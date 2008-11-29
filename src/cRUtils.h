@@ -1,16 +1,18 @@
-/***********************************************************
- * RHmm version 1.0.4                                      *
- *                                                         *
- *                                                         *
- * Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> *
- *                                                         *
- * Date: 2008/08/08                                        *
- *                                                         *
- ***********************************************************/
+/**************************************************************
+ *** RHmm version 1.2.0                                      
+ ***                                                         
+ *** File: cRUtils.h 
+ ***                                                         
+ *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
+ ***                                                         
+ *** Date: 2008/11/29                                        
+ ***                                                         
+ **************************************************************/
+
 #ifndef _CRUTILS_H_
 #define _CRUTILS_H_
 
-#include "otmathutil.h"
+#include "OTMathUtil.h"
 #include <R.h>
 #include <Rinternals.h>
 #include <Rmath.h>
@@ -19,16 +21,16 @@
 	typedef unsigned int uint ;
 #endif // uint
 
-/*
- *	Récupérer une seule valeur à partir d'une liste SEXP à la place n° theNum
- */
 class cRUtil
 {	private :
-		int	mNbProtect	;
+		int	mvNbProtect	;
 	public :
-		cRUtil(){mNbProtect = 0 ;} ;
-		void EndProtect(void){if (mNbProtect > 0) {UNPROTECT(mNbProtect); mNbProtect = 0 ; }} ;
-		~cRUtil(){};
+		cRUtil(){mvNbProtect = 0 ;} ;
+		void EndProtect(void){if (mvNbProtect > 0) {UNPROTECT(mvNbProtect); mvNbProtect = 0 ; }} ;
+		~cRUtil(){mvNbProtect = 0 ;};
+		/*
+		 *	Récupérer une seule valeur à partir d'une liste SEXP à la place n° theNum
+		 */
 		void GetValSexp(SEXP theSEXP, uint theNum, uint &theVal) ;
 		void GetValSexp(SEXP theSEXP, uint theNum, int &theVal) ;
 		void GetValSexp(SEXP theSEXP, uint theNum, double &theVal) ;
@@ -141,7 +143,8 @@ class cRUtil
 		/*
 		* Remplit une liste de theNList1 elements de listes de theNList2 elements de matrices dans un SEXP
 		*/
-		void SetListListVectSexp(cOTMatrix** theMat, uint theNList1, uint theNList2, SEXP &theSEXP) ;
+		void SetListListMatSexp(cOTMatrix** theMat, uint theNList1, uint theNList2, SEXP &theSEXP) ;
+		void SetListListMatSexp(cOTMatrix** theMat, uint theNList1, uint* theNList2, SEXP &theSEXP) ;
 
 	} ;
 #endif // _CRUTILS_H_
