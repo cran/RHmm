@@ -1,4 +1,4 @@
-RHmm package version 1.2.0
+RHmm package version 1.3.0
 
 
 Make instructions
@@ -12,6 +12,7 @@ Thanks to:
 - Mait Raag who found a bug in may Multivariate Normal Density function (version <= 1.03).
 - Tarmo Leinonen who found some problems in the forwardbackward procedure
 - Matteo Re who found bugs in Viterbi path procedure (for discrete distributions)
+- Vince Melfi who found a bug in the ForwardBackward procedure.
 
 
 Ollivier TARAMASCO

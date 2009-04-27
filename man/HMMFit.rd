@@ -22,9 +22,9 @@ of the Baum-Welch algorithm for the user's data}
     \item{levels}{A character vector of all different levels of 'obs'. By Default (levels=NULL), this vector is computed from 'obs'.}
     \item{asymptCov}{A boolean. asymptCov=TRUE if the asymptotic covariance matrix is computed. Default FALSE.}
     \item{asymptMethod}{A string which indicates the numerical method for computing the Hessian of parameters. Default 'nlme'.}
-    \item{...}{optional parameter:
+    \item{...}{optional parameter:\itemize{
         \item{control}{A list of control parameters for the Baum-Welch algorithm. See \bold{control parameter}}
-        }
+        }}
 }
 \value{ a HMMFitClass object:
     \item{HMM}{A HMMClass object with the fitted values of the model}
@@ -50,7 +50,7 @@ of the Baum-Welch algorithm for the user's data}
 
 
 \section{control parameter}{
-
+    \itemize{
         \item{init}{Kind of initialisation ='KMEANS' (for univariate or multivariate normal distributions), 'RANDOM' or 'USER'. Default 'RANDOM', see \bold{Random Initialization}}
         \item{iter}{Maximum number of iterations for the Baum-Welch algorithm. Default 500}
         \item{tol}{Tolerance of the relative log-likehood augmentation. Default 1e-6}
@@ -59,6 +59,7 @@ of the Baum-Welch algorithm for the user's data}
         \item{nIterInit}{Number of maximum iterations of the Baum-Welch algorithm in the random initialisation phase. Default 5}
         \item{initPoint}{An HMMClass object used to initialize the parameters of the Baum-Welch algorithm. Default NULL.\cr
             if initPoint != NULL, init is set to "USER"}
+        }
 }
 
 \section{Random initialization}{
@@ -110,20 +111,20 @@ of the Baum-Welch algorithm for the user's data}
     # Fit a 3 states gaussian HMM for obs_n1d_3s
     # with iterations printing and kmeans initialization
     Res_n1d_3s <- HMMFit(obs=obs_n1d_3s, nStates=3, 
-		paramBW=list(verbose=1, init="KMEANS"), 
-		asymptCov=TRUE, asymptMethod='optim')
+        control=list(verbose=1, init="KMEANS"), 
+        asymptCov=TRUE, asymptMethod='optim')
     summary(Res_n1d_3s)
     
     # Fit a 2 states 3D-gaussian model
     data(n3d_2s)
     summary(HMMFit(obs_n3d_2s, asymptCov=TRUE, 
-				asymptMethod='optim'))
+                asymptMethod='optim'))
     
     # Fit a 2 states mixture of 3 normal distributions HMM
     # for data_mixture
     data(data_mixture)
     ResMixture <- HMMFit(data_mixture, nStates=2, nMixt=3, 
-		dis="MIXTURE")
+        dis="MIXTURE")
 
     # Fit a 3 states discrete HMM for weather data
     data(weather)

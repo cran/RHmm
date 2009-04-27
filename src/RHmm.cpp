@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.2.0                                      
+ *** RHmm version 1.3.0                                      
  ***                                                         
  *** File: RHmm.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ***                                                         
- *** Date: 2008/11/29                                        
+ *** Date: 2009/04/27                                       
  ***                                                         
  **************************************************************/
 
@@ -17,6 +17,7 @@
 #include "cInParam.h"
 #include "cBaumWelchInParam.h"
 #include "cBaumWelch.h"
+#include "cLogBaumWelch.h"
 #include "cLogBaumWelch.h"
 #include "AllDistributions.h"
 #include "cHmm.h"
@@ -678,20 +679,25 @@ cLogBaumWelch myLogBaumWelch=cLogBaumWelch(myNbSample, myT, myNbClasses) ;
 
 	delete [] myProbaCond ;
 
-SEXP	myAux[1] ;
+SEXP	myAux[6] ;
 uint*	myLigne = new uint[myNbSample] ;
 
 
 	for (register uint n = 0 ; n < myNbSample ; n++)
 		myLigne[n] = myNbClasses ;
 
-	myRUtil.SetListValSexp(myLogBaumWelch.mLogVrais, myAux[0]) ;
+	myRUtil.SetListMatSexp(myLogBaumWelch.mLogAlpha, myNbSample,myAux[0]) ;
+	myRUtil.SetListMatSexp(myLogBaumWelch.mLogBeta, myNbSample, myAux[1]) ;
+	myRUtil.SetListMatSexp(myLogBaumWelch.mLogGamma, myNbSample, myAux[2]) ;
+	myRUtil.SetListListMatSexp(myLogBaumWelch.mLogXsi, myNbSample, myT, myAux[3]) ;
+	myRUtil.SetListVectSexp(myLogBaumWelch.mLogRho, myNbSample, myAux[4]) ;
+	myRUtil.SetListValSexp(myLogBaumWelch.mLogVrais, myAux[5]) ;
 
 	delete [] myLigne ;
 	delete [] myT ;
 SEXP myRes ;
-	PROTECT(myRes = allocVector(VECSXP, 1)) ;
-	for (register int i = 0 ; i < 1 ; i++)
+	PROTECT(myRes = allocVector(VECSXP, 6)) ;
+	for (register int i = 0 ; i < 6 ; i++)
 		SET_VECTOR_ELT(myRes, i, myAux[i]) ;
 	myRUtil.EndProtect() ;
 

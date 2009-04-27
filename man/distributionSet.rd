@@ -19,20 +19,20 @@ distributionSet(dis="DISCRETE", proba, labels=NULL)
 
 \arguments{
     \item{dis}{Name of the distribution of observations. In 'NORMAL', 'DISCRETE', 'MIXTURE'.}
-    \item{mean}{
+    \item{mean}{\itemize{
         \item{univariate normal}{a vector of the means for each state of the model}
         \item{multivariate normal}{a list of the mean vectors for each state of the model}
         \item{mixture of univariate normal}{a list of vectors of the mixture means for each state of the model}
         \item{mixture of multivariate normal}{a list of lists of vectors of means for each state and each component of the mixture of the model}
-        }
-    \item{var}{
+        }}
+    \item{var}{\itemize{
         \item{univariate normal}{a vector of the variances for each states of the model}
         \item{mixture of univariate normal}{a list of vectors of the mixture variances for each states of the model}
-        }
-    \item{cov}{
+        }}
+    \item{cov}{\itemize{
         \item{multivariate normal}{a list of covariance matrices of the multivariate normal distribution for each state of the model}
         \item{mixture of multivariate normal}{a list of list of covariance matrices for each state and each component of the mixture}
-         }
+         }}
     \item{proportion}{a list of vector of the mixture proportions for each state of the model}
     \item{proba}{a list of vector of discrete probabilities for each state of the model}
     \item{labels}{a vector of the labels of the discrete observations. Default NULL}

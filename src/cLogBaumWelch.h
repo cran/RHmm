@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.2.0                                      
+ *** RHmm version 1.3.0                                      
  ***                                                         
  *** File: cLogBaumWelch.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ***                                                         
- *** Date: 2008/11/29                                        
+ *** Date: 2009/04/27                                       
  ***                                                         
  **************************************************************/
 
@@ -21,7 +21,11 @@ class cLogBaumWelch
 			uint*	mvT				;
 	public :						;
 			cOTMatrix*	mLogAlpha	;
+			cOTMatrix*	mLogBeta	;
 			cOTVector*	mLogRho		;
+			cOTMatrix*	mLogGamma	;
+			cOTMatrix**	mLogXsi		;
+			cOTMatrix*	mSumLogXsi	;
 			cOTVector	mLogVrais	;
 	public :
 		cLogBaumWelch(uint theNSample, uint* theT, uint theNClass) ;

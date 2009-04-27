@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.2.0                                      
+ *** RHmm version 1.3.0                                      
  ***                                                         
  *** File: cBaumWelchInParam.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ***                                                         
- *** Date: 2008/11/29                                        
+ *** Date: 2009/04/27                                       
  ***                                                         
  **************************************************************/
 

@@ -1,11 +1,11 @@
  ###############################################################
- #### RHmm version 1.2.0                                      
+ #### RHmm version 1.3.0                                      
  ####                                                         
  #### File: RHmm.R 
  ####                                                         
  #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ####                                                         
- #### Date: 2008/11/29                                        
+ #### Date: 2009/04/27                                        
  ####                                                         
  ###############################################################
 
@@ -1144,6 +1144,9 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, ..., asymptCov=FALSE, asymptM
     {   stop('asymptCov must be a boolean (TRUE if the asymptotic covariance matrix must be computed)')
     } 
     
+    if (! is.null(asymptMethod) && ! is.na(match(asymptMethod, c('nlme', 'optim'))))
+        asymptCov <- TRUE
+    
     if (is.null(asymptMethod))
         asymptMethod <- 'nlme'
     asymptMethod <- asymptMethod[1]
@@ -1237,7 +1240,7 @@ forwardBackward<-function(HMM, obs)
 
     HMM <- setStorageMode(HMM)
     maListe <- TransformeListe(HMM$distribution, obs)
-    Res1 <- .Call("Rforwardbackward", HMM, maListe$Zt)
+    Res1 <- .Call("RLogforwardbackward", HMM, maListe$Zt)
     names(Res1) <- c("Alpha", "Beta", "Gamma", "Xsi", "Rho", "LLH")
     if (!is.list(obs))
     {   Res1$Alpha <- t(Res1$Alpha[[1]])
