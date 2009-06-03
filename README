@@ -1,12 +1,20 @@
-RHmm package version 1.3.0
+RHmm package version 1.3.1
 
 
 Make instructions
 -----------------
 
 
-Somme source and header files are used only for the R shared library (for example, RHmm.*pp or RUtil.*pp) 
-RHmm can be used as a standalone library (don't define _RDLL_ in your Makefile), but still needs RLapack library and access to R_Ext/RLapack.h
+RHmm can be used as a standalone library. if R_HOME is R directory, go into RHmm/src and
+1) compile all .cpp using g++ -c *.cpp -I R_HOME/include -w
+2) link the program using 
+	On unix system: g++ -o main *.o -W1,-Bstatic -lRlapack -lRblas -L R_HOME/lib
+	On windows system: g++ -o main *.o -W1,-Bstatic -lR -lRlapack -lRblas -L R_HOME/bin
+3) To execute the main program,
+	on unix system: copy R_HOME/lib/libRlapack.so and R_HOME/lib/libRblas.so in RHmm/src directory
+	on windows system: copy R_HOME/bin/*.dll in Rhmm/src directory
+then you can execute the main program by doing ./main in RHmm/src directory. Main.cpp is an example of the main program. At the end of Main.cpp file, you will find some samples used for testing the library.
+
 
 Thanks to: 
 - Mait Raag who found a bug in may Multivariate Normal Density function (version <= 1.03).

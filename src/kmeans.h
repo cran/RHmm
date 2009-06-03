@@ -5,7 +5,7 @@
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ***                                                         
- *** Date: 2009/04/27                                       
+ *** Date: 2009/06/03                                      
  ***                                                         
  **************************************************************/
 
@@ -20,8 +20,8 @@
 #endif //uint
 
 
-extern void mkmeans(cOTVector& theYt, uint theNClass, int* theSeq) ;
-extern void mkmeans(cOTVector& theYt, uint theNClass, uint theDimObs, int* theSeq) ;
+void mkmeans(cOTVector& theYt, uint theNClass, int* theSeq) ;
+void mkmeans(cOTVector& theYt, uint theNClass, uint theDimObs, int* theSeq) ;
 #endif //_RDLL_
 #endif // _KMEANS_H_
 

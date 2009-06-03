@@ -5,7 +5,7 @@
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ***                                                         
- *** Date: 2009/04/27                                       
+ *** Date: 2009/06/03                                      
  ***                                                         
  **************************************************************/
 
@@ -32,7 +32,7 @@
 #else
 	#include "Kmeans.h"
 	#include "REquivalents.h"
-	#include "crandomgenerator.h"
+	#include "cRandomGenerator.h"
 #endif //_RDLL_
 
 
