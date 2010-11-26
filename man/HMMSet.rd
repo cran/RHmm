@@ -4,7 +4,7 @@
 \title{Set the parameters for the hidden Markov models}
 
 \description{This function is used to create a HMMClass object which contains the parameters of the HMM. An HMM is described by an initial state probability vector,
-a transition matrix and a distributionClass object. }
+transition matrices and a distributionClass object. }
 \synopsis{
 HMMSet(initProb, transMat, ...)
 }
@@ -18,7 +18,8 @@ HMMSet(initProb, transMat, dis="DISCRETE", proba, labels=NULL)
 }
 \arguments{
     \item{initProb}{the vector of probabilities of the initial state}
-    \item{transMat}{the transition matrix of the hidden Markov chain}
+    \item{transMat}{the transition matrix of the hidden Markov chain. Since version 1.3.4 of RHmm, a list of transition matrices can be specified
+in order to define an inhomogeneous HMM. }
     \item{distribution}{the distributionClass object of the observations}
     \item{dis}{dis parameter. See \bold{distributionSet}}
     \item{mean}{mean parameter. See \bold{distributionSet}}

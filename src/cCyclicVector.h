@@ -1,7 +1,7 @@
 /**************************************************************
  *** RHmm version 1.4.2                                     
  ***                                                         
- *** File: Kmeans.h 
+ *** File: cCyclicVector.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
@@ -9,20 +9,28 @@
  ***                                                         
  **************************************************************/
 
-#ifndef _KMEANS_H_
-#define _KMEANS_H_
-#ifndef _RDLL_
+ #include <vector>
 
-#include "OTMathUtil.h"
-#include "REquivalents.h"
-#ifndef uint
-        typedef unsigned int uint ;
-#endif //uint
+#include "Hmm.h"
 
+template<class T>
+class cCyclicVector : public std::vector<T>
+{
+public:
+    typename std::vector<T>::reference operator[](int __n)
+    {
+        return std::vector<T>::at(__n % std::vector<T>::size());
+    }
 
-void mkmeans(cOTVector& theYt, uint theNClass, int* theSeq) ;
-void mkmeans(cOTVector& theYt, uint theNClass, uint theDimObs, int* theSeq) ;
-#endif //_RDLL_
-#endif // _KMEANS_H_
+    cCyclicVector & operator=(const cCyclicVector &rhs)
+    {
+        if (this == &rhs)      // Same object?
+                return *this;
 
+        this->clear();
+        for (int i=0;i<(int)rhs.size();i++)
+            this->push_back(rhs.at(i));
 
+        return *this;
+    }
+};

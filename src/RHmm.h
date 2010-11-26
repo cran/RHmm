@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.3.4                                      
+ *** RHmm version 1.4.2                                     
  ***                                                         
  *** File: RHmm.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
- ***                                                         
- *** Date: 2010/11/14                                      
+ *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
+ *** Date: 2010/11/26                                     
  ***                                                         
  **************************************************************/
 
@@ -13,43 +13,43 @@
 #define _RHMM_H_
 
 typedef enum ParamHMMEnum
-{	eNClasses=0,
-	eObsDim,
-	eNMixt,
-	eNProba,
-	eDistrType
+{       eNClasses=0,
+        eObsDim,
+        eNMixt,
+        eNProba,
+        eDistrType
 }ParamHMMEnum ;
 
 typedef enum ParamAlgoBWEnum
-{	eInitType=0,
-	eNMaxIter,
-	eTol,
-	eVerbose,
-	eNInitIter,
-	eNMaxIterinit,
-	eInitPoint
+{       eInitType=0,
+        eNMaxIter,
+        eTol,
+        eVerbose,
+        eNInitIter,
+        eNMaxIterinit,
+        eInitPoint
 }ParamAlgoBWEnum ;
 
 typedef enum HMMEnum
-{	fInitProba=0,
-	fTransMat,
-	fDistr
+{       fInitProba=0,
+        fTransMat,
+        fDistr
 }HMMEnum ;
 
 typedef enum DistEnum
-{	gType=0, 
-	gNClasses
+{       gType=0, 
+        gNClasses
 }DistEnum ;
 
 #ifdef WIN32
-	#define DECL_DLL_EXPORT __declspec(dllexport) 
+        #define DECL_DLL_EXPORT __declspec(dllexport) 
 #else
-	#define DECL_DLL_EXPORT 
+        #define DECL_DLL_EXPORT 
 #endif // WIN32
 
 #ifndef BEG_EXTERN_C
-	#define BEG_EXTERN_C extern "C" {
-	#define END_EXTERN_C }
+        #define BEG_EXTERN_C extern "C" {
+        #define END_EXTERN_C }
 #endif //BEG_EXTERN_C
 
 #endif //_RHMM_H_

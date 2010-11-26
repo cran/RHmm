@@ -1,11 +1,11 @@
  ###############################################################
- #### RHmm version 1.3.4                                      
+ #### RHmm version 1.4.2                               
  ####                                                         
  #### File: RHmm.R 
  ####                                                         
- #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
- ####                                                         
- #### Date: 2010/11/14                                       
+ #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr>
+ #### Author: Sebastian BAUER <sebastian.bauer@charite.de>
+ #### Date: 2010/11/26                                      
  ####                                                         
  ###############################################################
 
@@ -288,7 +288,7 @@ distributionSet <- function(dis, ...)
     if (is.na(match(dis, c('NORMAL', 'MIXTURE', 'DISCRETE'))))
         stop("dis must be in 'NORMAL', 'MIXTURE', 'DISCRETE'\n")
     args <- list(...)
-    extras <- match.call(expand.dots = FALSE)$... # pour récupérer les noms
+    extras <- match.call(expand.dots = FALSE)$... # pour rï¿½cupï¿½rer les noms
     mcall <- list(as.name("toto"))
     lextras <- length(extras)
     for (i in 1:lextras)
@@ -513,10 +513,31 @@ HMMSet <- function(initProb, transMat, ...)
     
     if (!is.vector(initProb))
         stop('initProb must be a vector\n')
-    if (!is.matrix(transMat))
-        stop('MatTrans must be a matrix\n')
+
+    
+    if (is.list(transMat))
+    {
+        if (!all(sapply(transMat,is.matrix)))
+            stop('MatTrans must be a matrix or list of matrices\n')
+        
+        nColTransMat <- ncol(transMat[[1]]);
+        nRowTransMat <- nrow(transMat[[1]]);
+        
+        if (!all(sapply(transMat, function(x) ncol(x)== nColTransMat)))
+            stop('Number of colums of matrix must match.\n')
+        
+        if (!all(sapply(transMat, function(x) nrow(x)== nRowTransMat)))
+            stop('Number of rows of matrix must match.\n')
+    } else
+    {
+        if (!is.matrix(transMat))
+            stop('MatTrans must be a matrix or list of matrices\n')
+        
+        nColTransMat <- ncol(transMat);
+        nRowTransMat <- nrow(transMat);
+    }
     nStates <- length(initProb)
-    if ( (ncol(transMat) != nStates) || (nrow(transMat) != nStates) || (distribution$nStates != nStates) )
+    if ( (nColTransMat != nStates) || (nRowTransMat != nStates) || (distribution$nStates != nStates) )
         stop('length of initProb, dim of transMat or dim of distribution parameters do not match\n')
     
     Res <- list(initProb = initProb, transMat = transMat, distribution = distribution)
@@ -571,12 +592,28 @@ print.HMMClass <- function(x, ...)
     names(Aux) <- cnames
     row.names(Aux) <- " "
     print.data.frame(Aux, quote=FALSE, right=TRUE)
-    cat("\nTransition matrix:\n", sep="")
-    Aux <- as.data.frame(x$transMat)
-    cnames <- as.character(gl(x$distribution$nStates, 1, labels="State "))
-    names(Aux) <- cnames
-    rownames(Aux) <- cnames
-    print.data.frame(Aux, quote=FALSE, right=TRUE)
+    
+    
+    print.mat<-function(mat)
+    {
+        Aux <- as.data.frame(mat)
+        cnames <- as.character(gl(x$distribution$nStates, 1, labels="State "))
+        names(Aux) <- cnames
+        rownames(Aux) <- cnames
+        print.data.frame(Aux, quote=FALSE, right=TRUE)
+        
+    }
+    
+    if (is.list(x$transMat))
+    {
+        cat("\nTransition matrices:\n", sep="")
+        lapply(x$transMat,print.mat)
+    }   else
+    {
+        cat("\nTransition matrix:\n", sep="")
+        print.mat(x$transMat)
+    }
+    
     cat("\nConditionnal distribution parameters:\n", sep="")
     print(x$distribution, quote=FALSE, right=TRUE, doNotAffiche=TRUE)
 }
@@ -721,20 +758,36 @@ sim.markovChainClass <- function(object, nSim, lastState)
         k <- 1
     }
     
-    probaCum <- matrix(0, nrow=object$nStates, ncol=object$nStates)
-    for (i in 1:object$nStates)
-        for (j in 1:object$nStates)
-            probaCum[i,j] <- sum(object$transMat[i,1:j])
-  
+    cummat<-function(mat)
+    {
+        cummat<-matrix(0, nrow=nrow(mat), ncol=ncol(mat))
+        
+        for (i in 1:nrow(mat))
+            cummat[i,] <- cumsum(mat[i,])
+        return(cummat)
+    }
+
+    probaCumList<-list();
+
+    
+    if (is.list(object$transMat))
+    {
+        probaCumList<-lapply(object$transMat,cummat)
+    } else
+    {
+        probaCumList<-list(cummat(object$transMat))
+    }
+
     for (tt in k:nSim)
-        val <- value[tt] <- trouve_indice(Aux[tt], probaCum[val,])
+    {
+        val <- value[tt] <- trouve_indice(Aux[tt], probaCumList[[((tt-1)%%length(probaCumList))+1]][val,])
+    }
     
     return(as.integer(value))
 }
 
 sim.HMMClass <- function(object, nSim, lastState)
 {
-     
     mc <- list(nStates = object$distribution$nStates, initProb=object$initProb, transMat=object$transMat)
     class(mc) <- "markovChainClass" 
     Eps <- sim(mc, nSim, lastState)
@@ -990,7 +1043,7 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
             if (is.list(args[[1]]))
             {   control <- args[[1]]
                 if (lextras != 2)
-                    Levels <- NULL # Pas de vecteur des niveaux entré
+                    Levels <- NULL # Pas de vecteur des niveaux entrï¿½
                 else
                     Levels <- args[[2]]
             }
@@ -1227,7 +1280,9 @@ forwardBackward<-function(HMM, obs)
         stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
     if (class(HMM) == "HMMFitClass")
         HMM <- HMM$HMM
-        
+
+    if (length(obs) < 1) stop("'obs' needs to contain at least a single element!")
+    
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
         if (dimObs == 1)
@@ -1237,7 +1292,8 @@ forwardBackward<-function(HMM, obs)
     }
 
     HMM <- setStorageMode(HMM)
-    maListe <- TransformeListe(HMM$distribution, obs)
+    maListe <- TransfListe(HMM$distribution, obs)
+    
     Res1 <- .Call("RLogforwardbackward", HMM, maListe$Zt)
     names(Res1) <- c("Alpha", "Beta", "Gamma", "Xsi", "Rho", "LLH")
     if (!is.list(obs))
@@ -1282,10 +1338,10 @@ viterbi<-function(HMM, obs)
 {   if ( ( class(HMM) != "HMMFitClass" ) && (class(HMM) != "HMMClass") )
         stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
     
+    if (length(obs) < 1) stop("'obs' needs to contain at least a single element!")
+    
     if (class(HMM) == "HMMFitClass")
         HMM <- HMM$HMM
-
-   
     
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]

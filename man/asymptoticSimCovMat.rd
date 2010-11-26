@@ -1,7 +1,7 @@
 \name{asymptoticSimCovMat}
 \alias{asymptoticSimCovMat}
-\title{Set the asymptotic covariance matrix of a fitted HMM}
-\description{This function sets the empirical asymptotic covariance matrix of the fitted HMM}
+\title{Compute the asymptotic covariance matrix of a fitted HMM by simulation}
+\description{This function compute the empirical asymptotic covariance matrix of the fitted HMM.}
 \usage{
 asymptoticSimCovMat(HMM, obs, nSimul, verbose)
 }
@@ -16,7 +16,7 @@ asymptoticSimCovMat(HMM, obs, nSimul, verbose)
 \value{the empirical covariance matrix}
 
 \section{Numerical computations}{This is an ``experimental'' method. The HMM model is simulated nSimul times then fitted
-and the emirical covariance matrix is computed.}
+and the empirical covariance matrix is computed.}
 
 
 

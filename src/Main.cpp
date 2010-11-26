@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.3.4                                      
+ *** RHmm version 1.4.2                                     
  ***                                                         
  *** File: Main.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
- ***                                                         
- *** Date: 2010/11/14                                      
+ *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
+ *** Date: 2010/11/26                                     
  ***                                                         
  **************************************************************/
 
@@ -23,8 +23,8 @@
 #include "RHmm.h"
 using namespace std;
 
-#define FIC_NAME  "Geyser.txt" /*"data_mixture.txt" "DISCRETEb.txt" "DISCRETE.txt"   "Geyser.txt" "SimulMultiMixt.txt"*/
-#define DIM_OBS 2
+#define FIC_NAME  "Norm.txt" /*"Geyser.txt" "data_mixture.txt" "DISCRETEb.txt" "DISCRETE.txt"   "Geyser.txt" "SimulMultiMixt.txt"*/
+#define DIM_OBS 1
 #define NB_SAMPLE 1
 int main(void)
 {
@@ -53,16 +53,16 @@ double myAux ;
 /*cOTVector* myRt1 = new cOTVector[1] ;
 	myRt1[0].ReAlloc(n) ;
 	for (register uint i = 0 ; i < n ; i++)
-//		myRt1[0][i] = myRt[0][i(*+n*)] - 1;
+		myRt1[0][i] = myRt[0][i(*+n*)] - 1;
 */
 
 //cHmm MyHMM(eNormalDistr, 2) ;
 uint myDimObs = DIM_OBS ;
 
-//cBaumWelchInParam myParam=cBaumWelchInParam(1, myDimObs, myRt1, eNormalDistr, 2) ;
+cBaumWelchInParam myParam=cBaumWelchInParam(1, myDimObs, myRt, eNormalDistr, 2) ;
 //cBaumWelchInParam myParam=cBaumWelchInParam(1, myDimObs, myRt1, eDiscreteDistr, 3, 0, 10) ;
 //cBaumWelchInParam myParam=cBaumWelchInParam(NB_SAMPLE, myDimObs, myRt, eMixtUniNormalDistr, 2, 3) ;
-cBaumWelchInParam myParam=cBaumWelchInParam(NB_SAMPLE, myDimObs, myRt, eMultiNormalDistr, 3) ;
+//cBaumWelchInParam myParam=cBaumWelchInParam(NB_SAMPLE, myDimObs, myRt, eMultiNormalDistr, 3) ;
 
 /*cHmm myHMM(eDiscreteDistr, 2) ;
 	myHMM.mInitProba[0] = myHMM.mInitProba[1] = 0.5L ;

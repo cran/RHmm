@@ -1,11 +1,11 @@
  ###############################################################
- #### RHmm version 1.3.4                                      
+ #### RHmm version 1.4.2                               
  ####                                                         
  #### File: RHmm-internals.R 
  ####                                                         
- #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
- ####                                                         
- #### Date: 2010/11/14                                       
+ #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr>
+ #### Author: Sebastian BAUER <sebastian.bauer@charite.de>
+ #### Date: 2010/11/26                                      
  ####                                                         
  ###############################################################
 
@@ -38,7 +38,9 @@ setStorageMode.paramAlgoBW <- function(object)
 setStorageMode.HMMClass <- function(object)
 {   x <- object
     storage.mode(x$initProb) <- "double"
-    storage.mode(x$transMat) <- "double"
+
+    if (is.list(x$transMat)) lapply(x$transMat,function(x){storage.mode(x) <- "double"})
+    else storage.mode(x$transMat) <- "double"
     x$distribution <- setStorageMode(object$distribution)
     class(x$distribution) <- class(object$distribution)
     storage.mode(x) <- "list"
