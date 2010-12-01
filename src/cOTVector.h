@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.4.2                                     
+ *** RHmm version 1.4.3                                     
  ***                                                         
  *** File: cOTVector.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/11/26                                     
+ *** Date: 2010/12/01                                     
  ***                                                         
  **************************************************************/
 
@@ -32,7 +32,7 @@ class cOTVector
                 void ReAlloc(uint theSize, double* theVect) ;
                 double& operator[](int theIndex) ;
                 cOTVector& operator =(cOTVector& theSrcVect) ;
-                cOTVector& operator =(cOTMatrix &theMatrix) ;
+                cOTVector& operator =(const cOTMatrix &theMatrix) ;
                 cOTVector& operator =(double theVal) ;
                 cOTVector& operator =(double* theVect) ;
                 cOTVector& operator +(cOTVector& theVect) ;

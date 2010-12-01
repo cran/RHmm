@@ -16,7 +16,7 @@ asymptoticSimCovMat(HMM, obs, nSimul, verbose)
 \value{the empirical covariance matrix}
 
 \section{Numerical computations}{This is an ``experimental'' method. The HMM model is simulated nSimul times then fitted
-and the empirical covariance matrix is computed.}
+and the emirical covariance matrix is computed.}
 
 
 

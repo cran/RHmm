@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.4.2                                     
+ *** RHmm version 1.4.3                                     
  ***                                                         
  *** File: cBaumWelch.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/11/26                                     
+ *** Date: 2010/12/01                                     
  ***                                                         
  **************************************************************/
 
@@ -18,7 +18,7 @@ class cBaumWelch
 {       private :
                         uint    mvNSample               ;
                         uint*   mvT                             ;
-        public :                                                ;
+        public :                                                
                         cOTMatrix*      mAlpha          ;
                         cOTMatrix*      mBeta           ;
                         cOTVector*      mRho            ;

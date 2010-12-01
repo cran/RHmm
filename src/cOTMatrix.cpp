@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.4.2                                     
+ *** RHmm version 1.4.3                                     
  ***                                                         
  *** File: cOTMatrix.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/11/26                                     
+ *** Date: 2010/12/01                                     
  ***                                                         
  **************************************************************/
 
@@ -13,7 +13,7 @@
 
 cOTMatrix ourTempMatrix  ;
 
-cOTVector& cOTVector::operator =(cOTMatrix& theMatrix)
+cOTVector& cOTVector::operator =(const cOTMatrix& theMatrix)
 {
         if (theMatrix.mNCol == 1)
         {
@@ -134,7 +134,7 @@ double* & cOTMatrix::operator [](uint theNRow)
                 throw cOTError("bad index") ;
 }
 
-cOTMatrix& cOTMatrix::operator =(cOTMatrix& theSrcMatrix)
+cOTMatrix& cOTMatrix::operator =(const cOTMatrix& theSrcMatrix)
 {
 register uint   i,
                                 j       ;

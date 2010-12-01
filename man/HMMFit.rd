@@ -123,11 +123,11 @@ of the Baum-Welch algorithm for the user's data}
     # Fit a 2 states mixture of 3 normal distributions HMM
     # for data_mixture
     data(data_mixture)
-    HMMFit(data_mixture, nStates=2, nMixt=3, 
+    ResMixture <- HMMFit(data_mixture, nStates=2, nMixt=3, 
         dis="MIXTURE")
 
     # Fit a 3 states discrete HMM for weather data
     data(weather)
-    HMMFit(weather, dis='DISCRETE', nStates=3) 
+    ResWeather <- HMMFit(weather, dis='DISCRETE', nStates=3) 
  }
 \keyword{htest}

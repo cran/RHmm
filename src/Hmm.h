@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.4.2                                     
+ *** RHmm version 1.4.3                                     
  ***                                                         
  *** File: Hmm.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/11/26                                     
+ *** Date: 2010/12/01                                     
  ***                                                         
  **************************************************************/
 
@@ -52,13 +52,13 @@ typedef enum distrDefinitionEnum
         eMixtUniNormalDistr = 2,
         eMixtMultiNormalDistr = 3,
         eDiscreteDistr=4
-} ;
+}distrDefinitionEnum;
 
 typedef enum initEnum
 {       eRandom = 0,
         eKMeans = 1,
         eUser = 2
-} ;
+}initEnum;
 
 
 #endif //_HMM_H_

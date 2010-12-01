@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.4.2                                     
+ *** RHmm version 1.4.3                                     
  ***                                                         
  *** File: cLogBaumWelch.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/11/26                                     
+ *** Date: 2010/12/01                                     
  ***                                                         
  **************************************************************/
 
@@ -19,7 +19,7 @@ class cLogBaumWelch
 {       private :
                         uint    mvNSample               ;
                         uint*   mvT                             ;
-        public :                                                ;
+        public :                                                
                         cOTMatrix*      mLogAlpha       ;
                         cOTMatrix*      mLogBeta        ;
                         cOTVector*      mLogRho         ;
