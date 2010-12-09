@@ -1,16 +1,18 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cMultivariateNormal.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _CMULTIVARIATENORMAL_H_
 #define _CMULTIVARIATENORMAL_H_
+#pragma once
+
 #include "cDistribution.h"
 #include "SamplesUtil.h"
 
@@ -34,5 +36,4 @@ class cMultivariateNormal : public cDistribution
                 uint GetNParam(void){ return mMean[0].mSize + mMean[0].mSize * mMean[0].mSize ; }
 
 } ;
-
 #endif //_CMULTIVARIATENORMAL_H_

@@ -1,16 +1,17 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cOTMatrix.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _COTMATRIX_H_
 #define _COTMATRIX_H_
+#pragma once
 #ifndef MIN_DBLE
         #define MIN_DBLE 1e-16L
 #endif //MIN_DBLE
@@ -20,11 +21,22 @@
         typedef unsigned int uint ;
 #endif //uint
 
+
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include "R_ext/Lapack.h"
 #include "cOTError.h"
 #include "cOTVector.h"
+
+#ifdef __SUNPRO_CC
+    #ifndef _RDLL_
+        #define log std::log
+        #define exp std::exp
+        #define printf std::printf
+        #define pow std::pow
+        #define sqrt std::sqrt
+    #endif // RDLL
+#endif //__SUNPRO_CC
 
 class cOTMatrix
 {

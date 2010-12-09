@@ -1,39 +1,27 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: MultivariateNormalUtil.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #include "MultivariateNormalUtil.h"
 
-void SymetricInverseAndDet      (       cOTMatrix&      theMat,
-                                                                double&         theDet,
-                                                                cOTMatrix&      theInvMat
-                                                        )
+void SymetricInverseAndDet(cOTMatrix& theMat, double& theDet, cOTMatrix& theInvMat)
 {
-        LapackInvAndDet(theMat, theInvMat, theDet) ;
+	LapackInvAndDet(theMat, theInvMat, theDet) ;
 }
 
 
 
-void MultivariateNormalDensity  (       cOTVector&      thex,
-                                                                        cOTVector&      theMu,
-                                                                        cOTMatrix&      theInvCov,
-                                                                        double          theDet,
-                                                                        double*         theDens
-                                                                ) 
-
+void MultivariateNormalDensity(cOTVector& thex, cOTVector& theMu, cOTMatrix& theInvCov, double theDet, double*  theDens)
 {
-register uint   i,
-                                j,
-                                t                               ;
-double                  myAux,
-                                myRapport               ;
+register uint i, j, t ;
+double  myAux, myRapport ;
 
 uint myDimObs = theMu.mSize ;   
         myRapport = pow(SQRT_TWO_PI, (int)myDimObs)*sqrt(theDet) ;

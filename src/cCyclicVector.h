@@ -1,16 +1,18 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cCyclicVector.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
- #include <vector>
-
+#ifndef _CCYCLICVECTOR_H_
+#define _CCYCLICVECTOR_H_
+#pragma once
+#include <vector>
 #include "Hmm.h"
 
 template<class T>
@@ -34,3 +36,4 @@ public:
         return *this;
     }
 };
+#endif //_CCYCLICVECTOR_H_

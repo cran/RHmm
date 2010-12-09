@@ -5,7 +5,7 @@
 \title{A 2 states HMM with 3D gaussian distribution data set}
 \description{This data set contains 1 sample with 1000 observations of this HMM}
 \details{
-    File 'n3d\_3s.RData' contains the matrix 'obs\_n3d\_2s'.
+    File 'n3d_3s.RData' contains the matrix 'obs_n3d_2s'.
 }
 
 \note{Parameters for the simulation

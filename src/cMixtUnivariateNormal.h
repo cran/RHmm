@@ -1,16 +1,18 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cMixtUnivariateNormal.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _CMIXTUNIVARIATENORMAL_H_
 #define _CMIXTUNIVARIATENORMAL_H_
+#pragma once
+
 #include "cDistribution.h"
 
 class cMixtUnivariateNormal : public cDistribution
@@ -33,5 +35,4 @@ class cMixtUnivariateNormal : public cDistribution
                 virtual void SetParam(uint theDeb, cOTVector& theParam) ;
                 uint GetNParam(void){ return mvNMixt * 3 - 1  ; }
 } ;
-
 #endif //_CMIXTUNIVARIATENORMAL_H_

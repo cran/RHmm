@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cOTMatrix.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -432,7 +432,7 @@ cOTMatrix& inv(cOTMatrix &theMatrix)
 double myDet ;
 
         LapackInvAndDet(theMatrix, ourTempMatrix, myDet) ;
-        if (fabs(myDet) < MIN_DBLE)
+        if (std::fabs(myDet) < MIN_DBLE)
                         throw cOTError("Non inversible matrix") ;
         return ourTempMatrix ;
 }

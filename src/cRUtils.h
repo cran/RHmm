@@ -1,16 +1,17 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cRUtils.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _CRUTILS_H_
 #define _CRUTILS_H_
+#pragma once
 
 #include "OTMathUtil.h"
 #include <R.h>
@@ -149,6 +150,5 @@ class cRUtil
                 void SetListListMatSexp(cOTMatrix** theMat, uint theNList1, uint* theNList2, SEXP &theSEXP) ;
 
         } ;
-#endif // _CRUTILS_H_
 
-
+#endif //_CRUTILS_H_

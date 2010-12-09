@@ -1,16 +1,17 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cUnivariateNormal.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _CUNIVARIATENORMAL_H_
 #define _CUNIVARIATENORMAL_H_
+#pragma once
 #include "cDistribution.h"
 
 class cUnivariateNormal : public cDistribution
@@ -29,5 +30,4 @@ class cUnivariateNormal : public cDistribution
                 virtual uint GetNParam(void){ return 2 ; }
                 void CopyDistr(cDistribution* theSrc) ;
 } ;
-
 #endif //_CUNIVARIATENORMAL_H_

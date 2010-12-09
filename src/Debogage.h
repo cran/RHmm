@@ -1,14 +1,17 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: Debogage.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
+#ifndef _DEBOGAGE_H_
+#define _DEBOGAGE_H_
+#pragma once
 #ifdef _DEBOGAGE_
 extern uint ourNProtect ;
 
@@ -37,14 +40,14 @@ extern uint ourNProtect ;
 }
 
 #define SETLISTVECTSEXP(theVect_, theNElt_, theSEXP_) {\
-        SEXP myAux_  ; \
-        PROTECT(theSEXP_ = allocVector(VECSXP, theNElt_)) ;\
+        SEXP myAux_ ; \
+        PROTECT(theSEXP_= allocVector(VECSXP, theNElt_)) ;\
         ourNProtect++ ; \
-        for (register uint i_ = 0 ; i_ < theNElt_ ; i_++) \
+        for (register uint i_= 0 ; i_< theNElt_; i_++) \
         {       SETVECTSEXP(theVect_[i_], myAux_) ; \
                 SET_VECTOR_ELT(theSEXP_, i_, myAux_) ; \
         } \
 }
+#endif //_DEBOGAGE_
 
-
-#endif 
+#endif //_DEBOGAGE_H_

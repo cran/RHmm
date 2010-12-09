@@ -1,16 +1,18 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cOTVector.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _COTVECTOR_H_
 #define _COTVECTOR_H_
+#pragma once
+
 #include <iostream>
 #include "cOTError.h"
 
@@ -57,5 +59,4 @@ class cOTVector
                 friend cOTVector& zeros(uint theN) ;
                 friend cOTVector& copy_double(double* theVect, uint theSize) ;
 } ;
-
-#endif //  _COTVECTOR_H_
+#endif // _COTVECTOR_H_

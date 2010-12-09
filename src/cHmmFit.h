@@ -1,16 +1,18 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cHmmFit.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _CHMMFIT_H_
 #define _CHMMFIT_H_
+#pragma once
+
 #include "cBaumWelchInParam.h"
 #include "cBaumWelch.h"
 #include "cDistribution.h"
@@ -35,5 +37,4 @@ class cHmmFit : public cBaumWelch, public cHmm
                 void ComputeGradient(cBaumWelchInParam& theInParam, cOTVector& theGrad, double theDelta=1e-3) ;
                 void ComputeHessian(cBaumWelchInParam& theInPram, cOTMatrix& theHess, double theDelta=1e-3) ;
 } ;
-
-#endif // _CHMMFIT_H_
+#endif //_CHMMFIT_H_

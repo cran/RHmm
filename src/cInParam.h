@@ -1,16 +1,18 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cInParam.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _CINPARAM_H_
 #define _CINPARAM_H_
+#pragma once
+
 #include "Hmm.h"
 
 
@@ -29,6 +31,4 @@ class cInParam
                 cInParam & operator =(const cInParam &theSrc) ;
                 virtual void Print(void) ;
 } ;
-
-
 #endif //_CINPARAM_H_

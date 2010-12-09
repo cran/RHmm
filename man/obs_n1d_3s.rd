@@ -5,7 +5,7 @@
 \title{A 3 states HMM with univariate gaussian distribution data set}
 \description{This data set contains 10 samples with 100 observations of this HMM}
 \details{
-    File 'n1d\_3s.RData' contains the list of vectors 'obs\_n1d\_3s'.
+    File 'n1d_3s.RData' contains the list of vectors 'obs_n1d_3s'.
 }
 \note{Parameters for the simulation
 \cr

@@ -1,16 +1,18 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: cBaumWelchInParam.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _CBAUMWELCHINPARAM_H_
 #define _CBAUMWELCHINPARAM_H_
+#pragma once
+
 #include "cInParam.h"
 
 class cBaumWelchInParam : public cInParam
@@ -28,6 +30,4 @@ class cBaumWelchInParam : public cInParam
                 virtual ~cBaumWelchInParam() ;
                 void Print(void) ;
 } ;
-
-
 #endif //_CBAUMWELCHINPARAM_H_

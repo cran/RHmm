@@ -1,16 +1,17 @@
 /**************************************************************
- *** RHmm version 1.4.3                                     
+ *** RHmm version 1.4.4                                     
  ***                                                         
  *** File: RHmm.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/01                                     
+ *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _RHMM_H_
 #define _RHMM_H_
+#pragma once
 
 typedef enum ParamHMMEnum
 {       eNClasses=0,
@@ -53,4 +54,3 @@ typedef enum DistEnum
 #endif //BEG_EXTERN_C
 
 #endif //_RHMM_H_
-
