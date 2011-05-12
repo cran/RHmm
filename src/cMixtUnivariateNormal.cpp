@@ -1,18 +1,17 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cMixtUnivariateNormal.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
-#include "cMixtUnivariateNormal.h"
-static void MixtUnivariateNormalDensity(cOTVector& theY, uint theNMixt, cOTVector& theMean, cOTVector& theVar, cOTVector& thep, double* theDens)
+#include "StdAfxRHmm.h"
+static void MixtUnivariateNormalDensity(cDVector& theY, uint theNMixt, cDVector& theMean, cDVector& theVar, cDVector& thep, double* theDens)
 {
-cOTVector mySigma(theNMixt) ;
+cDVector mySigma(theNMixt) ;
         for (register uint i = 0 ; i < theNMixt ; i++)
                 mySigma[i] = sqrt(theVar[i]) ;
 
@@ -33,9 +32,9 @@ cMixtUnivariateNormal::cMixtUnivariateNormal(uint theNClass, uint theNMixt)
         mvNClass = theNClass ;
         mvNMixt = theNMixt ;
         if ( (theNClass > 0) && (theNMixt > 0) )
-        {       mMean = new cOTVector[theNClass] ;
-                mVar = new cOTVector[theNClass] ;
-                mp = new cOTVector[theNClass] ;
+        {       mMean = new cDVector[theNClass] ;
+                mVar = new cDVector[theNClass] ;
+                mp = new cDVector[theNClass] ;
                 for (register uint i = 0 ; i < mvNClass ; i++)
                 {       mMean[i].ReAlloc(theNMixt) ;
                         mVar[i].ReAlloc(theNMixt) ;
@@ -59,14 +58,14 @@ cMixtUnivariateNormal::~cMixtUnivariateNormal()
         mvNClass = mvNMixt = 0 ;
 }
 
-void cMixtUnivariateNormal::ComputeCondProba(cOTVector* theY, uint theNSample, cOTMatrix* theCondProba)
+void cMixtUnivariateNormal::ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba)
 {
         for (register uint n = 0 ; n < theNSample ; n++)
                 for (register uint i = 0 ; i < mvNClass ; i++)
-                        MixtUnivariateNormalDensity(theY[n], mvNMixt, mMean[i], mVar[i], mp[i], theCondProba[n].mMat[i]) ;
+                        MixtUnivariateNormalDensity(theY[n], mvNMixt, mMean[i], mVar[i], mp[i], theCondProba[n][i]) ;
 }
 
-void cMixtUnivariateNormal::UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cOTMatrix* theCondProba)
+void cMixtUnivariateNormal::UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba)
 {       
         for (register uint i = 0 ; i < mvNClass ; i++)
         {       
@@ -163,7 +162,7 @@ void cMixtUnivariateNormal::Print()
 }
 
 
-void cMixtUnivariateNormal::GetParam(uint theDeb, cOTVector& theParam)
+void cMixtUnivariateNormal::GetParam(uint theDeb, cDVector& theParam)
 {
 register uint k = theDeb ;
         for (register uint n = 0 ; n < mvNClass ; n++)
@@ -174,11 +173,11 @@ register uint k = theDeb ;
                                 theParam[k++] = mp[n][p] ;
                 }       
 }
-void cMixtUnivariateNormal::SetParam(uint theDeb, cOTVector& theParam)
+void cMixtUnivariateNormal::SetParam(uint theDeb, cDVector& theParam)
 {
 register uint k = theDeb ;
         for (register uint n = 0 ; n < mvNClass ; n++)
-        {       mp[n][mvNMixt-1] = 1.0L ;
+        {       mp[n][mvNMixt-1] = 1.0 ;
                 for (register uint p = 0 ; p < mvNMixt ; p++)
                 {       mMean[n][p] = theParam[k++] ;
                         mVar[n][p] = theParam[k++] ;

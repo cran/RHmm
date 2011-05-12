@@ -3,11 +3,12 @@
 \title{Plot univariates series in each estimated states}
 \description{This function plots the time series in each hidden state.}
 \usage{
-    HMMPlotSerie(obs, states, dis="NORMAL", color="green")
+    HMMPlotSerie(obs, states, dates=NULL, dis="NORMAL", color="green")
     }
 \arguments{
     \item{obs}{the vector, list of vectors of observations}
     \item{states}{a ViterbiClass object which gives the hidden states or a vector or a lis of vectors of integer 1 to the number of hidden states}
+    \item{dates}{an R object representing dates that can be plot as axis labels (e.g. Date object)} 
     \item{dis}{Distribution name = 'NORMAL', 'DISCRETE', 'MIXTURE'. Default 'NORMAL'.}
     \item{color}{color for the kernel density plot}
 }

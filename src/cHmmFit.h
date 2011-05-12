@@ -1,11 +1,10 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cHmmFit.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -31,10 +30,10 @@ class cHmmFit : public cBaumWelch, public cHmm
                 void BaumWelchAlgo(cBaumWelchInParam& theInParam) ;
                 void BaumWelchAlgoInit(cBaumWelchInParam& theInParam) ;
                 cHmmFit & operator = (cHmmFit& theSrc) ;
-                double ComputeLLH(cBaumWelchInParam& theInParam, cOTMatrix* theProbaCond) ;
-                void ComputeFunction(cBaumWelchInParam& theInParam, cOTVector& theValFunct, cOTVector& theh, cOTMatrix* theProbaCond, double theDelta=1e-3) ;
-                void ComputeFunction(cBaumWelchInParam& theInParam, cOTMatrix& theValFunct, cOTVector& theh, cOTMatrix* theProbaCond, double theDelta=1e-3) ;
-                void ComputeGradient(cBaumWelchInParam& theInParam, cOTVector& theGrad, double theDelta=1e-3) ;
-                void ComputeHessian(cBaumWelchInParam& theInPram, cOTMatrix& theHess, double theDelta=1e-3) ;
+                double ComputeLLH(cBaumWelchInParam& theInParam, cDMatrix* theProbaCond) ;
+                void ComputeFunction(cBaumWelchInParam& theInParam, cDVector& theValFunct, cDVector& theh, cDMatrix* theProbaCond, double theDelta=1e-3) ;
+                void ComputeFunction(cBaumWelchInParam& theInParam, cDMatrix& theValFunct, cDVector& theh, cDMatrix* theProbaCond, double theDelta=1e-3) ;
+                void ComputeGradient(cBaumWelchInParam& theInParam, cDVector& theGrad, double theDelta=1e-3) ;
+                void ComputeHessian(cBaumWelchInParam& theInPram, cDMatrix& theHess, double theDelta=1e-3) ;
 } ;
 #endif //_CHMMFIT_H_

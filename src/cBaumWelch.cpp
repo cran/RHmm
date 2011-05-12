@@ -1,15 +1,14 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cBaumWelch.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
-#include "cBaumWelch.h"
+#include "StdAfxRHmm.h"
 
 
 cBaumWelch::cBaumWelch(uint theNSample, uint* theT, uint theNClass)
@@ -29,18 +28,18 @@ cBaumWelch::cBaumWelch(uint theNSample, uint* theT, uint theNClass)
         mvT = new uint[mvNSample] ;
         mLogVrais.ReAlloc(mvNSample) ;
         
-        mAlpha = new cOTMatrix[mvNSample] ;
-        mBeta = new cOTMatrix[mvNSample] ;
-        mGamma = new cOTMatrix[mvNSample] ;
-        mXsi = new cOTMatrix*[mvNSample] ;
-        mSumXsi = new cOTMatrix[mvNSample] ;
-        mRho = new cOTVector[mvNSample] ;
+        mAlpha = new cDMatrix[mvNSample] ;
+        mBeta = new cDMatrix[mvNSample] ;
+        mGamma = new cDMatrix[mvNSample] ;
+        mXsi = new cDMatrix*[mvNSample] ;
+        mSumXsi = new cDMatrix[mvNSample] ;
+        mRho = new cDVector[mvNSample] ;
         for (register uint n = 0 ; n < mvNSample ; n++)
         {       mvT[n] = theT[n] ;
                 mAlpha[n].ReAlloc(theNClass, mvT[n]) ;
                 mBeta[n].ReAlloc(theNClass, mvT[n]) ;
                 mGamma[n].ReAlloc(theNClass, mvT[n]) ;
-                mXsi[n] = new cOTMatrix[mvT[n]] ;
+                mXsi[n] = new cDMatrix[mvT[n]] ;
                 for (register uint t = 0 ; t < mvT[n] ; t++)
                         mXsi[n][t].ReAlloc(theNClass, theNClass) ;
                 mSumXsi[n].ReAlloc(theNClass, theNClass) ;
@@ -64,18 +63,18 @@ cBaumWelch::cBaumWelch(const cInParam &theInParam)
         mvT = new uint[mvNSample] ;
         mLogVrais.ReAlloc(mvNSample) ;
         
-        mAlpha = new cOTMatrix[mvNSample] ;
-        mBeta = new cOTMatrix[mvNSample] ;
-        mGamma = new cOTMatrix[mvNSample] ;
-        mXsi = new cOTMatrix*[mvNSample] ;
-        mSumXsi = new cOTMatrix[mvNSample] ;
-        mRho = new cOTVector[mvNSample] ;
+        mAlpha = new cDMatrix[mvNSample] ;
+        mBeta = new cDMatrix[mvNSample] ;
+        mGamma = new cDMatrix[mvNSample] ;
+        mXsi = new cDMatrix*[mvNSample] ;
+        mSumXsi = new cDMatrix[mvNSample] ;
+        mRho = new cDVector[mvNSample] ;
         for (register uint n = 0 ; n < mvNSample ; n++)
         {       mvT[n] = (theInParam.mY[n].mSize)/theInParam.mDimObs ;
                 mAlpha[n].ReAlloc(theInParam.mNClass, mvT[n]) ;
                 mBeta[n].ReAlloc(theInParam.mNClass, mvT[n]) ;
                 mGamma[n].ReAlloc(theInParam.mNClass, mvT[n]) ;
-                mXsi[n] = new cOTMatrix[mvT[n]] ;
+                mXsi[n] = new cDMatrix[mvT[n]] ;
                 for (register uint t=0 ; t < mvT[n] ; t++)
                         mXsi[n][t].ReAlloc(theInParam.mNClass, theInParam.mNClass) ;
                 mSumXsi[n].ReAlloc(theInParam.mNClass, theInParam.mNClass) ;
@@ -106,7 +105,7 @@ cBaumWelch::~cBaumWelch()
         }
 }
 
-void cBaumWelch::ForwardBackward(cOTMatrix* theCondProba, cHmm& theHMM)
+void cBaumWelch::ForwardBackward(cDMatrix* theCondProba, cHmm& theHMM)
 {
 register uint   i,
                                 j               ;
@@ -118,7 +117,7 @@ uint myNClass = theHMM.mInitProba.mSize ;
         for (register uint n = 0 ; n < mvNSample ; n++)
         {
         int myT = (int)mvT[n] ;
-                mRho[n][0] = 0.0L ;
+                mRho[n][0] = 0.0 ;
                 for (i = 0 ; i < myNClass ; i++)
                 {       mAlpha[n][i][0] = theHMM.mInitProba[i] * theCondProba[n][i][0] ;
                         mRho[n][0] += mAlpha[n][i][0] ; 

@@ -1,11 +1,10 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cUnivariateNormal.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -16,17 +15,17 @@
 
 class cUnivariateNormal : public cDistribution
 {       public :
-                cOTVector       mMean   ;
-                cOTVector       mVar    ;
+                cDVector       mMean   ;
+                cDVector       mVar    ;
         public :
                 cUnivariateNormal(uint theNClass = 0) ;
                 virtual ~cUnivariateNormal() ;
-                virtual void ComputeCondProba(cOTVector* theY, uint theNSample, cOTMatrix* theCondProba) ;
-                virtual void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cOTMatrix* theCondProba=NULL) ;
+                virtual void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba) ;
+                virtual void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL) ;
                 virtual void InitParameters(cBaumWelchInParam &theInParam) ;
                 virtual void Print() ;
-                virtual void GetParam(uint theDeb, cOTVector& theParam) ;
-                virtual void SetParam(uint theDeb, cOTVector& theParam) ;
+                virtual void GetParam(uint theDeb, cDVector& theParam) ;
+                virtual void SetParam(uint theDeb, cDVector& theParam) ;
                 virtual uint GetNParam(void){ return 2 ; }
                 void CopyDistr(cDistribution* theSrc) ;
 } ;

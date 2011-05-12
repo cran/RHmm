@@ -1,15 +1,14 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cLogBaumWelch.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
-#include "cLogBaumWelch.h"
+#include "StdAfxRHmm.h"
 
 
 cLogBaumWelch::cLogBaumWelch(uint theNSample, uint* theT, uint theNClass)
@@ -29,18 +28,18 @@ cLogBaumWelch::cLogBaumWelch(uint theNSample, uint* theT, uint theNClass)
         mvT = new uint[mvNSample] ;
         mLogVrais.ReAlloc(mvNSample) ;
         
-        mLogAlpha = new cOTMatrix[mvNSample] ;
-        mLogBeta = new cOTMatrix[mvNSample] ;
-        mLogGamma = new cOTMatrix[mvNSample] ;
-        mLogXsi = new cOTMatrix*[mvNSample] ;
-        mSumLogXsi = new cOTMatrix[mvNSample] ;
-        mLogRho = new cOTVector[mvNSample] ;
+        mLogAlpha = new cDMatrix[mvNSample] ;
+        mLogBeta = new cDMatrix[mvNSample] ;
+        mLogGamma = new cDMatrix[mvNSample] ;
+        mLogXsi = new cDMatrix*[mvNSample] ;
+        mSumLogXsi = new cDMatrix[mvNSample] ;
+        mLogRho = new cDVector[mvNSample] ;
         for (register uint n = 0 ; n < mvNSample ; n++)
         {       mvT[n] = theT[n] ;
                 mLogAlpha[n].ReAlloc(theNClass, mvT[n]) ;
                 mLogBeta[n].ReAlloc(theNClass, mvT[n]) ;
                 mLogGamma[n].ReAlloc(theNClass, mvT[n]) ;
-                mLogXsi[n] = new cOTMatrix[mvT[n]] ;
+                mLogXsi[n] = new cDMatrix[mvT[n]] ;
                 for (register uint t = 0 ; t < mvT[n] ; t++)
                         mLogXsi[n][t].ReAlloc(theNClass, theNClass) ;
                 mSumLogXsi[n].ReAlloc(theNClass, theNClass) ;
@@ -64,18 +63,18 @@ cLogBaumWelch::cLogBaumWelch(const cInParam &theInParam)
         mvT = new uint[mvNSample] ;
         mLogVrais.ReAlloc(mvNSample) ;
         
-        mLogAlpha = new cOTMatrix[mvNSample] ;
-        mLogBeta = new cOTMatrix[mvNSample] ;
-        mLogGamma = new cOTMatrix[mvNSample] ;
-        mLogXsi = new cOTMatrix*[mvNSample] ;
-        mSumLogXsi = new cOTMatrix[mvNSample] ;
-        mLogRho = new cOTVector[mvNSample] ;
+        mLogAlpha = new cDMatrix[mvNSample] ;
+        mLogBeta = new cDMatrix[mvNSample] ;
+        mLogGamma = new cDMatrix[mvNSample] ;
+        mLogXsi = new cDMatrix*[mvNSample] ;
+        mSumLogXsi = new cDMatrix[mvNSample] ;
+        mLogRho = new cDVector[mvNSample] ;
         for (register uint n = 0 ; n < mvNSample ; n++)
         {       mvT[n] = (theInParam.mY[n].mSize)/theInParam.mDimObs ;
                 mLogAlpha[n].ReAlloc(theInParam.mNClass, mvT[n]) ;
                 mLogBeta[n].ReAlloc(theInParam.mNClass, mvT[n]) ;
                 mLogGamma[n].ReAlloc(theInParam.mNClass, mvT[n]) ;
-                mLogXsi[n] = new cOTMatrix[mvT[n]] ;
+                mLogXsi[n] = new cDMatrix[mvT[n]] ;
                 for (register uint t=0 ; t < mvT[n] ; t++)
                         mLogXsi[n][t].ReAlloc(theInParam.mNClass, theInParam.mNClass) ;
                 mSumLogXsi[n].ReAlloc(theInParam.mNClass, theInParam.mNClass) ;
@@ -106,7 +105,7 @@ cLogBaumWelch::~cLogBaumWelch()
         }
 }
 
-void cLogBaumWelch::LogForwardBackward(cOTMatrix* theCondProba, cHmm& theHMM)
+void cLogBaumWelch::LogForwardBackward(cDMatrix* theCondProba, cHmm& theHMM)
 {
 register uint   i,
                                 j               ;
@@ -146,7 +145,7 @@ uint myNClass = theHMM.mInitProba.mSize ;
 
                 // backward
                 for (i = 0 ; i < myNClass ; i++)
-                        mLogBeta[n][i][myT-1] = 0.0L ;  // log(1)
+                        mLogBeta[n][i][myT-1] = 0.0 ;  // log(1)
 
                 for (t = myT-2 ; t >= 0 ; t--)
                 {

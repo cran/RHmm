@@ -1,11 +1,10 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: SamplesUtil.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -14,7 +13,7 @@
 #pragma once
 #include "OTMathUtil.h"
 
-void flatSamples(cOTVector* theInVect, uint theNSample, uint theDimObs, uint theNObsAllSamples, cOTVector& theOutVect) ;
-void listSamples(cOTVector& theInVect, uint theNSample, uint theDimObs, uint* theNObsSample, cOTVector* theOutVect) ;
+void flatSamples(cDVector* theInVect, uint theNSample, uint theDimObs, uint theNObsAllSamples, cDVector& theOutVect) ;
+void listSamples(cDVector& theInVect, uint theNSample, uint theDimObs, uint* theNObsSample, cDVector* theOutVect) ;
 
 #endif //_SAMPLESUTIL_H_

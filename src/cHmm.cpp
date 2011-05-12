@@ -1,26 +1,21 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cHmm.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
-#include "cHmm.h"
-#include "AllDistributions.h"
-
-#include <vector>
-
+#include "StdAfxRHmm.h"
 
 cHmm::cHmm(distrDefinitionEnum theDistrType, uint theNClass, uint theDimObs, uint theNMixture, uint theNProba)
 {       MESS_CREAT("cHmm")
         mDistrType = theDistrType ;
         mInitProba.ReAlloc(theNClass) ;
 
-        cOTMatrix *transMat = new cOTMatrix(theNClass,theNClass,0);
+        cDMatrix *transMat = new cDMatrix(theNClass,theNClass,0.0);
         mTransMatVector.push_back(*transMat);
 //      mTransMat.ReAlloc(theNClass, theNClass) ;
 
@@ -50,8 +45,9 @@ cHmm::cHmm(const cInParam &theInParam)
         mInitProba.ReAlloc(theInParam.mNClass);
 //      mTransMat.ReAlloc(theInParam.mNClass, theInParam.mNClass) ;
 
-        cOTMatrix *transMat = new cOTMatrix(theInParam.mNClass,theInParam.mNClass,0);
+        cDMatrix *transMat = new cDMatrix(theInParam.mNClass,theInParam.mNClass,0.0);
         mTransMatVector.push_back(*transMat);
+        delete transMat;
 
         mDistrType = theInParam.mDistrType ;
         switch(mDistrType)
@@ -78,52 +74,14 @@ cHmm::cHmm(const cInParam &theInParam)
 cHmm::~cHmm()
 {       MESS_DESTR("cHmm")
 
-        std::vector<cOTMatrix>::iterator it;
+        std::vector<cDMatrix>::iterator it;
         for (it = mTransMatVector.begin(); it < mTransMatVector.end(); it++ )
                 it->Delete();
-        // Probably more to free here
 
+        // Probably more to free here
         mInitProba.Delete() ;
 
-        delete mDistrParam ;    
-/*      if (mDistrParam != NULL)
-        {       switch(mDistrType)
-                {       case eNormalDistr :
-                        {       
-                        cUnivariateNormal* myDistr = dynamic_cast<cUnivariateNormal *>(mDistrParam) ;
-                                delete myDistr ;
-                        }
-                        break ;
-                        case eMultiNormalDistr :
-                        {
-                        cMultivariateNormal* myDistr = dynamic_cast<cMultivariateNormal *>(mDistrParam) ;
-                                delete myDistr ;
-                        }
-                        break ;
-                        case eMixtUniNormalDistr :
-                        {
-                        cMixtUnivariateNormal* myDistr = dynamic_cast<cMixtUnivariateNormal *>(mDistrParam) ;
-                                delete myDistr ;
-                        }
-                        break ;
-                        case eMixtMultiNormalDistr :
-                        {       
-                        cMixtUnivariateNormal* myDistr = dynamic_cast<cMixtUnivariateNormal *>(mDistrParam) ;
-                                delete myDistr ;
-                        }
-                        break ;
-                        case eDiscreteDistr :
-                        {
-                        cDiscrete* myDistr = dynamic_cast<cDiscrete *>(mDistrParam) ;
-                                delete myDistr ;
-                        }
-                        break ;
-                        case eUnknownDistr :
-                                mDistrParam = (cDistribution *)NULL ;
-                        break ;
-                }
-        }
-*/
+        delete mDistrParam ;
         mDistrParam = (cDistribution *)NULL ;
 }
 
@@ -172,19 +130,19 @@ uint myNClass = mInitProba.mSize ;
         return( -1 + myNClass * (myNClass + mDistrParam->GetNParam()) ) ;
 }
 
-void cHmm::SetParam(cOTVector& theParam) 
+void cHmm::SetParam(cDVector& theParam) 
 {
 uint myNClass = mInitProba.mSize ;
 register uint k = 0 ;
         
-        mInitProba[myNClass-1] = 1.0L ;
+        mInitProba[myNClass-1] = 1.0 ;
         for (register uint n = 0 ; n < myNClass - 1 ; n++)
         {       mInitProba[n] = theParam[k++] ;
                 mInitProba[myNClass-1] -= mInitProba[n] ;
         }
 
         for (register uint n = 0 ; n < myNClass ; n++)
-        {       mTransMatVector[0][n][myNClass-1] = 1.0L ;
+        {       mTransMatVector[0][n][myNClass-1] = 1.0 ;
                 for (register uint p = 0 ; p < myNClass - 1 ; p++)
                 {       mTransMatVector[0][n][p] = theParam[k++] ;
                         mTransMatVector[0][n][myNClass-1] -= mTransMatVector[0][n][p] ; // FIXME
@@ -193,7 +151,7 @@ register uint k = 0 ;
         mDistrParam->SetParam(k, theParam) ;
 }
 
-void cHmm::GetParam(cOTVector& theParam) 
+void cHmm::GetParam(cDVector& theParam) 
 {
 uint myNClass = mInitProba.mSize ; 
 register uint k = 0 ;

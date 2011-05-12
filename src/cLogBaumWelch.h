@@ -1,11 +1,10 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cLogBaumWelch.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -21,17 +20,17 @@ class cLogBaumWelch
                         uint    mvNSample               ;
                         uint*   mvT                             ;
         public :                                                
-                        cOTMatrix*      mLogAlpha       ;
-                        cOTMatrix*      mLogBeta        ;
-                        cOTVector*      mLogRho         ;
-                        cOTMatrix*      mLogGamma       ;
-                        cOTMatrix**     mLogXsi         ;
-                        cOTMatrix*      mSumLogXsi      ;
-                        cOTVector       mLogVrais       ;
+                        cDMatrix*      mLogAlpha       ;
+                        cDMatrix*      mLogBeta        ;
+                        cDVector*      mLogRho         ;
+                        cDMatrix*      mLogGamma       ;
+                        cDMatrix**     mLogXsi         ;
+                        cDMatrix*      mSumLogXsi      ;
+                        cDVector       mLogVrais       ;
         public :
                 cLogBaumWelch(uint theNSample, uint* theT, uint theNClass) ;
                 cLogBaumWelch(const cInParam &theInParam) ;
-                void LogForwardBackward(cOTMatrix* theCondProba, cHmm& theHMM) ;
+                void LogForwardBackward(cDMatrix* theCondProba, cHmm& theHMM) ;
                 uint GetSampleSize(uint theN){ return mvT[theN] ;}
                 virtual ~cLogBaumWelch() ;
 } ;

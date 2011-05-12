@@ -1,18 +1,17 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cBaumWelchInParam.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
-#include "cBaumWelchInParam.h"
+#include "StdAfxRHmm.h"
 
 
-cBaumWelchInParam::cBaumWelchInParam(uint theNSample, uint theDimObs, cOTVector* theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba):cInParam(theNSample, theDimObs, theY, theDistrType, theNClass, theNMixt, theNProba)
+cBaumWelchInParam::cBaumWelchInParam(uint theNSample, uint theDimObs, cDVector* theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba):cInParam(theNSample, theDimObs, theY, theDistrType, theNClass, theNMixt, theNProba)
 {       MESS_CREAT("cBaumWelchInParam") 
         SetDefault() ;
 }
@@ -44,7 +43,7 @@ cBaumWelchInParam &cBaumWelchInParam::operator =(const cBaumWelchInParam &theSrc
                         mY[i].Delete() ;
                 delete mY ;
         }
-        mY = new cOTVector[theSrc.mNSample] ;
+        mY = new cDVector[theSrc.mNSample] ;
         mNSample = theSrc.mNSample ;
         mDimObs = theSrc.mDimObs ;
         mNProba = theSrc.mNProba ;

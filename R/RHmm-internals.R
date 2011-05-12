@@ -1,11 +1,10 @@
  ###############################################################
- #### RHmm version 1.4.4                               
+ #### RHmm version 1.5.0                             
  ####                                                         
  #### File: RHmm-internals.R 
  ####                                                         
  #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr>
  #### Author: Sebastian BAUER <sebastian.bauer@charite.de>
- #### Date: 2010/12/09                                      
  ####                                                         
  ###############################################################
 
@@ -117,7 +116,7 @@ GetAllLevels <- function(obs)
         {   Aux1 <- unlist(lapply(obs, levels))
             Aux2 <- sort(Aux1)
             lAux <- length(Aux2)
-            Aux3 <- c(T,(Aux2[2:lAux]!=Aux2[1:(lAux-1)]))
+            Aux3 <- c(TRUE,(Aux2[2:lAux]!=Aux2[1:(lAux-1)]))
             return(Aux2[Aux3])
         }
         else

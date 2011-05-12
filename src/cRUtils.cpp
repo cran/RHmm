@@ -1,18 +1,17 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cRUtils.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
+#include "StdAfxRHmm.h"
 #ifdef _RDLL_
-#include "cRUtils.h"
 /*
- *      Récupérer une seule valeur à partir d'une liste SEXP à la place n° theNum
+ *      Récupérer une seule valeur ï¿½ partir d'une liste SEXP à la place n° theNum
  */
 void cRUtil::GetValSexp(SEXP theSEXP, uint theNum, uint &theVal)
 {
@@ -43,7 +42,7 @@ void cRUtil::GetValSexp(SEXP theSEXP, uint theNum, SEXP &theVal)
 }
 
 /*
- *      Récupérer une vecteur à partir d'une liste SEXP à la place n° theNum
+ *      Récupérer une vecteur ï¿½ partir d'une liste SEXP à la place n° theNum
  */
 void cRUtil::GetVectSexp(SEXP theSEXP, uint theNum, uint theDim, int* theVal)
 {
@@ -64,14 +63,14 @@ SEXP myAux = VECTOR_ELT(theSEXP, theNum) ;
         for (register uint i = 0 ; i < theDim ; i++)
                 theVal[i] = REAL(myAux)[i] ;
 }
-void cRUtil::GetVectSexp(SEXP theSEXP, uint theNum, cOTVector& theVal)
+void cRUtil::GetVectSexp(SEXP theSEXP, uint theNum, cDVector& theVal)
 {
 SEXP myAux = VECTOR_ELT(theSEXP, theNum) ;
         for (register uint i = 0 ; i < theVal.mSize ; i++)
                 theVal[i] = REAL(myAux)[i] ;
 }
 /*
- *      Récupérer une matrice à partir d'une liste SEXP à la place n° theNum
+ *      Récupérer une matrice á partir d'une liste SEXP à la place n° theNum
  */
 void cRUtil::GetMatSexp(SEXP theSEXP, uint theNum, uint theLigne, uint theCol, int** theMat)
 {
@@ -95,12 +94,12 @@ SEXP myAux = VECTOR_ELT(theSEXP, theNum) ;
                         theMat[i][j] = REAL(myAux)[i+j*theLigne] ;
 }
 
-void cRUtil::GetMatSexp(SEXP theSEXP, uint theNum, cOTMatrix& theMat)
+void cRUtil::GetMatSexp(SEXP theSEXP, uint theNum, cDMatrix& theMat)
 {
 SEXP myAux = VECTOR_ELT(theSEXP, theNum) ;
         for (register uint i = 0 ; i < theMat.mNRow ; i++)
                 for (register uint j = 0 ; j < theMat.mNCol ; j++)
-                {       theMat.mMat[i][j] = REAL(myAux)[i+j*theMat.mNRow] ;
+                {       theMat[i][j] = REAL(myAux)[i+j*theMat.mNRow] ;
                 }
 }
 
@@ -108,7 +107,7 @@ SEXP myAux = VECTOR_ELT(theSEXP, theNum) ;
  * Retrieves the list of matrix and stores it in theList.
  * We assume that at least one element has been stored before.
  */
-void cRUtil::GetMatListSexp(SEXP theSEXP, uint theNum, std::vector<cOTMatrix> &theList)
+void cRUtil::GetMatListSexp(SEXP theSEXP, uint theNum, std::vector<cDMatrix> &theList)
 {
         SEXP myAux = VECTOR_ELT(theSEXP, theNum) ;
 
@@ -126,7 +125,53 @@ void cRUtil::GetMatListSexp(SEXP theSEXP, uint theNum, std::vector<cOTMatrix> &t
                 {
                         if (theList.size() <= i)
                         {
-                                cOTMatrix *mat = new cOTMatrix(nrow,ncol,0.0);
+                                cDMatrix *mat = new cDMatrix(nrow,ncol,0.0);
+                                theList.push_back(*mat);
+                        }
+                        GetMatSexp(myAux, i, theList.at(i) );
+                }
+        }
+}
+
+/**
+ * Retrieves the emission probabilities which either can be stored as list of vectors
+ * or as a list of matrices (time-dependent then).
+ *
+ * We assume that at least one element has been stored before.
+ */
+void cRUtil::GetEmissionSexp(SEXP theSEXP, uint theNum, std::vector<cDMatrix> &theList)
+{
+        SEXP myAux = VECTOR_ELT(theSEXP, theNum) ;
+
+        uint nrow = theList.at(0).mNRow;
+        uint ncol = theList.at(0).mNCol;
+        uint i,j;
+
+        if (!isVector(myAux))
+                return;
+
+        if (!isMatrix(VECTOR_ELT(myAux,0)))
+        {
+                /* Parameter is a list of vectors, as the first elements is no matrix */
+                cDVector vec;
+                vec.ReAlloc(ncol);
+
+                for (i=0;i<nrow;i++)
+                {
+                        GetVectSexp(myAux, i, vec);
+
+                        for (j=0;j<ncol;j++)
+                                theList.at(0)[i][j] = vec[j];
+                }
+        } else
+        {
+                /* Parameter is a list of matrices */
+
+                for (i=0;i<(uint)length(myAux);i++)
+                {
+                        if (theList.size() <= i)
+                        {
+                                cDMatrix *mat = new cDMatrix(nrow,ncol,0.0);
                                 theList.push_back(*mat);
                         }
                         GetMatSexp(myAux, i, theList.at(i) );
@@ -161,7 +206,7 @@ SEXP myAux ;
 }
 
 /*
- * Récuperer l'ensemble des vecteurs dans une liste de vecteur
+ * Récupérer l'ensemble des vecteurs dans une liste de vecteur
  */
 void cRUtil::GetListVectSexp(SEXP theSEXP, uint theNum, uint theNElt, uint theDim, int** theVal)
 {
@@ -184,7 +229,7 @@ SEXP myAux ;
         for (register uint i = 0 ; i < theNElt ; i++)
                 GetVectSexp(myAux, i, theDim, theVal[i]) ;
 }
-void cRUtil::GetListVectSexp(SEXP theSEXP, uint theNum, uint theNElt, cOTVector* theVal)
+void cRUtil::GetListVectSexp(SEXP theSEXP, uint theNum, uint theNElt, cDVector* theVal)
 {
 SEXP myAux ;
         GetValSexp(theSEXP, theNum, myAux) ;
@@ -219,7 +264,7 @@ SEXP myAux ;
                 GetMatSexp(myAux, i,theLigne, theCol, theVal[i]) ;
 }
 
-void cRUtil::GetListMatSexp(SEXP theSEXP, uint theNum, uint theNElt, cOTMatrix* theVal)
+void cRUtil::GetListMatSexp(SEXP theSEXP, uint theNum, uint theNElt, cDMatrix* theVal)
 {
 SEXP myAux ;
         GetValSexp(theSEXP, theNum, myAux) ;
@@ -228,9 +273,9 @@ SEXP myAux ;
 }
 
 /*
- * Récuperer l'ensemble des vecteurs dans une liste de liste de vecteurs
+ * Store the given SEXP vectors in an array of vectors
  */
-void cRUtil::GetListListVectSexp(SEXP theSEXP, uint theNum, uint theNList1, uint theNList2, cOTVector** theVect)
+void cRUtil::GetListListVectSexp(SEXP theSEXP, uint theNum, uint theNList1, uint theNList2, cDVector** theVect)
 {
 SEXP myAux ;
         GetValSexp(theSEXP, theNum, myAux) ;
@@ -240,9 +285,9 @@ SEXP myAux ;
 }
 
 /*
- * Récuperer l'ensemble des matrices dans une liste de liste de matrices
+ * Store the given SEXP matrices in an array of matrices.
  */
-void cRUtil::GetListListMatSexp(SEXP theSEXP, uint theNum, uint theNList1, uint theNList2, cOTMatrix** theMat)
+void cRUtil::GetListListMatSexp(SEXP theSEXP, uint theNum, uint theNList1, uint theNList2, cDMatrix** theMat)
 {
 SEXP myAux ;
         GetValSexp(theSEXP, theNum, myAux) ;
@@ -252,7 +297,7 @@ SEXP myAux ;
 }
 
 /*
- *      Remplit une seule valeur dans un SEXP à la place n° theNum 
+ *      Remplit une seule valeur dans un SEXP à la place n° theNum
  */
 void cRUtil::set_val_sexp(int theVal, SEXP &theSEXP)
 {       mvNbProtect++ ;
@@ -292,7 +337,7 @@ void cRUtil::SetVectSexp(double *theVect, uint theDim, SEXP &theSEXP)
         for (register uint i = 0 ; i < theDim ; i++)
                 REAL(theSEXP)[i] = theVect[i] ;
 }
-void cRUtil::SetVectSexp(cOTVector& theVect, SEXP &theSEXP)
+void cRUtil::SetVectSexp(cDVector& theVect, SEXP &theSEXP)
 {       mvNbProtect++ ;
         PROTECT(theSEXP=allocVector(REALSXP, theVect.mSize)) ;
         for (register uint i = 0 ; i < theVect.mSize ; i++)
@@ -327,12 +372,12 @@ void cRUtil::SetMatSexp(double** theMat, uint theLigne, uint theCol, SEXP &theSE
                         REAL(theSEXP)[i+j*theLigne] = theMat[i][j] ;
 }
 
-void cRUtil::SetMatSexp(cOTMatrix& theMat, SEXP &theSEXP)
+void cRUtil::SetMatSexp(cDMatrix& theMat, SEXP &theSEXP)
 {       mvNbProtect++ ;
         PROTECT(theSEXP = allocMatrix(REALSXP, theMat.mNRow, theMat.mNCol)) ;
         for (register uint i = 0 ; i < theMat.mNRow ; i++)
                 for (register uint j = 0 ; j <  theMat.mNCol ; j++)
-                        REAL(theSEXP)[i+j*theMat.mNRow] = theMat.mMat[i][j] ;
+                        REAL(theSEXP)[i+j*theMat.mNRow] = theMat[i][j] ;
 }
 
 /*
@@ -367,7 +412,7 @@ void cRUtil::SetListValSexp(double* theVal, uint theDim, SEXP &theSEXP)
                 SET_VECTOR_ELT(theSEXP, i, myAux) ;
         }
 }
-void cRUtil::SetListValSexp(cOTVector& theVal, SEXP &theSEXP)
+void cRUtil::SetListValSexp(cDVector& theVal, SEXP &theSEXP)
 {       mvNbProtect++ ;
         PROTECT(theSEXP = allocVector(VECSXP, theVal.mSize)) ;
         for (register uint i = 0 ; i < theVal.mSize ; i++)
@@ -443,7 +488,7 @@ void cRUtil::SetListVectSexp(double** theVal, uint theNElt, uint *theDim, SEXP &
 }
 
 
-void cRUtil::SetListVectSexp(cOTVector* theVal, uint theNElt, SEXP &theSEXP)
+void cRUtil::SetListVectSexp(cDVector* theVal, uint theNElt, SEXP &theSEXP)
 {       mvNbProtect++ ;
         PROTECT(theSEXP = allocVector(VECSXP, theNElt)) ;
         for (register uint i = 0 ; i < theNElt ; i++)
@@ -453,7 +498,21 @@ void cRUtil::SetListVectSexp(cOTVector* theVal, uint theNElt, SEXP &theSEXP)
         }
 }
 
+void cRUtil::SetListVectSexp(cDMatrix& theVal, SEXP &theSEXP)
+{
+        uint theNElt;
 
+        theNElt = theVal.mNRow;
+
+        PROTECT(theSEXP = allocVector(VECSXP, theNElt)) ;
+        for (uint i = 0 ; i < theNElt; i++)
+        {
+               SEXP myAux  ;
+               SetVectSexp(theVal[i], theVal.mNCol, myAux) ;
+               SET_VECTOR_ELT(theSEXP, i, myAux) ;
+        }
+
+}
 
 /*
  * Remplit une liste de theNElt matrice de taille theLigne x theCol dans un SEXP
@@ -517,7 +576,7 @@ void cRUtil::SetListMatSexp(double*** theVal, uint theNElt, uint *theLigne, uint
 }
 
 
-void cRUtil::SetListMatSexp(cOTMatrix* theVal, uint theNElt, SEXP &theSEXP)
+void cRUtil::SetListMatSexp(cDMatrix* theVal, uint theNElt, SEXP &theSEXP)
 {       mvNbProtect++ ;
         PROTECT(theSEXP = allocVector(VECSXP, theNElt)) ;
         for (register uint i = 0 ; i < theNElt ; i++)
@@ -530,7 +589,7 @@ void cRUtil::SetListMatSexp(cOTMatrix* theVal, uint theNElt, SEXP &theSEXP)
 /*
 * Remplit une liste de theNList1 elements de listes de theNList2 elements de vecteurs dans un SEXP
 */
-void cRUtil::SetListListVectSexp(cOTVector** theVect, uint theNList1, uint theNList2, SEXP &theSEXP)
+void cRUtil::SetListListVectSexp(cDVector** theVect, uint theNList1, uint theNList2, SEXP &theSEXP)
 {
         mvNbProtect++ ;
         PROTECT(theSEXP = allocVector(VECSXP, theNList1)) ;
@@ -545,7 +604,7 @@ void cRUtil::SetListListVectSexp(cOTVector** theVect, uint theNList1, uint theNL
 * Remplit une liste de theNList1 elements de listes de theNList2 elements de matrices dans un SEXP
 */
                 
-void cRUtil::SetListListMatSexp(cOTMatrix** theMat, uint theNList1, uint theNList2, SEXP &theSEXP)
+void cRUtil::SetListListMatSexp(cDMatrix** theMat, uint theNList1, uint theNList2, SEXP &theSEXP)
 {       mvNbProtect++ ;
         PROTECT(theSEXP = allocVector(VECSXP, theNList1)) ;
         for (register uint i = 0 ; i < theNList1 ; i++)
@@ -555,7 +614,7 @@ void cRUtil::SetListListMatSexp(cOTMatrix** theMat, uint theNList1, uint theNLis
         }
 }
 
-void cRUtil::SetListListMatSexp(cOTMatrix** theMat, uint theNList1, uint* theNList2, SEXP &theSEXP)
+void cRUtil::SetListListMatSexp(cDMatrix** theMat, uint theNList1, uint* theNList2, SEXP &theSEXP)
 {       mvNbProtect++ ;
         PROTECT(theSEXP = allocVector(VECSXP, theNList1)) ;
         for (register uint i = 0 ; i < theNList1 ; i++)
@@ -565,4 +624,4 @@ void cRUtil::SetListListMatSexp(cOTMatrix** theMat, uint theNList1, uint* theNLi
         }
 }
 
-#endif / _RDLL_
+#endif /* _RDLL_ */

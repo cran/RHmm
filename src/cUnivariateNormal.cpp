@@ -1,15 +1,14 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cUnivariateNormal.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
-#include "cUnivariateNormal.h"
+#include "StdAfxRHmm.h"
 
 cUnivariateNormal::cUnivariateNormal(uint theDimObs)
 {       MESS_CREAT("cUnivariateNormal")
@@ -23,7 +22,7 @@ cUnivariateNormal::~cUnivariateNormal()
         mVar.Delete() ;
 }
 
-void cUnivariateNormal::ComputeCondProba(cOTVector* theY, uint theNSample, cOTMatrix* theCondProba)
+void cUnivariateNormal::ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba)
 {
 register uint   i,
                                 n,
@@ -40,7 +39,7 @@ double                  myAux                                   ;
                         }
                 }
 }
-void cUnivariateNormal::UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cOTMatrix* theCondProba)
+void cUnivariateNormal::UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba)
 {       
         for (register uint i = 0 ; i < theInParam.mNClass ; i++)
         {       register uint   n,
@@ -74,7 +73,7 @@ void cUnivariateNormal::InitParameters(cBaumWelchInParam &theInParam)
         int *mySeq = new int[myT], 
                 *myNbObs = new int[myT] ;
 
-        cOTVector myY(myT)      ;
+        cDVector myY(myT)      ;
 //              alloc_vecteur(myY, myT) ;
         register uint   s = 0,
                                         t               ;
@@ -108,7 +107,7 @@ void cUnivariateNormal::InitParameters(cBaumWelchInParam &theInParam)
 double  myMoy = 0, 
                 myVar = 0,
                 mystdev         ;
-double  mys = 0.0L              ;               
+double  mys = 0.0              ;               
                 for (register uint n = 0 ; n < theInParam.mNSample ; n++)
                 {       for (register uint t = 0 ; t < theInParam.mY[n].mSize  ; t++)
                         {       myMoy = (mys*myMoy + theInParam.mY[n][t])/(mys+1) ;
@@ -146,7 +145,7 @@ cUnivariateNormal* mySrc = static_cast<cUnivariateNormal *>(theSrc) ;
 
 
 
-void cUnivariateNormal::GetParam(uint theDeb, cOTVector& theParam)
+void cUnivariateNormal::GetParam(uint theDeb, cDVector& theParam)
 {
 register uint k = theDeb ;
         for (register uint n = 0 ; n < mMean.mSize ; n++)
@@ -154,7 +153,7 @@ register uint k = theDeb ;
                 theParam[k++] = mVar[n] ;
         }
 }
-void cUnivariateNormal::SetParam(uint theDeb, cOTVector& theParam)
+void cUnivariateNormal::SetParam(uint theDeb, cDVector& theParam)
 {
 register uint k = theDeb ;
         for (register uint n = 0 ; n < mMean.mSize ; n++)

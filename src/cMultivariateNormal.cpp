@@ -1,24 +1,23 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cMultivariateNormal.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
-#include "MultivariateNormalUtil.h"
-#include "cMultivariateNormal.h"
+#include "StdAfxRHmm.h"
+
 
 
 cMultivariateNormal::cMultivariateNormal(uint theNClass, uint theDimObs)
 {       MESS_CREAT("cMultivariateNormal")
         mvNClass = theNClass ;
         if ( (mvNClass > 0) && (theDimObs > 0) )
-        {       mMean = new cOTVector[mvNClass] ;
-                mCov = new cOTMatrix[mvNClass] ;
+        {       mMean = new cDVector[mvNClass] ;
+                mCov = new cDMatrix[mvNClass] ;
                 
                 for (register uint      i = 0 ; i < mvNClass ; i++)
                 {       mMean[i].ReAlloc(theDimObs) ;
@@ -40,8 +39,8 @@ cMultivariateNormal::~cMultivariateNormal()
                 {       mMean[i].Delete() ;
                         mCov[i].Delete() ;
                 }
-                delete mMean ;
-                delete mCov ;
+                delete [] mMean ;
+                delete [] mCov ;
                 mMean = NULL ;
                 mCov = NULL ;
                 mvNClass = 0 ;
@@ -49,25 +48,25 @@ cMultivariateNormal::~cMultivariateNormal()
 }
 
 
-void cMultivariateNormal::ComputeCondProba(cOTVector* theY, uint theNSample, cOTMatrix* theCondProba) 
+void cMultivariateNormal::ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba) 
 {
 register uint   i,
                                 k       ;
 uint myDimObs = mMean[0].mSize ;
 
-cOTMatrix myInvCov=cOTMatrix(myDimObs, myDimObs) ;
+cDMatrix myInvCov=cDMatrix(myDimObs, myDimObs) ;
 
 double myDet ;
         for (i = 0 ; i < mvNClass ; i++)
         {       SymetricInverseAndDet(mCov[i], myDet, myInvCov) ;
 
                 for (k = 0 ; k < theNSample ; k++)
-                        MultivariateNormalDensity(theY[k], mMean[i], myInvCov, myDet, theCondProba[k].mMat[i]) ;
+                        MultivariateNormalDensity(theY[k], mMean[i], myInvCov, myDet, theCondProba[k][i]) ;
         }
 
 }
 
-void cMultivariateNormal::UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cOTMatrix* theCondProba)
+void cMultivariateNormal::UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba)
 {       
         for (register uint i = 0 ; i < mvNClass ; i++)
         {       register uint   n,
@@ -113,7 +112,7 @@ void cMultivariateNormal::InitParameters(cBaumWelchInParam &theInParam)
                 {       myT +=  theInParam.mY[i].mSize ;
                 }
         
-        cOTVector myY(myT)      ;
+        cDVector myY(myT)      ;
         myT /= theInParam.mDimObs ;
                 flatSamples(theInParam.mY ,theInParam.mNSample, theInParam.mDimObs, myT, myY) ;
 
@@ -157,21 +156,21 @@ void cMultivariateNormal::InitParameters(cBaumWelchInParam &theInParam)
         GetRNGstate();
 #endif //_RDLL_
 
-cOTVector       myMoy(theInParam.mDimObs),
+cDVector       myMoy(theInParam.mDimObs),
                         myVar(theInParam.mDimObs),
                         mySigma(theInParam.mDimObs) ;           
 
-double mys = 0.0L       ;
+double mys = 0.0       ;
 
         for (register uint n = 0 ; n < theInParam.mNSample ; n++)
         {       uint myT = theInParam.mY[n].mSize/theInParam.mDimObs  ;
-                cOTVector& myY = theInParam.mY[n] ;
+                cDVector& myY = theInParam.mY[n] ;
                 for (register uint t = 0 ; t < myT ; t++)
                 {       for(register uint i = 0 ; i < theInParam.mDimObs ; i++)
-                        {       myMoy[i] = (mys*myMoy[i] + myY[t+i*myT])/(mys+1.0L) ;
-                                myVar[i] = (mys*myVar[i] + myY[t+i*myT]*myY[t+i*myT])/(mys+1.0L) ;
+                        {       myMoy[i] = (mys*myMoy[i] + myY[t+i*myT])/(mys+1.0) ;
+                                myVar[i] = (mys*myVar[i] + myY[t+i*myT]*myY[t+i*myT])/(mys+1.0) ;
                         }
-                        mys += 1.0L ;
+                        mys += 1.0 ;
                 }
         }
 
@@ -181,7 +180,7 @@ double mys = 0.0L       ;
         }
 
         for (register uint i = 0 ; i < mvNClass ; i++)
-                mCov[i] = 0.0L ;
+                mCov[i] = 0.0 ;
 
         for (register uint i = 0 ; i < mvNClass ; i++)
         {       for (register uint j = 0 ; j < theInParam.mDimObs ; j++)
@@ -236,7 +235,7 @@ uint cMultivariateNormal::GetDimObs(void)
                 return 0 ;
 }
 
-void cMultivariateNormal::GetParam(uint theDeb, cOTVector& theParam)
+void cMultivariateNormal::GetParam(uint theDeb, cDVector& theParam)
 {
 uint myDimObs = GetDimObs() ;
 register uint k = theDeb ;
@@ -248,7 +247,7 @@ register uint k = theDeb ;
                                 theParam[k++] = mCov[n][p][q] ;
         }
 }
-void cMultivariateNormal::SetParam(uint theDeb, cOTVector& theParam)
+void cMultivariateNormal::SetParam(uint theDeb, cDVector& theParam)
 {
 uint myDimObs = GetDimObs() ;
 register uint k = theDeb ;

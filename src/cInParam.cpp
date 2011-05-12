@@ -1,17 +1,16 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cInParam.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
-#include "cInParam.h"
+#include "StdAfxRHmm.h"
 
-cInParam::cInParam(uint theNSample, uint theDimObs, cOTVector* theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba)
+cInParam::cInParam(uint theNSample, uint theDimObs, cDVector* theY, distrDefinitionEnum theDistrType, uint theNClass, uint theNMixt, uint theNProba)
 {       MESS_CREAT("cInParam")
         mDistrType = theDistrType ;
         mNClass = theNClass ;
@@ -20,12 +19,12 @@ cInParam::cInParam(uint theNSample, uint theDimObs, cOTVector* theY, distrDefini
         mNSample = theNSample ;
         mDimObs = theDimObs ;
         if (mNSample > 0)
-        {       mY = new cOTVector[mNSample] ;
+        {       mY = new cDVector[mNSample] ;
                 for (register uint i = 0 ; i < mNSample ; i++)
                         mY[i] = theY[i] ;
         }
         else
-                mY = (cOTVector *)NULL ;
+                mY = (cDVector *)NULL ;
 }
 cInParam::~cInParam()
 {       MESS_DESTR("cInParam")
@@ -47,7 +46,7 @@ cInParam &cInParam::operator =(const cInParam &theSrc)
                 delete mY ;
         }
         mNSample = theSrc.mNSample ;
-        mY = new cOTVector[mNSample] ;
+        mY = new cDVector[mNSample] ;
         
         mDimObs = theSrc.mDimObs ;
         mNProba = theSrc.mNProba ;

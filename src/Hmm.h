@@ -1,19 +1,16 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: Hmm.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _HMM_H_
 #define _HMM_H_
 #pragma once
-
-#include "OTMathUtil.h"
 
 #ifdef _DEBOGAGE_
 #include "Debogage.h"

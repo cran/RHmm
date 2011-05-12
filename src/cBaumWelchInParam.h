@@ -1,11 +1,10 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cBaumWelchInParam.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -25,7 +24,7 @@ class cBaumWelchInParam : public cInParam
                 uint            mVerbose                ; /* 0 rien, 1 imprime */
         public :
                 cBaumWelchInParam & operator =(const cBaumWelchInParam &theSrc) ;
-                cBaumWelchInParam(uint theNSample=0, uint theDimObs=0, cOTVector *theY=NULL, distrDefinitionEnum theDistrType=eNormalDistr, uint theNClass=2, uint theNMixt=0, uint theNProba=0) ;
+                cBaumWelchInParam(uint theNSample=0, uint theDimObs=0, cDVector *theY=NULL, distrDefinitionEnum theDistrType=eNormalDistr, uint theNClass=2, uint theNMixt=0, uint theNProba=0) ;
                 void SetDefault(void) ;
                 virtual ~cBaumWelchInParam() ;
                 void Print(void) ;

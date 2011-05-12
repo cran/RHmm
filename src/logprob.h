@@ -1,11 +1,10 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: logprob.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -13,12 +12,13 @@
 #define _LOGPROB_H_
 #include <cfloat>
 #include <cmath>
-	#define LOGZERO -DBL_MAX
+#include "math.h"
+        #define LOGZERO -DBL_MAX
 #ifndef MIN
-	#define MIN(p,q) ((p) < (q) ? (p) : (q))
+        #define MIN(p,q) ((p) < (q) ? (p) : (q))
 #endif //MIN
 #ifndef MAX
-	#define MAX(p,q) ((p) > (q) ? (p) : (q))
+        #define MAX(p,q) ((p) > (q) ? (p) : (q))
 #endif //MAX
 extern double eexp(const double theX) ;
 extern double eln(const double theX) ;

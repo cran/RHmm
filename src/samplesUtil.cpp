@@ -1,17 +1,16 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: SamplesUtil.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
-#include "SamplesUtil.h"
+#include "StdAfxRHmm.h"
 
-void flatSamples(cOTVector* theInVect, uint theNSample, uint theDimObs, uint theNObsAllSamples, cOTVector& theOutVect)
+void flatSamples(cDVector* theInVect, uint theNSample, uint theDimObs, uint theNObsAllSamples, cDVector& theOutVect)
 {
 // Pour un sample Y[i][j]== Y[i + j*DimObs]
 // Pour N samples Y[n][i][j] == Y[n][i + j *DimObs] à remplacer par un seul sample de taille correcte
@@ -26,7 +25,7 @@ void flatSamples(cOTVector* theInVect, uint theNSample, uint theDimObs, uint the
                 }
 }
 
-void listSamples(cOTVector& theInVect, uint theNSample, uint theDimObs, uint* theNObsSample, cOTVector* theOutVect)
+void listSamples(cDVector& theInVect, uint theNSample, uint theDimObs, uint* theNObsSample, cDVector* theOutVect)
 {
 uint myBegInd = 0 ;
         for (register uint n = 0 ; n < theNSample ; n++)

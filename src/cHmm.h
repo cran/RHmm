@@ -1,11 +1,10 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cHmm.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -21,8 +20,8 @@ class cDistribution ;
 class cHmm
 {       public :
                 distrDefinitionEnum                     mDistrType                      ;
-                cOTVector                                       mInitProba                      ;
-                cCyclicVector<cOTMatrix>        mTransMatVector         ;
+                cDVector                                       mInitProba                      ;
+                cCyclicVector<cDMatrix>        mTransMatVector         ;
                 cDistribution*                          mDistrParam                     ;
         public :
                 cHmm(distrDefinitionEnum theDistrType, uint theNClass , uint theDimObs=1 , uint theNMixt=0, uint theNProba=0) ;
@@ -32,7 +31,7 @@ class cHmm
                 void CopyHmm(cHmm& theSrc) { *this = theSrc ; } ;
                 void Print() ;
                 uint GetNParam(void) ;
-                void SetParam(cOTVector& theParam) ;
-                void GetParam(cOTVector& theParam) ;            
+                void SetParam(cDVector& theParam) ;
+                void GetParam(cDVector& theParam) ;            
 } ;
 #endif //_CHMM_H_

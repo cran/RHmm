@@ -1,35 +1,29 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: Main.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
 #ifndef _RDLL_
 #include <iostream>
 #include <fstream>
-#include "Hmm.h"
-#include "cInParam.h"
-#include "cBaumWelchInParam.h"
-#include "cBaumWelch.h"
-#include "AllDistributions.h"
-#include "cHmm.h"
-#include "cHmmFit.h"
-#include "cViterbi.h"
-#include "RHmm.h"
+#include "StdAfxRHmm.h"
+
 using namespace std;
 
-#define FIC_NAME  "Norm.txt" /*"Geyser.txt" "data_mixture.txt" "DISCRETEb.txt" "DISCRETE.txt"   "Geyser.txt" "SimulMultiMixt.txt"*/
-#define DIM_OBS 1
+#define FIC_NAME   "Xirisx.txt" /* "Norm.txt"  "n1d_3s.txt"  "Geyser.txt" "data_mixture.txt"  "DISCRETEb.txt" "DISCRETE.txt"  "SimulMultiMixt.txt"*/
+#define DIM_OBS 4
 #define NB_SAMPLE 1
+#define NB_STATES 3
+#define NB_MIXT 3
 int main(void)
 {
 ifstream myFile ;
-cOTVector* myRt = new cOTVector[NB_SAMPLE] ;
+cDVector* myRt = new cDVector[NB_SAMPLE] ;
 register uint n = 0 ;
 double myAux ;
 	myFile.open(FIC_NAME) ;
@@ -50,7 +44,7 @@ double myAux ;
 //	myRt[1] = myRt[0] ;
 	myFile1.close() ;
 
-/*cOTVector* myRt1 = new cOTVector[1] ;
+/*cDVector* myRt1 = new cDVector[1] ;
 	myRt1[0].ReAlloc(n) ;
 	for (register uint i = 0 ; i < n ; i++)
 		myRt1[0][i] = myRt[0][i(*+n*)] - 1;
@@ -59,10 +53,11 @@ double myAux ;
 //cHmm MyHMM(eNormalDistr, 2) ;
 uint myDimObs = DIM_OBS ;
 
-cBaumWelchInParam myParam=cBaumWelchInParam(1, myDimObs, myRt, eNormalDistr, 2) ;
+//cBaumWelchInParam myParam=cBaumWelchInParam(NB_SAMPLE, myDimObs, myRt, eNormalDistr, NB_STATES) ;
 //cBaumWelchInParam myParam=cBaumWelchInParam(1, myDimObs, myRt1, eDiscreteDistr, 3, 0, 10) ;
 //cBaumWelchInParam myParam=cBaumWelchInParam(NB_SAMPLE, myDimObs, myRt, eMixtUniNormalDistr, 2, 3) ;
 //cBaumWelchInParam myParam=cBaumWelchInParam(NB_SAMPLE, myDimObs, myRt, eMultiNormalDistr, 3) ;
+cBaumWelchInParam myParam=cBaumWelchInParam(NB_SAMPLE, myDimObs,  myRt, eMixtMultiNormalDistr, NB_STATES, NB_MIXT) ;
 
 /*cHmm myHMM(eDiscreteDistr, 2) ;
 	myHMM.mInitProba[0] = myHMM.mInitProba[1] = 0.5L ;
@@ -92,7 +87,7 @@ cHmmFit myHMMFit(myParam) ;
 	myHMMFit.BaumWelchAlgo(myParam) ;
 	myHMMFit.Print() ;
 /*
-cOTMatrix*	myProbaCond = new cOTMatrix[myParam.mNSample] ; 
+cDMatrix*	myProbaCond = new cDMatrix[myParam.mNSample] ; 
 	
  	for (register uint n = 0 ; n < myParam.mNSample ; n++)
 	{	
@@ -103,27 +98,25 @@ cOTMatrix*	myProbaCond = new cOTMatrix[myParam.mNSample] ;
 	myHMMFit.ForwardBackward(myProbaCond, myHMMFit) ;
 	cout << *(myHMMFit.mRho) ;
 
-
+*/
 cViterbi myViterbi(myParam) ;
 	myViterbi.ViterbiPath(myParam, myHMMFit) ;
 //	myViterbi.ViterbiPath(myParam, myHMM) ;
 	for (register uint n = 0 ; n < myParam.mNSample ; n++)
 		for (register uint i = 0 ; i < myParam.mY[n].mSize ; i++)
 			std::cout << myViterbi.mSeq[n][i] << std::endl ;
-			source("C:/Users/taram/Documents/R/RHMM DEBUG/debug.R")
-*/
 /*
-cOTVector myGrad ;
+cDVector myGrad ;
 	myHMMFit.ComputeGradient(myParam, myGrad, 1e-2) ;
 	std::cout << "Gradient : \n" ;
 	std::cout << myGrad ;
 
-cOTMatrix myHess	;
+cDMatrix myHess	;
 	myHMMFit.ComputeHessian(myParam, myHess,1e-5) ;
 	std::cout << "Hessian : \n" ;
 	std::cout << myHess ;
 
-cOTMatrix	myI,
+cDMatrix	myI,
 			myJ,
 			myInvJ,
 			myCov	;

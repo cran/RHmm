@@ -1,11 +1,10 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cBaumWelch.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -21,17 +20,17 @@ class cBaumWelch
                         uint    mvNSample               ;
                         uint*   mvT                             ;
         public :                                                
-                        cOTMatrix*      mAlpha          ;
-                        cOTMatrix*      mBeta           ;
-                        cOTVector*      mRho            ;
-                        cOTMatrix*      mGamma          ;
-                        cOTMatrix**     mXsi            ;
-                        cOTMatrix*      mSumXsi         ;
-                        cOTVector       mLogVrais       ;
+                        cDMatrix*      mAlpha          ;
+                        cDMatrix*      mBeta           ;
+                        cDVector*      mRho            ;
+                        cDMatrix*      mGamma          ;
+                        cDMatrix**     mXsi            ;
+                        cDMatrix*      mSumXsi         ;
+                        cDVector       mLogVrais       ;
         public :
                 cBaumWelch(uint theNSample, uint* theT, uint theNClass) ;
                 cBaumWelch(const cInParam &theInParam) ;
-                void ForwardBackward(cOTMatrix* theCondProba, cHmm& theHMM) ;
+                void ForwardBackward(cDMatrix* theCondProba, cHmm& theHMM) ;
                 uint GetSampleSize(uint theN){ return mvT[theN] ;}
                 virtual ~cBaumWelch() ;
 } ;

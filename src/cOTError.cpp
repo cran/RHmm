@@ -1,11 +1,10 @@
 /**************************************************************
- *** RHmm version 1.4.4                                     
+ *** RHmm version 1.5.0
  ***                                                         
  *** File: cOTError.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
- *** Date: 2010/12/09                                     
  ***                                                         
  **************************************************************/
 
@@ -14,7 +13,11 @@
 cOTError::cOTError(const char *theMess)
 {
         if (theMess != (char *)NULL) 
-                std::cout << theMess << std::endl ;
-        std::exit(0) ;
-}
+#ifndef _RDLL_
+			std::cout << theMess << std::endl ;
+			exit(0) ;
+#else
+			error(theMess) ;
+#endif //_RDLL_
 
+}
