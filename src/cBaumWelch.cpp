@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cBaumWelch.cpp 
  ***                                                         
@@ -154,7 +154,7 @@ uint myNClass = theHMM.mInitProba.mSize ;
                 }
                 
         // Calcul des Gamma et des Xsi et LogVrais
-                mLogVrais[n] = 0 ;
+                mLogVrais[n] = mRho[n][myT-1] ;
                 for (t = 0 ; t < myT ; t++)
                 {       mySum = 0.0 ;
                         for (i = 0 ; i < myNClass ; i++)
@@ -164,7 +164,7 @@ uint myNClass = theHMM.mInitProba.mSize ;
                         for (i = 0 ; i < myNClass ; i++)
                                 mGamma[n][i][t] /= mySum ;
                         
-                        mLogVrais[n] += log(mRho[n][t]) ;
+         // Erreur ?               mLogVrais[n] += log(mRho[n][t]) ;
                 }
         // Calcul des Xsi
                 for (i = 0 ; i < myNClass ; i++)

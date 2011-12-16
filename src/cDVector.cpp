@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cDVector.cpp 
  ***                                                         
@@ -14,7 +14,7 @@
 
     void cDVector::Initialize(uint theN)
     {
-        assert(mvV == NULL) ;
+        myAssert(mvV == NULL, "Problem") ;
                 if ( (mvV = new double[theN]) == NULL)
                 {      
                         throw cOTError("Memory allocation failed") ;
@@ -300,7 +300,7 @@
         cDVector operator+(const cDVector& theLeftVect, const cDVector& theRightVect)
         {
         uint myN = theLeftVect.GetSize() ;
-                assert(myN==theRightVect.GetSize()) ;
+                myAssert(myN==theRightVect.GetSize(), "operator +: vectors must have the same dimensions") ;
         cDVector myTmpVect(myN) ;
                 for (uint i = 0 ; i < myN ; i++)
                         myTmpVect[i] = theLeftVect[i] + theRightVect[i] ;
@@ -310,7 +310,7 @@
         cDVector operator += (cDVector& theVect, const cDVector& theRightVect)
         {
         uint myN = theVect.GetSize() ;
-                assert(myN == theRightVect.GetSize()) ;
+                myAssert(myN == theRightVect.GetSize(), "operator +=: vectors must have the same dimensions") ;
                 for (uint i = 0 ; i < myN ; i++)
                                 theVect[i] += theRightVect[i] ;
                 return theVect ;
@@ -319,7 +319,7 @@
         cDVector operator-(const cDVector& theVect, const cDVector& theRightVect)
         {
         uint myN = theVect.GetSize() ;
-                assert( myN == theRightVect.GetSize()) ;
+                myAssert( myN == theRightVect.GetSize(), "operator -: vectors must have the same dimensions") ;
         cDVector myTmpVect(myN) ;
                 for (uint i = 0 ; i < myN ; i++)
                         myTmpVect[i] = theVect[i] - theRightVect[i] ;
@@ -329,7 +329,7 @@
         cDVector operator-=(cDVector& theVect, const cDVector& theRightVect)
         {
         uint myN = theVect.GetSize() ;
-                assert(myN == theRightVect.GetSize()) ;
+                myAssert(myN == theRightVect.GetSize(), "operator -=: vectors must have the same dimensions") ;
                 for (uint i = 0 ; i < myN ; i++)
                         theVect[i] -= theRightVect[i] ;
                 return theVect ;

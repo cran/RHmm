@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cMultivariateNormal.h 
  ***                                                         
@@ -24,15 +24,16 @@ class cMultivariateNormal : public cDistribution
         public :
                 cMultivariateNormal(uint theNClass = 0, uint theDimObs = 1) ;
                 virtual ~cMultivariateNormal() ;
-                virtual void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba) ;
-                virtual void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL) ;
-                virtual void InitParameters(cBaumWelchInParam &theInParam) ;
-                virtual void Print() ;
-                virtual void GetParam(uint theDeb, cDVector& theParam) ;
-                virtual void SetParam(uint theDeb, cDVector& theParam) ;
+                void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba) ;
+                void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL) ;
+                void InitParameters(cBaumWelchInParam &theInParam) ;
+                void Print() ;
+                void GetParam(uint theDeb, cDVector& theParam) ;
+                void SetParam(uint theDeb, cDVector& theParam) ;
                 uint GetDimObs() ;
                 void CopyDistr(cDistribution* theSrc) ;
                 uint GetNParam(void){ return mMean[0].mSize + mMean[0].mSize * mMean[0].mSize ; }
+                uint GetNFreeParam(void){ return mMean[0].mSize + mMean[0].mSize * (mMean[0].mSize + 1)/2; }
 
 } ;
 #endif //_CMULTIVARIATENORMAL_H_

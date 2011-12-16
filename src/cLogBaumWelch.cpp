@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cLogBaumWelch.cpp 
  ***                                                         
@@ -158,7 +158,8 @@ uint myNClass = theHMM.mInitProba.mSize ;
                 }
                 
                 // Calcul des Gamma et LogVrais
-                mLogVrais[n] = LOGZERO ;
+                // erreur ? mLogVrais[n] = LOGZERO ;
+				mLogVrais[n] = mLogRho[n][myT-1] ;
                 for (t = 0 ; t < myT ; t++)
                 {       mySum = LOGZERO ;
                         for (i = 0 ; i < myNClass ; i++)
@@ -168,7 +169,7 @@ uint myNClass = theHMM.mInitProba.mSize ;
                         for (i = 0 ; i < myNClass ; i++)
                                 mLogGamma[n][i][t] = elnproduct(mLogGamma[n][i][t], -mySum) ;
                         
-                        mLogVrais[n] = elnsum(mLogVrais[n], mLogRho[n][t]) ;
+         // Erreur               mLogVrais[n] = elnsum(mLogVrais[n], mLogRho[n][t]) ;
                 }
         
         // Calcul des Xsi

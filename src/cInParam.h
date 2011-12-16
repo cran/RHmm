@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cInParam.h 
  ***                                                         
@@ -28,6 +28,6 @@ class cInParam
                 cInParam(uint theNSample, uint theDimObs, cDVector* theY, distrDefinitionEnum theDistrType=eNormalDistr, uint theNClass=2, uint theNMixt=0, uint theNProba=0) ;
                 virtual ~cInParam() ;
                 cInParam & operator =(const cInParam &theSrc) ;
-                virtual void Print(void) ;
+                void Print(void) ;
 } ;
 #endif //_CINPARAM_H_

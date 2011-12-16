@@ -2,18 +2,18 @@
 \alias{HMMGraphicDiag}
 \title{Graphic diagnostic of the HMM estimation}
 \description{This function plots the kernel density of the observations and the normal (mixture of normal, discrete) density
-    with estimated parameters for each hidden states. The hidden states}
+    with estimated parameters for each hidden states.}
 \usage{
 HMMGraphicDiag(vit, HMM, obs, color="green")
 }
 \arguments{
-    \item{vit}{a ViterbiClass object which gives the hidden states}
-    \item{HMM}{a HMMClass or a HMMFitClass object which describes the model}
-    \item{obs}{the vector, list of vectors of observations}
-    \item{color}{color for the kernel density plot}
+    \item{vit}{A ViterbiClass object which gives the hidden states}
+    \item{HMM}{A HMMClass or a HMMFitClass object which describes the model}
+    \item{obs}{The vector, list of vectors of observations}
+    \item{color}{Color for the kernel density plot}
 }
 
-\value{none}
+\value{None.}
 \note{
  HMMGraphicDiag is not implemented for multivariate distributions.\cr
 
@@ -24,7 +24,7 @@ HMMGraphicDiag(vit, HMM, obs, color="green")
 \examples{
 data(n1d_3s)
 obs <- obs_n1d_3s
-#Fits an 3 states gaussian model 
+#Fits an 3 states gaussian model
 ResFit <- HMMFit(obs, nStates=3)
 VitPath <- viterbi(ResFit, obs)
 # Graphic diagnostic

@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cRUtils.h 
  ***                                                         
@@ -28,8 +28,11 @@ class cRUtil
         public :
                 cRUtil(){mvNbProtect = 0 ;} ;
                 void EndProtect(void){if (mvNbProtect > 0) {UNPROTECT(mvNbProtect); mvNbProtect = 0 ; }} ;
-                ~cRUtil(){mvNbProtect = 0 ;};
-                /*
+                 ~cRUtil(){mvNbProtect = 0 ;};
+#ifdef _DEBUG
+				int GetNProtect(void){ return mvNbProtect ;} ;
+#endif // _DEBUG
+				/*
                  *      R�cup�rer une seule valeur � partir d'une liste SEXP � la place n� theNum
                  */
                 void GetValSexp(SEXP theSEXP, uint theNum, uint &theVal) ;

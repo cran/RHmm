@@ -17,10 +17,10 @@ HMMSet(initProb, transMat, dis="MIXTURE", mean, var, proportion)
 HMMSet(initProb, transMat, dis="DISCRETE", proba, labels=NULL)
 }
 \arguments{
-    \item{initProb}{the vector of probabilities of the initial state}
-    \item{transMat}{the transition matrix of the hidden Markov chain. Since version 1.3.4 of RHmm, a list of transition matrices can be specified
+    \item{initProb}{The vector of probabilities of the initial state}
+    \item{transMat}{The transition matrix of the hidden Markov chain. Since version 1.3.4 of RHmm, a list of transition matrices can be specified
 in order to define an inhomogeneous HMM. }
-    \item{distribution}{the distributionClass object of the observations}
+    \item{distribution}{The distributionClass object of the observations}
     \item{dis}{dis parameter. See \bold{distributionSet}}
     \item{mean}{mean parameter. See \bold{distributionSet}}
     \item{var}{var parameter. See \bold{distributionSet}}
@@ -29,9 +29,9 @@ in order to define an inhomogeneous HMM. }
     \item{proba}{proba parameter. See \bold{distributionSet}}
     \item{labels}{labels parameter. See \bold{distributionSet}}
 }
-\value{ an object of class HMMClass
-    \item{initProb}{initial state probabilities vector}
-    \item{transMat}{transition matrix}
+\value{An HMMClass class object:
+    \item{initProb}{Initial state probabilities vector}
+    \item{transMat}{Transition matrix}
     \item{distribution}{distributionClass object}
 }
 \examples{

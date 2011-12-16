@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cDiscrete.cpp 
  ***                                                         
@@ -138,8 +138,7 @@ void cDiscrete::CopyDistr(cDistribution* theSrc)
         mvNClass = mySrc->mvNClass;
         mProbaMatVector = mySrc->mProbaMatVector;
 }
-
-
+                
 void cDiscrete::GetParam(uint theDeb, cDVector& theParam)
 {
         uint myNProba = this->GetNProba();

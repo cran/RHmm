@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cUnivariateNormal.h 
  ***                                                         
@@ -20,13 +20,14 @@ class cUnivariateNormal : public cDistribution
         public :
                 cUnivariateNormal(uint theNClass = 0) ;
                 virtual ~cUnivariateNormal() ;
-                virtual void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba) ;
-                virtual void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL) ;
-                virtual void InitParameters(cBaumWelchInParam &theInParam) ;
-                virtual void Print() ;
-                virtual void GetParam(uint theDeb, cDVector& theParam) ;
-                virtual void SetParam(uint theDeb, cDVector& theParam) ;
-                virtual uint GetNParam(void){ return 2 ; }
+                void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba) ;
+                void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL) ;
+                void InitParameters(cBaumWelchInParam &theInParam) ;
+                void Print() ;
+                void GetParam(uint theDeb, cDVector& theParam) ;
+                void SetParam(uint theDeb, cDVector& theParam) ;
+                uint GetNParam(void){ return 2 ; } ;
+                uint GetNFreeParam(void){ return 2 ; } ;
                 void CopyDistr(cDistribution* theSrc) ;
 } ;
 #endif //_CUNIVARIATENORMAL_H_

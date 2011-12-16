@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cRUtils.cpp 
  ***                                                         
@@ -505,6 +505,7 @@ void cRUtil::SetListVectSexp(cDMatrix& theVal, SEXP &theSEXP)
         theNElt = theVal.mNRow;
 
         PROTECT(theSEXP = allocVector(VECSXP, theNElt)) ;
+        mvNbProtect++ ;
         for (uint i = 0 ; i < theNElt; i++)
         {
                SEXP myAux  ;

@@ -1,5 +1,5 @@
  ###############################################################
- #### RHmm version 1.5.0                             
+ #### RHmm package                             
  ####                                                         
  #### File: RHmm.R 
  ####                                                         
@@ -26,12 +26,12 @@ is_list_numeric_vector <- function(x)
 {
     if (!is.list(x))
         return(FALSE)
-    
+
     if (!all(sapply(x, is_numeric_vector)))
         return(FALSE)
-    
+
     return(TRUE)
-} 
+}
 
 is_list_list <- function(x)
 {
@@ -57,9 +57,9 @@ is_numeric_matrix <- function(x)
         return(FALSE)
     if (!is.numeric(x))
         return(FALSE)
-    return(TRUE)    
+    return(TRUE)
 }
- 
+
 is_list_numeric_matrix <- function(x)
 {
    if (!is.list(x))
@@ -82,7 +82,7 @@ is_proba_vector <- function(x)
 {
     if (!all(x >=0))
         return(FALSE)
-    return(abs(sum(x)-1) <= 2*tol)
+    return(abs(sum(x)-1) <= 100*tol)
 }
 
 is_list_proba_vector <- function(x)
@@ -104,7 +104,7 @@ is_list_positive_definite <- function(x)
 {   if (is.null(x))
         return(TRUE)
     return(all(sapply(x,is_positive_definite)))
-} 
+}
 
 is_list_list_positive_definite <- function(x)
 {
@@ -142,10 +142,10 @@ univariateNormalSet <- function(mean, var, verif=TRUE)
     }
     else
         nStates <- length(mean)
-    
+
     value <- list(dis="NORMAL", nStates=nStates, dimObs=as.integer(1), mean=mean, var=var)
     class(value) <- c("distributionClass", "univariateNormalClass")
-    return(value)    
+    return(value)
 }
 
 multivariateNormalSet <- function(mean, cov, verif=TRUE)
@@ -176,11 +176,11 @@ multivariateNormalSet <- function(mean, cov, verif=TRUE)
     }
     Res <- list(dis="NORMAL", nStates = nStates, dimObs=dimObs, mean=mean, cov=cov)
     class(Res) <- c("distributionClass", "multivariateNormalClass")
-    return(Res)    
+    return(Res)
 }
 
 discreteSet <- function(proba, labels=NULL, verif = TRUE)
-{   
+{
     if (verif)
     {
         inhomogeneous.emissions <- is_list_numeric_matrix(proba)
@@ -189,7 +189,7 @@ discreteSet <- function(proba, labels=NULL, verif = TRUE)
                 # if proba is a list of vectors, then a list element correspond to the emission probability distribution given
                 # a hidden state (hence the vector of each element is as large as the number of emission states is, and the
                 # list contains as many elements as their are hidden states)
-                # 
+                #
                 # we also accept here that proba is a list of matrices. Each matrix describes the emission probabilities
                 # of a given time point. Rows indicate the given hidden state, while columns indicate the emission state.
                 #
@@ -202,7 +202,7 @@ discreteSet <- function(proba, labels=NULL, verif = TRUE)
                 nLevels <- length(proba[[1]])
                 Aux <- as.integer(lapply(proba, length)) - nLevels
                 if (sum(abs(Aux)) != 0)
-                    return("Each element of 'proba' must have the same length, which is the number of the different discrete observations.\n") 
+                    return("Each element of 'proba' must have the same length, which is the number of the different discrete observations.\n")
                 if (!is_list_proba_vector(proba) )
                     return("The sum of each element of 'proba' must be equal to 1.\n")
                 } else
@@ -222,7 +222,7 @@ discreteSet <- function(proba, labels=NULL, verif = TRUE)
                 nLevels <- ncol(proba[[1]])
         }
     }
-    
+
     if (!is.null(labels))
     {
        Aux <- as.integer(lapply(labels, is.character))
@@ -235,7 +235,7 @@ discreteSet <- function(proba, labels=NULL, verif = TRUE)
     {
         labels <- MakeLabels(nLevels, labels="p")
     }
-    
+
     if (!is.matrix(proba[[1]]))
     {
         # setting names for list
@@ -253,7 +253,7 @@ discreteSet <- function(proba, labels=NULL, verif = TRUE)
 }
 
 univariateMixtureSet <- function(mean, var, proportion, verif = TRUE)
-{   
+{
     if (verif)
     {    if (!is_list_numeric_vector(mean))
             return("'mean' parameter must be a list of vectors.\n")
@@ -270,7 +270,7 @@ univariateMixtureSet <- function(mean, var, proportion, verif = TRUE)
             return("length of 'var' parameter must be equal to length of 'mean' which is the number of hidden states.\n")
         if (length(proportion) != nStates)
             return("length of 'proportion' parameter must be equal to length of 'mean' which is the number of hidden states.\n")
-        
+
         nMixt <- length(mean[[1]])
         Aux1 <- as.integer(lapply(mean, length)) - nMixt
         Aux2 <- as.integer(lapply(var, length)) - nMixt
@@ -289,7 +289,7 @@ univariateMixtureSet <- function(mean, var, proportion, verif = TRUE)
 }
 
 multivariateMixtureSet <- function(mean, cov, proportion, verif = TRUE)
-{   
+{
      if (verif)
     {    if (!is_list_list_numeric_vector(mean))
             return("'mean' parameter must be a list of list of vectors.\n")
@@ -328,7 +328,7 @@ multivariateMixtureSet <- function(mean, cov, proportion, verif = TRUE)
 #' Dispatches distribution
 #'
 distributionSet <- function(dis, ...)
-{   
+{
 # DEBUT de distributionSet
 
     if (is.na(match(dis, c('NORMAL', 'MIXTURE', 'DISCRETE'))))
@@ -340,7 +340,7 @@ distributionSet <- function(dis, ...)
     for (i in 1:lextras)
     {   mcall <- c(mcall, args[i])
         names(mcall[i+1]) <- names(extras[i])
-    }    
+    }
 
     if (dis=="NORMAL")
     {   if ( (lextras == 2) || (lextras == 3) )
@@ -353,7 +353,7 @@ distributionSet <- function(dis, ...)
                         {   mess <- sprintf("'%s' parameter unknown", nmcall[i])
                             stop(mess)
                         }
-            }    
+            }
             else
             {   mcall[[1]] <- as.name("multivariateNormalSet")
                 nmcall <- names(mcall)
@@ -367,13 +367,13 @@ distributionSet <- function(dis, ...)
             value <- (eval(as.call(mcall)))
             if (is.character(value))
                 stop(value)
-            else 
+            else
                 return(value)
         }
         else
             stop("Wrong number of parameters.\n")
     }
-    
+
     if (dis == "MIXTURE")
     {   if ( (lextras == 3) || (lextras == 4) )
         {   if (any(sapply(args, is_list_list)))
@@ -388,7 +388,7 @@ distributionSet <- function(dis, ...)
                 value <- (eval(as.call(mcall)))
                 if (is.character(value))
                     stop(value)
-                else 
+                else
                     return(value)
            }
             else
@@ -403,21 +403,21 @@ distributionSet <- function(dis, ...)
                 value <- (eval(as.call(mcall)))
                 if (is.character(value))
                     stop(value)
-                else 
+                else
                     return(value)
             }
         }
         else
             stop("wrong number of parameters.\n")
     }
-    
+
     if (dis == "DISCRETE")
     {
         if  ( (lextras == 1) || (lextras == 2) || (lextras == 3) )
         {
             mcall[[1]] <- as.name("discreteSet")
             nmcall <- names(mcall)
- 
+
             for (i in 1:length(nmcall))
             {
                 if ( (!is.null(nmcall[i])) && (nmcall[i] !='') )
@@ -431,12 +431,12 @@ distributionSet <- function(dis, ...)
            value <- (eval(as.call(mcall)))
             if (is.character(value))
             stop(value)
-            else 
+            else
             return(value)
          }
         else
             stop("wrong number of parameters.\n")
-    }     
+    }
 }
 
 print.univariateNormalClass <- function(x, ...)
@@ -450,7 +450,7 @@ print.univariateNormalClass <- function(x, ...)
 }
 
 print.multivariateNormalClass <- function(x, ...)
-{   
+{
     for (i in 1:x$nStates)
     {   cat(sprintf("  State %d\n", i), sep="")
         Aux <- cbind(x$mean[[i]], x$cov[[i]])
@@ -462,11 +462,11 @@ print.multivariateNormalClass <- function(x, ...)
         names(Aux) <- cnames
         Aux <- as.matrix(Aux)
         row.names(Aux) <- rnames
-        #print.matrix(Aux, quote=FALSE, right=TRUE)    
-        print(Aux, quote=FALSE, right=TRUE)    
+        #print.matrix(Aux, quote=FALSE, right=TRUE)
+        print(Aux, quote=FALSE, right=TRUE)
         cat("\n")
     }
-}   
+}
 
 print.discreteClass <- function(x, ...)
 {
@@ -481,7 +481,7 @@ print.discreteClass <- function(x, ...)
         cnames <- MakeLabels(x$nLevels, labels="p")
     else
         cnames <- names(proba[[1]])
-            
+
     names(Aux) <- cnames
     rownames(Aux) <- rnames
     print.data.frame(Aux, quote=FALSE, right=TRUE)
@@ -518,7 +518,7 @@ print.mixtureMultivariateNormalClass <- function(x, ...)
 }
 
 print.distributionClass <- function(x, ...)
-{        
+{
     call <- match.call()
     if (is.null(call$doNotAffiche))
     {   if (x$dis == "NORMAL")
@@ -535,11 +535,11 @@ print.distributionClass <- function(x, ...)
             else
                 nomloi <- sprintf("mixture of %d %d-d gaussian", x$nMixt, x$dimObs)
         }
-        Model <- sprintf("%d states HMM with %s distributions", x$nStates, nomloi)  
+        Model <- sprintf("%d states HMM with %s distributions", x$nStates, nomloi)
         cat("\nModel:\n", Model, "\n", sep = "")
     }
     cat("\nDistribution parameters:\n", sep="")
-    NextMethod("print", x)    
+    NextMethod("print", x)
 }
 
 HMMSet <- function(initProb, transMat, ...)
@@ -549,7 +549,7 @@ HMMSet <- function(initProb, transMat, ...)
     lextras <- length(extras)
     if (lextras == 0)
         stop("Wrong number of parameters")
- 
+
     if (lextras == 1)
     {
         distribution <- args[[1]]
@@ -569,36 +569,36 @@ HMMSet <- function(initProb, transMat, ...)
 
     if (is.na(match("distributionClass", class(distribution))))
         stop("'distribution' must be a distributionClass object\n")
-    
+
     if (!is.vector(initProb))
         stop('initProb must be a vector\n')
 
-    
+
     if (is.list(transMat))
     {
         if (!all(sapply(transMat,is.matrix)))
             stop('MatTrans must be a matrix or list of matrices\n')
-        
+
         nColTransMat <- ncol(transMat[[1]]);
         nRowTransMat <- nrow(transMat[[1]]);
-        
+
         if (!all(sapply(transMat, function(x) ncol(x)== nColTransMat)))
             stop('Number of colums of matrix must match.\n')
-        
+
         if (!all(sapply(transMat, function(x) nrow(x)== nRowTransMat)))
             stop('Number of rows of matrix must match.\n')
     } else
     {
         if (!is.matrix(transMat))
             stop('MatTrans must be a matrix or list of matrices\n')
-        
+
         nColTransMat <- ncol(transMat);
         nRowTransMat <- nrow(transMat);
     }
     nStates <- length(initProb)
     if ( (nColTransMat != nStates) || (nRowTransMat != nStates) || (distribution$nStates != nStates) )
         stop('length of initProb, dim of transMat or dim of distribution parameters do not match\n')
-    
+
     Res <- list(initProb = initProb, transMat = transMat, distribution = distribution)
     class(Res) <- 'HMMClass'
     return(Res)
@@ -635,15 +635,15 @@ print.HMMClass <- function(x, ...)
     else
     {   doNotAffiche <- FALSE
     }
-    
+
     if (!doNotAffiche)
     {
-        Model <- sprintf("%d states HMM with %s distribution", y$nStates, nomloi)     
+        Model <- sprintf("%d states HMM with %s distribution", y$nStates, nomloi)
         cat("\nModel:", sep="\n")
         cat("------", sep="\n")
         cat(Model, "\n", sep = "")
     }
-    
+
     cat("\nInitial probabilities:\n", sep="")
     Aux <- t(x$initProb)
     Aux <- as.data.frame(Aux)
@@ -651,8 +651,8 @@ print.HMMClass <- function(x, ...)
     names(Aux) <- cnames
     row.names(Aux) <- " "
     print.data.frame(Aux, quote=FALSE, right=TRUE)
-    
-    
+
+
     print.mat<-function(mat)
     {
         Aux <- as.data.frame(mat)
@@ -660,9 +660,9 @@ print.HMMClass <- function(x, ...)
         names(Aux) <- cnames
         rownames(Aux) <- cnames
         print.data.frame(Aux, quote=FALSE, right=TRUE)
-        
+
     }
-    
+
     if (is.list(x$transMat))
     {
         cat("\nTransition matrices:\n", sep="")
@@ -672,7 +672,7 @@ print.HMMClass <- function(x, ...)
         cat("\nTransition matrix:\n", sep="")
         print.mat(x$transMat)
     }
-    
+
     cat("\nConditionnal distribution parameters:\n", sep="")
     print(x$distribution, quote=FALSE, right=TRUE, doNotAffiche=TRUE)
 }
@@ -719,7 +719,7 @@ rmultimixt <- function(nSim, mean, cov, prop)
     YAux <- array(dim=c(nSim, dimObs, nMixt))
     for (i in 1:nMixt)
         YAux[ , , i] <- mvrnorm(nSim, mu=mean[[i]], Sigma=cov[[i]])
-    
+
     probaCum <- rep(0, nMixt)
     for (i in 1:nMixt)
         probaCum[i] <- sum(prop[1:i])
@@ -741,7 +741,7 @@ dmixt <- function(x, mean, var, prop)
     value <- YAux %*% prop
     return(value)
 }
-    
+
 
 sim.mixtureUnivariateNormalClass <- function(object, nSim, lastState)
 {   value <- NULL
@@ -785,13 +785,13 @@ rdiscrete <- function(nSim, proba)
 #            k <- k+1
 #        Res[i] <- k
 #    }
-#    return(Res) 
+#    return(Res)
 #}
 
 sim.discreteClass <- function(object, nSim, lastState)
-{   
+{
     value <- NULL
-    
+
         if (!is.matrix(object$proba[[1]]))
         {
             for (i in 1:object$nStates)
@@ -810,7 +810,7 @@ sim.discreteClass <- function(object, nSim, lastState)
                         value <- rbind(value,row);
                 }
         }
-        
+
         print(value)
 
     return(value)
@@ -837,11 +837,11 @@ sim.markovChainClass <- function(object, nSim, lastState)
     {   val <- lastState
         k <- 1
     }
-    
+
     cummat<-function(mat)
     {
         cummat<-matrix(0, nrow=nrow(mat), ncol=ncol(mat))
-        
+
         for (i in 1:nrow(mat))
             cummat[i,] <- cumsum(mat[i,])
         return(cummat)
@@ -849,7 +849,7 @@ sim.markovChainClass <- function(object, nSim, lastState)
 
     probaCumList<-list();
 
-    
+
     if (is.list(object$transMat))
     {
         probaCumList<-lapply(object$transMat,cummat)
@@ -862,14 +862,14 @@ sim.markovChainClass <- function(object, nSim, lastState)
     {
         val <- value[tt] <- trouve_indice(Aux[tt], probaCumList[[((tt-1)%%length(probaCumList))+1]][val,])
     }
-    
+
     return(as.integer(value))
 }
 
 sim.HMMClass <- function(object, nSim, lastState)
 {
     mc <- list(nStates = object$distribution$nStates, initProb=object$initProb, transMat=object$transMat)
-    class(mc) <- "markovChainClass" 
+    class(mc) <- "markovChainClass"
     Eps <- sim(mc, nSim, lastState)
     obs <- sim(object$distribution, nSim)
     if (all(is.na(match(c("multivariateNormalClass","mixtureMultivariateNormalClass"), class(object$distribution)))))
@@ -877,7 +877,7 @@ sim.HMMClass <- function(object, nSim, lastState)
         value <- rep(0, nSim)
         for (t in 1:nSim)
             value[t] <- obs[t,Eps[t]]
-            
+
         if (!is.na(match("discreteClass", class(object$distribution))))
         {
             value <- as.factor(value)
@@ -892,9 +892,9 @@ sim.HMMClass <- function(object, nSim, lastState)
         for (t in 1:nSim)
             value[t, ] <- obs[t, ,Eps[t]]
      }
-    
-    return(list(obs=value, states=Eps))    
-    
+
+    return(list(obs=value, states=Eps))
+
 }
 
 HMMSim <- function(nSim, HMM, lastState=NULL)
@@ -905,14 +905,14 @@ HMMSim <- function(nSim, HMM, lastState=NULL)
         stop('nSim must be a positive integer')
     if (class(HMM) != "HMMClass")
         stop("HMM be be a HMMClass object. See HMMSet")
-            
+
     return(sim(HMM, nSim, lastState))
 }
 
 incr <- function(x)
 {
     x<-x+1
-    
+
 }
 
 HMMKMeans <- function(obs, nClass)
@@ -924,7 +924,7 @@ HMMKMeans <- function(obs, nClass)
             obs <- as.matrix(obs[,1:dimObs])
     }
 
-    
+
     if (is.list(obs))
     {   x <- obs[[1]]
         dimObs <- dim(x)[2]
@@ -969,7 +969,7 @@ HMMKMeans <- function(obs, nClass)
         {   Var[i] <- var(x[z$cluster==i])
             Mean[i] <- z$center[i]
         }
-        
+
     }
     TT <- length(z$cluster)
     transMat <- matrix(0, nClass, nClass)
@@ -978,14 +978,14 @@ HMMKMeans <- function(obs, nClass)
     for (j in 1:nClass)
         transMat[j,] <- transMat[j, ]/sum(transMat[j,])
     initProb <- rep(1/nClass, nClass)
-    
+
     if (dimObs > 1)
-    {    
+    {
 #        Res <- list(Mean=Mean, Cov=Cov, transMat=transMat, initProb=initProb)
         Res <- HMMSet(dis='NORMAL', transMat=transMat, initProb=initProb, mean=Mean, cov = Cov)
     }
     else
-    {   
+    {
 #    Res <- list(Mean=Mean, Var = Var, transMat=transMat, initProb=initProb)
         Res <- HMMSet(dis='NORMAL', transMat=transMat, initProb=initProb, mean=Mean, var = Var)
 
@@ -994,33 +994,32 @@ HMMKMeans <- function(obs, nClass)
 }
 
 BaumWelch<-function(paramHMM, obs, paramAlgo)
-{   
+{
     paramAlgo1 <-paramAlgo[1:7]
     class(paramAlgo1) <- "paramAlgoBW"
     paramAlgo1 <- setStorageMode(paramAlgo1)
     maListe <- TransformeListe(paramHMM, obs)
     nLevels <- maListe$nLevels
-    paramHMM1 <- list(nStates=paramHMM$nStates, dimObs=paramHMM$dimObs, nMixt = paramHMM$nMixt, nLevels = nLevels, 
+    paramHMM1 <- list(nStates=paramHMM$nStates, dimObs=paramHMM$dimObs, nMixt = paramHMM$nMixt, nLevels = nLevels,
         dis=paramHMM$dis)
     class(paramHMM1) <- "paramHMM"
- 
+
     paramHMM1 <- setStorageMode(paramHMM1)
-    
     Res1 <- .Call("RBaumWelch", paramHMM1, maListe$Zt, paramAlgo1)
-    
-    if (paramHMM$dis=="NORMAL") 
+
+    if (paramHMM$dis=="NORMAL")
     {   if (paramHMM$dimObs == 1)
             distribution <- distributionSet(dis="NORMAL", mean=Res1[[3]], var=Res1[[4]], verif=FALSE)
         else
             distribution <- distributionSet(dis="NORMAL", mean=Res1[[3]], cov=Res1[[4]], verif=FALSE)
         Autres <- Res1[[5]]
     }
-        
+
     if (paramHMM$dis == "DISCRETE")
     {   distribution <- distributionSet(dis="DISCRETE", proba=Res1[[3]], labels=maListe$labels, verif=FALSE)
         Autres <- Res1[[4]]
     }
-    
+
     if (paramHMM$dis == "MIXTURE")
     {   if (paramHMM$dimObs==1)
             distribution <- distributionSet(dis="MIXTURE", mean=Res1[[3]], var=Res1[[4]], proportion=Res1[[5]], verif=FALSE)
@@ -1028,9 +1027,13 @@ BaumWelch<-function(paramHMM, obs, paramAlgo)
             distribution <- distributionSet(dis="MIXTURE", mean=Res1[[3]], cov=Res1[[4]], proportion=Res1[[5]], verif=FALSE)
         Autres <- Res1[[6]]
     }
- 
+
     Res2 <- HMMSet(initProb=Res1[[1]], transMat=Res1[[2]], distribution=distribution)
-    
+
+    Res2 <- HMMSort(Res2)
+
+
+
     LLH <- Autres[1]
     relVariation=Autres[4]
     if (is.nan(LLH))
@@ -1040,29 +1043,29 @@ BaumWelch<-function(paramHMM, obs, paramAlgo)
             convergence <- FALSE
         else
             convergence <- TRUE
-    }    
-    
+    }
+
     Res3 <- NULL
     if ( (convergence) && (paramAlgo$asymptCov))
     {   cat(sprintf("... Computing the asymptotic covariance matrix ...\n"))
-        Res3 <- asymptoticCovMat(Res2, obs, paramAlgo$asymptMethod)   
+        Res3 <- asymptoticCovMat(Res2, obs, paramAlgo$asymptMethod)
     }
-    Res <- list(HMM=Res2, LLH=Autres[1], BIC=Autres[2], nIter=as.integer(Autres[3]), relVariation=relVariation, convergence=convergence, asymptCov=Res3, obs=obs)
-        
+    Res <- list(HMM=Res2, LLH=Autres[1], BIC=Autres[2], AIC=Autres[5], nIter=as.integer(Autres[3]), relVariation=relVariation, convergence=convergence, asymptCov=Res3, obs=obs)
+
     class(Res) <- "HMMFitClass"
     return(Res)
 }
 
 HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod=c('nlme', 'optim'), ... )
-{  
+{
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
         if (dimObs == 1)
             obs <- obs[,1]
         else
             obs <- as.matrix(obs[,1:dimObs])
-    }   
- 
+    }
+
     if (is.list(obs))
     {   Aux <- dim(obs[[1]])
         if (is.null(Aux))
@@ -1080,7 +1083,7 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
             }
         }
     }
-    
+
     nMixt <- NULL
     Levels <- NULL
     control <- NULL
@@ -1089,11 +1092,11 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
     lextras <- 0
     if (!is.null(extras))
         lextras <- length(extras)
-    
+
     if (dis == "MIXTURE")
     {    if (lextras == 0)
             stop("HMMFit with gaussian MIXTURE distributions needs a 'nMixt' parameter.\n")
-        if (lextras > 2) 
+        if (lextras > 2)
             stop("too many parameters.\n")
         if (is.list(args[[1]]))
         {   control <- args[[1]]
@@ -1107,7 +1110,7 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
             if (lextras == 2)
                 control <- args[[2]]
         }
-        
+
         nextras <- names(extras)
         for (nn in nextras)
             if ( !(nn %in% c("nMixt", "control")) && (nn != '') )
@@ -1117,7 +1120,7 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
         if ( !(is.null(control)) && (!is.list(control)) )
             stop("'control' parameter must be a list.\n")
     }
-    
+
     if (dis == 'DISCRETE')
     {   if (lextras > 2)
             stop("too many parameters.\n")
@@ -1138,7 +1141,7 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
                 if (lextras == 2)
                     control <- args[[2]]
             }
-        
+
             nextras <- names(extras)
             for (nn in nextras)
                 if ( !(nn %in% c("Levels", "control")) && (nn != '') )
@@ -1149,13 +1152,13 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
                 stop("'control' parameter must be a list.\n")
         }
     }
-    
+
     if ( (dis != "MIXTURE") && (dis != 'DISCRETE') )
     {   if (lextras > 1)
             stop("too many parameters.\n")
-        
+
         if (lextras == 1)
-        {   control <- args[[1]]    
+        {   control <- args[[1]]
             nnames <- names(extras[[1]])
             if ( !is.null(nnames) )
                 if ( (nnames != '') && (nnames != 'control') )
@@ -1166,10 +1169,10 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
                 stop("'control' parameter must be a list.\n")
         }
     }
-        
+
     if (is.null(control))
         control <- list(init="RANDOM", iter=500, tol=1e-6, verbose=0, nInit=5, nIterInit=5, initPoint=NULL)
-    
+
     nnames <- names(control)
     lnames <- length(nnames)
     rnames <- c("init", "iter", "tol", "verbose", "nInit", "nIterInit", "initPoint")
@@ -1182,7 +1185,7 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
                 stop(nerror)
             }
     }
-       
+
     if (is.null(control$init))
         control$init <- "RANDOM"
     if (is.null(control$iter))
@@ -1195,16 +1198,16 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
         control$nInit <- 5
     if (is.null(control$nIterInit))
         control$nIterInit <- 5
-     
+
     if (is.na(match(dis, c('NORMAL', 'MIXTURE', 'DISCRETE'))))
         stop("'dis' parameter must be in 'NORMAL', 'MIXTURE', 'DISCRETE'\n")
-    
+
     if (!is.numeric(nStates))
         stop('nStates must be a positive number\n')
     nStates <- as.integer(nStates)
     if (nStates <= 0)
         stop("nStates must be a positive number\n")
-        
+
     if (is.null(nMixt))
         nMixt <- as.integer(0)
     else
@@ -1214,12 +1217,12 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
         if (nMixt < 0)
             stop("nMixt must be a positive integer\n")
     }
-    
+
     if ( (dis == 'MIXTURE') && (nMixt < 2) )
     {   nMixt <- as.integer(2)
         warning("gaussian MIXTURE conditionnal distribution with nMixt < 2. nMixt = 2 used instead.\n")
     }
-     
+
     if (!is.null(control$initPoint))
     {    if (class(control$initPoint) != "HMMClass")
             stop("control$initPoint class must be HMMClass. See HMMSet\n")
@@ -1233,64 +1236,64 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
             warning("'USER' initialization and no initPoint. 'RANDOM' initialization used instead.\n")
         }
     }
-    
+
     if ( (control$init == 'KMEANS') && (dis != 'NORMAL') )
     {   warning("'KMEANS' initialization only for 'NORMAL' conditionnal distribution. 'RANDOM' init used instead.\n")
         control$init <- 'RANDOM'
     }
-        
+
     if (is.na(match(control$init, c("RANDOM", "KMEANS", "USER"))))
         stop("control$init must be in 'RANDOM', 'KMEANS', 'USER'")
-        
+
     init <- control$init
-    
+
     if (!is.numeric(control$iter))
         stop('control$iter must be a positive integer\n')
     iter <- as.integer(control$iter)
     if (iter <= 0)
         stop('control$iter must be a positive integer\n')
-    
+
     if (!is.numeric(control$tol))
         stop('control$tol must be a positive real\n')
     tol <- as.double(control$tol)
     if (tol < 0)
         stop('control$tol must be a positive double\n')
-   
+
     if (!is.numeric(control$verbose))
         stop('control$verbose must be 0 or 1\n')
     verbose <- as.integer(control$verbose)
     if (is.na(match(verbose, c(0,1,2))))
         stop('control$verbose must be 0 or 1\n')
-        
+
     if (!is.numeric(control$nInit))
         stop('control$nInit must be a positive integer\n')
     nInit <- as.integer(control$nInit)
     if  (nInit < 0)
         stop('control$nInit must be a positive integer\n')
-   
+
     if (!is.numeric(control$nIterInit))
         stop('control$nIterInit must be a positive integer\n')
     nIterInit <- as.integer(control$nIterInit)
     if  (nIterInit < 0)
         stop('control$nIterInit must be a positive integer\n')
-     
+
     if (control$init == 'KMEANS')
     {   initPoint <- HMMKMeans(obs, nStates)
         init='USER'
     }
-        
+
     if (! is.logical(asymptCov))
     {   stop('asymptCov must be a boolean (TRUE if the asymptotic covariance matrix must be computed)')
-    } 
-    
+    }
+
     if (is.null(asymptMethod))
         asymptMethod <- 'nlme'
-    
+
      asymptMethod <- asymptMethod[1]
-        
+
     if (is.na(match(asymptMethod, c('nlme', 'optim'))))
         stop("asymptMethod must be in 'nlme', 'optim'")
-        
+
     paramAlgo <- list(init=init, iter=iter, tol=tol, verbose=verbose, nInit=nInit, nIterInit=nIterInit, initPoint=initPoint, asymptCov=asymptCov, asymptMethod=asymptMethod[1])
 
     class(paramAlgo) <- "paramAlgoBW"
@@ -1298,11 +1301,11 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod
         dimObs <- ncol(as.matrix(obs[[1]]))
     else
         dimObs <- ncol(as.matrix(obs))
-    
-    
-    paramHMM <- list(nStates=nStates, dimObs=dimObs, nMixt = nMixt, Levels = Levels, dis=dis) 
+
+
+    paramHMM <- list(nStates=nStates, dimObs=dimObs, nMixt = nMixt, Levels = Levels, dis=dis)
     class(paramHMM) <- "paramHMM"
-    
+
     Res<-BaumWelch(paramHMM, obs, paramAlgo)
     Res$call <- match.call()
     return(Res)
@@ -1329,14 +1332,14 @@ print.HMMFitClass <- function(x, ...)
         else
             nomloi <- sprintf("mixture of %d %d-d gaussian", y$nMixt, y$dimObs)
     }
-     
-    Model <- sprintf("%d states HMM with %s distribution", y$nStates, nomloi)     
-    
+
+    Model <- sprintf("%d states HMM with %s distribution", y$nStates, nomloi)
+
     cat("\nModel:", sep="\n")
     cat("------", sep="\n")
     cat(Model, "\n", sep = "")
     # Algorithm
-    
+
     cat("\nBaum-Welch algorithm status:", sep="\n")
     cat("----------------------------", sep="\n")
     if (! x$convergence)
@@ -1347,7 +1350,7 @@ print.HMMFitClass <- function(x, ...)
         cat(sprintf("\nPROBLEM IN BAUM-WELCH'S ALGORITHM\n"), sep="")
     else
         cat(sprintf("Last relative variation of LLH function: %f\n", x$relVariation), sep="")
-   
+
    # Estimation
    if (x$convergence)
    {    cat("\nEstimation:", sep="\n")
@@ -1360,6 +1363,7 @@ print.HMMFitClass <- function(x, ...)
    print(x$HMM, doNotAffiche=TRUE)
    cat("\nLog-likelihood: ",format(round(x$LLH, 2)), "\n", sep="")
    cat("BIC criterium: ",format(round(x$BIC, 2)), "\n", sep="")
+   cat("AIC criterium: ",format(round(x$AIC, 2)), "\n", sep="")
 }
 
 forwardBackward<-function(HMM, obs)
@@ -1369,7 +1373,7 @@ forwardBackward<-function(HMM, obs)
         HMM <- HMM$HMM
 
     if (length(obs) < 1) stop("'obs' needs to contain at least a single element!")
-    
+
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
         if (dimObs == 1)
@@ -1380,8 +1384,8 @@ forwardBackward<-function(HMM, obs)
 
     HMM <- setStorageMode(HMM)
     maListe <- TransfListe(HMM$distribution, obs)
-    
-    Res1 <- .Call("RLogforwardbackward", HMM, maListe$Zt)
+
+    Res1 <- .Call("Rforwardbackward", HMM, maListe$Zt)
     names(Res1) <- c("Alpha", "Beta", "Gamma", "Xsi", "Rho", "LLH")
     if (!is.list(obs))
     {   Res1$Alpha <- t(Res1$Alpha[[1]])
@@ -1400,7 +1404,7 @@ forwardBackward<-function(HMM, obs)
             Res1$Xsi[[n]][length(Res1$Xsi[[n]])] <- NaN
           }
     }
-    
+
     return(Res1)
 }
 
@@ -1424,12 +1428,12 @@ inc <- function(x)
 viterbi<-function(HMM, obs)
 {   if ( ( class(HMM) != "HMMFitClass" ) && (class(HMM) != "HMMClass") )
         stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
-    
+
     if (length(obs) < 1) stop("'obs' needs to contain at least a single element!")
-    
+
     if (class(HMM) == "HMMFitClass")
         HMM <- HMM$HMM
-    
+
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
         if (dimObs == 1)
@@ -1440,13 +1444,13 @@ viterbi<-function(HMM, obs)
 
     maListe <- TransfListe(HMM$distribution, obs)
     HMM <- setStorageMode(HMM)
-   
+
     Res1 <- .Call("RViterbi", HMM, maListe$Zt)
     names(Res1) <- c("states", "logViterbiScore")
     Res1$states <- inc(Res1$states)
     Aux <- forwardBackward(HMM, obs)
     LLH <- Aux$LLH
- 
+
     if (is.list(obs))
     {   probSeq <- sapply(Res1$logViterbiScore, sum) - sapply(LLH, sum)
         Res<-list(states=Res1$states, logViterbiScore = Res1$logViterbiScore, logProbSeq=as.list(probSeq))
@@ -1490,14 +1494,14 @@ graphicDiag.distributionClass <- function(object, vit, obs, color="green", ...)
         }
         obs <- Aux
         vit$states <- states
-    }   
-      
+    }
+
     NextMethod(generic="graphicDiag", object=object)
 }
 
 graphicDiag.univariateNormalClass <- function(object, vit, obs, color="green")
-{  
-        
+{
+
     #x11()
      nStates <- max(vit$states)
      nScreens <- floor(nStates/3)
@@ -1525,14 +1529,14 @@ graphicDiag.univariateNormalClass <- function(object, vit, obs, color="green")
             }
             else
             {   plot(x0, y0, type='l', xlab="", ylab="Density")
-                    lines(z$x, z$y, col=color, lwd=2)    
+                    lines(z$x, z$y, col=color, lwd=2)
             }
             sub <- sprintf("Estimated Density (%s) - Normal density with estimated parameters (black)\n", color)
             titre <- sprintf("Graphic diagnostic for state %d", k)
             k <- k + 1
             title(main=titre, sub=sub)
             i <- i + 1
-        } 
+        }
         invisible(close.screen(all.screens = TRUE))
         if (k <= nStates)
             windows()
@@ -1540,7 +1544,7 @@ graphicDiag.univariateNormalClass <- function(object, vit, obs, color="green")
 }
 
 graphicDiag.mixtureUnivariateNormalClass <- function(object, vit, obs, color="green")
-{  
+{
  #   x11()
     nStates <- max(vit$states)
     nScreens <- floor(nStates/3)
@@ -1571,14 +1575,14 @@ graphicDiag.mixtureUnivariateNormalClass <- function(object, vit, obs, color="gr
             }
             else
             {   plot(x0, y0, type='l', xlab="", ylab="Density")
-                lines(z$x, z$y, col=color, lwd=2)    
+                lines(z$x, z$y, col=color, lwd=2)
             }
             sub <- sprintf("Estimated Density (%s) - Mixture of univariate normal density with estimated parameters (black)\n", color)
             titre <- sprintf("Graphic diagnostic for state %d", k)
             title(main=titre, sub=sub)
             i <- i + 1
             k <- k + 1
-        } 
+        }
         invisible(close.screen(all.screens = TRUE))
         if (k <= nStates)
             windows()
@@ -1586,7 +1590,7 @@ graphicDiag.mixtureUnivariateNormalClass <- function(object, vit, obs, color="gr
 }
 
 graphicDiag.discreteClass <- function(object, vit, obs, color="green")
-{  
+{
     nStates <- max(vit$states)
     nScreens <- floor(nStates/3)
     if (nScreens * 3 - nStates != 0)
@@ -1603,7 +1607,7 @@ graphicDiag.discreteClass <- function(object, vit, obs, color="green")
             ny <- length(y)
             y <- table(y) / ny
             y0 <- object$proba[[k]]
-                
+
             if (max(y) > max(y0))
             {   plot(y, col=color, xlab="", ylab="Probability", lwd=2)
                 lines(y0, type="p", lwd=3)
@@ -1611,12 +1615,12 @@ graphicDiag.discreteClass <- function(object, vit, obs, color="green")
             else
             {   plot(y, col=color, xlab="", ylab="Probability", lwd=2, type="n")
                 lines(y0, type='p', lwd=3)
-                lines(y, col=color, lwd=2, type="h")    
+                lines(y, col=color, lwd=2, type="h")
             }
-                
+
             sub <- sprintf("Frequency (%s) - Estimated parameters (black)\n", color)
             titre <- sprintf("Graphic diagnostic for state %d", k)
-            title(main=titre, sub=sub) 
+            title(main=titre, sub=sub)
             k <- k + 1
             i <- i + 1
         }
@@ -1629,9 +1633,9 @@ graphicDiag.discreteClass <- function(object, vit, obs, color="green")
 HMMGraphicDiag <- function(vit, HMM, obs, color="green")
 {   if (class(vit) !="viterbiClass")
         stop("vit must be a viterbiClass object. See viterbi\n")
-    if ( (class(HMM) != "HMMClass") && (class(HMM) != "HMMFitClass") && is.na(match("distributionClass", class(HMM))) )   
+    if ( (class(HMM) != "HMMClass") && (class(HMM) != "HMMFitClass") && is.na(match("distributionClass", class(HMM))) )
         stop("distribution must be a distributionClass, HMMClass or a HMMFitClass object\n")
-    
+
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
         if (dimObs == 1)
@@ -1639,9 +1643,9 @@ HMMGraphicDiag <- function(vit, HMM, obs, color="green")
         else
             obs <- as.matrix(obs[,1:dimObs])
     }
-   
+
     graphicDiag(HMM, vit, obs, color)
-    
+
 }
 
 PlotSerie <- function(object, vit, obs, color="black", ...) UseMethod("PlotSerie")
@@ -1668,20 +1672,20 @@ plotSerie.distributionClass <- function(object, vit, obs, color="black", ...)
         }
         obs <- Aux
         vit$states <- states
-    }   
-      
+    }
+
     NextMethod(generic="plotSerie", object=object)
 }
 
 
 
 HMMPlotSerie <- function(obs, states, dates = NULL, dis = "NORMAL", color="green")
-{   
+{
     if ( (class(states) !="viterbiClass") && (!is_numeric_vector(states)) && (!is_list_numeric_vector(states)))
         stop("vit must be a viterbiClass object, a numeric vector or a list of numeric vector.\n")
-    if (class(states) == "viterbiClass") 
+    if (class(states) == "viterbiClass")
         states <- states$states
-    
+
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
         if (dimObs == 1)
@@ -1689,7 +1693,7 @@ HMMPlotSerie <- function(obs, states, dates = NULL, dis = "NORMAL", color="green
         else
             obs <- as.matrix(obs[,1:dimObs])
     }
-       
+
     if (is.list(obs))
     {   if (!is.list(states))
             stop("incompatibilty beetween 'states' and 'obs' parameters\n")
@@ -1706,11 +1710,11 @@ HMMPlotSerie <- function(obs, states, dates = NULL, dis = "NORMAL", color="green
     else
     {   Aux <- obs
     }
-      
+
     if (!is.null(dim(obs)))
         if (dim(obs)[2] > 1)
             stop("Not yet implemented for this kind of distribution\n")
-   
+
     nStates <- max(states)
     if (dis == 'NORMAL')
     {    distribution<-distributionSet(dis, rep(0,nStates), rep(1, nStates))
@@ -1724,11 +1728,11 @@ HMMPlotSerie <- function(obs, states, dates = NULL, dis = "NORMAL", color="green
             labels <- levels(factor(Aux))
             nLevels <- length(levels(factor(Aux)))
             for (j in 1:nStates)
-                proba[[j]] <- rep(1,nLevels)/as.double(nLevels)            
+                proba[[j]] <- rep(1,nLevels)/as.double(nLevels)
             distribution<-distributionSet(dis="DISCRETE", proba, labels)
 
         }
-    }            
+    }
     #x11()
     nScreens <- floor(nStates/3)
     if (nScreens * 3 - nStates != 0)
@@ -1757,7 +1761,7 @@ HMMPlotSerie <- function(obs, states, dates = NULL, dis = "NORMAL", color="green
             k <- k + 1
             i <- i + 1
             title(main=titre)
-        } 
+        }
         if (k <= nStates)
             windows()
         invisible(close.screen(all.screens = TRUE))

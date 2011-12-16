@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cDMatrix.cpp 
  ***                                                         
@@ -201,8 +201,8 @@ cDMatrix operator +(const cDMatrix& theLeftMat, const cDMatrix& theRightMat)
 {
 uint myNRow = theLeftMat.GetNRows() ;
 uint myNCol = theLeftMat.GetNCols() ;
-    assert(myNRow == theRightMat.GetNRows()) ;
-    assert(myNCol == theRightMat.GetNCols()) ;
+    myAssert(myNRow == theRightMat.GetNRows(), "operator +: Matrices must have the same dimensions") ;
+    myAssert(myNCol == theRightMat.GetNCols(), "operator +: Matrices must have the same dimensions") ;
 cDMatrix myTmpMat(myNRow, myNCol) ;
     for (uint i = 0 ; i < myNRow ; i++)
         for (uint j = 0 ; j < myNCol ; j++)
@@ -214,8 +214,8 @@ cDMatrix operator +=(cDMatrix& theLeftMat, const cDMatrix& theRightMat)
 {
 uint myNRow = theLeftMat.GetNRows() ;
 uint myNCol = theLeftMat.GetNCols() ;
-    assert(myNRow == theRightMat.GetNRows()) ;
-    assert(myNCol == theRightMat.GetNCols()) ;
+    myAssert(myNRow == theRightMat.GetNRows(), "operator +=: Matrices must have the same dimensions") ;
+    myAssert(myNCol == theRightMat.GetNCols(), "operator +=: Matrices must have the same dimensions") ;
 
         for (uint i = 0 ; i < myNRow ; i++)
         for (uint j = 0 ; j < myNCol ; j++)
@@ -227,8 +227,8 @@ cDMatrix operator-(const cDMatrix& theLeftMat, const cDMatrix& theRightMat)
 {
 uint myNRow = theLeftMat.GetNRows() ;
 uint myNCol = theLeftMat.GetNCols() ;
-        assert(myNRow == theRightMat.GetNRows()) ;
-    assert(myNCol == theRightMat.GetNCols()) ;
+    myAssert(myNRow == theRightMat.GetNRows(), "operator -: Matrices must have the same dimensions") ;
+    myAssert(myNCol == theRightMat.GetNCols(), "operator -: Matrices must have the same dimensions") ;
 cDMatrix myTmpMat(myNRow, myNCol) ;
     for (uint i = 0 ; i < myNRow ; i++)
         for (uint j = 0 ; j < myNCol ; j++)
@@ -240,8 +240,8 @@ cDMatrix operator-=(cDMatrix& theLeftMat, const cDMatrix& theRightMat)
 {
 uint myNRow = theLeftMat.GetNRows() ;
 uint myNCol = theLeftMat.GetNCols() ;
-        assert(myNRow == theRightMat.GetNRows()) ;
-    assert(myNCol == theRightMat.GetNCols()) ;
+    myAssert(myNRow == theRightMat.GetNRows(), "operator -=: Matrices must have the same dimensions") ;
+	myAssert(myNCol == theRightMat.GetNCols(), "operator -=: Matrices must have the same dimensions") ;
     for (uint i = 0 ; i < myNRow ; i++)
         for (uint j = 0 ; j < myNCol ; j++)
                         theLeftMat[i][j] -= theRightMat[i][j] ;

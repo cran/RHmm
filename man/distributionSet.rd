@@ -19,35 +19,35 @@ distributionSet(dis="DISCRETE", proba, labels=NULL)
 
 \arguments{
     \item{dis}{Name of the distribution of observations. In 'NORMAL', 'DISCRETE', 'MIXTURE'.}
-    \item{mean}{\itemize{
-        \item{univariate normal}{a vector of the means for each state of the model}
-        \item{multivariate normal}{a list of the mean vectors for each state of the model}
-        \item{mixture of univariate normal}{a list of vectors of the mixture means for each state of the model}
-        \item{mixture of multivariate normal}{a list of lists of vectors of means for each state and each component of the mixture of the model}
-        }}
-    \item{var}{\itemize{
-        \item{univariate normal}{a vector of the variances for each states of the model}
-        \item{mixture of univariate normal}{a list of vectors of the mixture variances for each states of the model}
-        }}
-    \item{cov}{\itemize{
-        \item{multivariate normal}{a list of covariance matrices of the multivariate normal distribution for each state of the model}
-        \item{mixture of multivariate normal}{a list of list of covariance matrices for each state and each component of the mixture}
-         }}
-    \item{proportion}{a list of vector of the mixture proportions for each state of the model}
-    \item{proba}{a list of vector of discrete probabilities for each state of the model}
-    \item{labels}{a vector of the labels of the discrete observations. Default NULL}
+    \item{mean}{
+        \emph{- Univariate normal distribution: }a vector of the means for each state of the model.\cr
+        \emph{- Multivariate normal distribution: }a list of the mean vectors for each state of the model.\cr
+        \emph{- Mixture of univariate normal distribution: }a list of vectors of the mixture means for each state of the model.\cr
+        \emph{- Mixture of multivariate normal distribution: }a list of lists of vectors of means for each state and each component of the mixture of the model.
+        }
+    \item{var}{
+        \emph{- Univariate normal distribution: }a vector of the variances for each states of the model.\cr
+        \emph{- Mixture of univariate normal distribution: }a list of vectors of the mixture variances for each states of the model.
+        }
+    \item{cov}{
+        \emph{- Multivariate normal distribution: }a list of covariance matrices of the multivariate normal distribution for each state of the model\cr
+        \emph{- Mixture of multivariate normal distribution: }a list of list of covariance matrices for each state and each component of the mixture.
+         }
+    \item{proportion}{A list of vector of the mixture proportions for each state of the model.}
+    \item{proba}{A list of vector of discrete probabilities for each state of the model.}
+    \item{labels}{A vector of the labels of the discrete observations. Default NULL.}
 
 }
-\value{ an object of class distributionClass with some of the following elements
-    \item{dis}{the name of the distribution}
-    \item{nStates}{number of hidden states}
-    \item{dimObs}{dimension of observations}
-    \item{nMixt}{number of mixtures for mixture of gaussian distributions}
-    \item{nLevels}{number of levels for discrete distributions}
-    \item{mean}{the 'mean' argument for univariate normal, mixture of univariate normal and multivariate normal distributions}
-    \item{var}{the 'var' argument for univariate normal and mixture of univariate normal distributions}
-    \item{cov}{the 'cov' argument for multivariate normal and mixture of multivaiate normal distributions}
-    \item{proba}{the 'proba' argument for discrete distributions}
+\value{An \sQuote{distributionClass} class object with some of the following elements:
+    \item{dis}{The name of the distribution.}
+    \item{nStates}{Number of hidden states.}
+    \item{dimObs}{Dimension of observations.}
+    \item{nMixt}{Number of mixtures for mixture of normal distributions.}
+    \item{nLevels}{Number of levels for discrete distributions.}
+    \item{mean}{The \sQuote{mean} argument for univariate normal, mixture of univariate normal and multivariate normal distributions.}
+    \item{var}{The \sQuote{var} argument for univariate normal and mixture of univariate normal distributions}
+    \item{cov}{The \sQuote{cov} argument for multivariate normal and mixture of multivaiate normal distributions}
+    \item{proba}{The \sQuote{proba} argument for discrete distributions}
     }
 
 
@@ -101,9 +101,9 @@ distributionSet(dis="DISCRETE", proba, labels=NULL)
         mm4 <- c(100, 20)
         mm5 <- c(20, -20)
         mm6 <- c(0, 0)
-        m_2d_2s <- distributionSet("MIXTURE", mean=list(list(mm1,mm2,mm3), list(mm4,mm5,mm6)), 
+        m_2d_2s <- distributionSet("MIXTURE", mean=list(list(mm1,mm2,mm3), list(mm4,mm5,mm6)),
             cov=list(list(cov1,cov2,cov3), list(cov4,cov5,cov6)), proportion=list(q1,q2))
-        
+
 }
 \keyword{models}
 \keyword{distribution}

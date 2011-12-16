@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cDVector.h 
  ***                                                         
@@ -14,10 +14,10 @@
 
 #include <cmath> 
 #include <cstdlib>
-#include <cassert>
 #include <sstream>
 #include <iomanip>
 #include "cOTError.h"
+#include "ExitError.h"
 
 #define D_PRECISION 16
 
@@ -94,7 +94,6 @@ extern cDVector operator-(const cDVector& theVect, const cDVector& theRightVect)
 extern cDVector operator-=(cDVector& theVect, const cDVector& theRightVect) ;
 extern cDVector Zeros(uint theN) ;
 extern cDVector CopyDouble(double* theVect, uint theSize) ;
-
 #endif // CDVECTOR_H_
 
 

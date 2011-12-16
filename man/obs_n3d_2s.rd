@@ -3,7 +3,7 @@
 \alias{n3d_2s}
 \alias{obs_n3d_2s}
 \title{A 2 states HMM with 3D gaussian distribution data set}
-\description{This data set contains 1 sample with 1000 observations of this HMM}
+\description{This data set contains 1 sample with 1000 observations of this HMM.}
 \details{
     File 'n3d_3s.RData' contains the matrix 'obs_n3d_2s'.
 }
@@ -32,7 +32,7 @@ Conditionnal distribution parameters:\cr
 Distribution parameters:\cr
   State 1\cr
     \tabular{rrrr}{
-     mean \tab \tab \tab cov matrix\cr          
+     mean \tab \tab \tab cov matrix\cr
         2 \tab 1.0 \tab 1.6 \tab -0.6\cr
         2 \tab 1.6 \tab 4.0 \tab -3.6\cr
         2 \tab -0.6 \tab -3.6 \tab 9.0\cr
@@ -40,7 +40,7 @@ Distribution parameters:\cr
 
   State 2\cr
    \tabular{rrrr}{
-    mean \tab cov matrix \tab \tab \cr          
+    mean \tab cov matrix \tab \tab \cr
     -1 \tab 4.0 \tab 1.6 \tab 1.6\cr
     -2 \tab 1.6 \tab 1.0 \tab 1.0\cr
     -3 \tab 1.6 \tab 1.0 \tab 4.0\cr

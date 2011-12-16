@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cHmm.cpp 
  ***                                                         
@@ -129,6 +129,13 @@ uint cHmm::GetNParam(void)
 uint myNClass = mInitProba.mSize ;
         return( -1 + myNClass * (myNClass + mDistrParam->GetNParam()) ) ;
 }
+
+uint cHmm::GetNFreeParam(void)
+{
+uint myNClass = mInitProba.mSize ;
+	return((myNClass -1)*(myNClass + 1) + myNClass*mDistrParam->GetNFreeParam()) ;
+}
+
 
 void cHmm::SetParam(cDVector& theParam) 
 {

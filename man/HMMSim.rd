@@ -1,12 +1,12 @@
 \name{HMMSim}
 \alias{HMMSim}
 \title{Simulation of an Hidden Markov Model}
-\description{Simulation of an HMM for different classes of observations distributions}
+\description{Simulation of an HMM for different classes of observations distributions.}
 \usage{
 HMMSim(nSim, HMM, lastState=NULL)
 }
 \arguments{
-    \item{nSim}{Number of simulations}
+    \item{nSim}{Number of simulations.}
     \item{HMM}{An HMMClass object. See \bold{HMMSet}}
     \item{lastState}{If not NULL, the state of the previous observation (usefull to complete a serie)}
     }
@@ -24,6 +24,6 @@ HMMSim(nSim, HMM, lastState=NULL)
     #Complete the serie.
     simul <- c(simul, HMMSim(1000, hmm_1d_3s, simul$states[1000]))
     }
- \seealso{code\link{HMMSet}}
+ \seealso{\code{\link{HMMSet}}}
 \keyword{datagen}
 \keyword{distribution}

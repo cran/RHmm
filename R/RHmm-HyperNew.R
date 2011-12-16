@@ -1,5 +1,5 @@
  ###############################################################
- #### RHmm version 1.5.0                             
+ #### RHmm package                             
  ####                                                         
  #### File: RHmm-HyperNew.R 
  ####                                                         
@@ -167,7 +167,7 @@ GetVectAllParam.HMMClass<-function(object)
 {
     nStates <- object$distribution$nStates
     Res <- object$initProb
-    
+
     for (i in 1:nStates)
         Res <- c(Res, object$transMat[i,])
     Res1 <- GetVectAllParam(object$distribution)
@@ -178,12 +178,12 @@ SetVectParam.HMMClass<-function(object, Vect)
 # nStates - 1 probInit + nStates*(nStates-1) matTrans + GetNParam de la distribution
 {
     nStates <- object$distribution$nStates
-    
+
     #initProb
     initProb <- rep(0, nStates)
     initProb[1:(nStates-1)] <- Vect[1:(nStates-1)]
     initProb[nStates] <- 1.0 - sum(initProb)
-    
+
     #transMat
     transMat <- matrix(0, nrow=nStates, ncol=nStates)
     k <- nStates
@@ -192,7 +192,7 @@ SetVectParam.HMMClass<-function(object, Vect)
         k <- k + nStates-1
         transMat[i,nStates] <- 1.0 - sum(transMat[i,])
     }
-    
+
     ResDistr <- SetVectParam(object=object$distribution, Vect=Vect[k:length(Vect)])
     HMM<-HMMSet(initProb=initProb, transMat=transMat, ResDistr)
     return(HMM)
@@ -202,10 +202,10 @@ SetVectAllParam.HMMClass<-function(object, Vect)
 # nStates - 1 probInit + nStates*(nStates-1) matTrans + GetNParam de la distribution
 {
     nStates <- object$distribution$nStates
-    
+
     #initProb
     initProb <- Vect[1:nStates]
-    
+
     #transMat
     transMat <- matrix(0, nrow=nStates, ncol=nStates)
     k <- nStates+1
@@ -213,7 +213,7 @@ SetVectAllParam.HMMClass<-function(object, Vect)
     {   transMat[i,1:nStates] <- Vect[k:(k+nStates-1)]
         k <- k + nStates
     }
-    
+
     ResDistr <- SetVectAllParam(object=object$distribution, Vect=Vect[k:length(Vect)])
     HMM<-HMMSet(initProb=initProb, transMat=transMat, ResDistr)
     return(HMM)
@@ -238,7 +238,7 @@ GradConstraint.HMMClass<-function(object)
 #   transMat
     for (i in 1:nStates)
         Res[i+1, (i*nStates+1):((i+1)*nStates)] <- Grad1
-#   Distribution    
+#   Distribution
     Aux <- GradConstraint(object$distribution)
     if (! is.null(Aux))
     {    Res[(nStates+2):nConstr,(nStates*(nStates+1) + 1):LParam$nParam] <- Aux
@@ -315,11 +315,11 @@ GetVectParam.univariateNormalClass<-function(object)
         Res[k] <- object$var[i]
         k<-k+1
     }
-    return(Res)    
+    return(Res)
 }
 
 GetVectAllParam.univariateNormalClass<-function(object)
-{   return(GetVectParam.univariateNormalClass(object))    
+{   return(GetVectParam.univariateNormalClass(object))
 }
 
 SetVectParam.univariateNormalClass<-function(object, Vect)
@@ -333,11 +333,11 @@ SetVectParam.univariateNormalClass<-function(object, Vect)
         k<-k+1
     }
     Res<-distributionSet(dis='NORMAL', mean=mean, var=var, verif=FALSE)
-    return(Res)    
+    return(Res)
 }
 
 SetVectAllParam.univariateNormalClass<-function(object, Vect)
-{   return(SetVectParam.univariateNormalClass(object, Vect)) 
+{   return(SetVectParam.univariateNormalClass(object, Vect))
 }
 
 GetNConstraint.univariateNormalClass<-function(object)
@@ -402,7 +402,7 @@ SetVectParam.multivariateNormalClass<-function(object, Vect)
     nStates <- object$nStates
 # Moyennes, puis variances puis corrélations
     k <- 1
-    distr <- object 
+    distr <- object
     for (i in 1:nStates)
     {   distr$mean[[i]] <- Vect[k:(k+dimObs-1)]
         k <- k + dimObs
@@ -434,7 +434,7 @@ GradConstraint.multivariateNormalClass<-function(object)
 {
     return(NULL)
 }
-   
+
 GetNParam.mixtureUnivariateNormalClass<-function(object)
 {
     nMixt <- object$nMixt
@@ -557,7 +557,7 @@ GradConstraint.mixtureUnivariateNormalClass<-function(object)
 }
 
 
- 
+
 GetNParam.mixtureMultivariateNormalClass<-function(object)
 {
     dimObs <- object$dimObs
@@ -594,7 +594,7 @@ GetVectParam.mixtureMultivariateNormalClass<-function(object)
     nParam <- (nMean + nVar + nCor + nProba)*nStates
     Res <- rep(0, nParam)
     k <- 1
-# Les Nmixt x dimObs mean, puis les NMixt*dimObs Var, puis les cor, puis les proba      
+# Les Nmixt x dimObs mean, puis les NMixt*dimObs Var, puis les cor, puis les proba
     for (i in 1:nStates)
     {   for (j in 1:nMixt)
         {   Res[k:(k+dimObs-1)] <- object$mean[[i]][[j]]
@@ -632,7 +632,7 @@ GetVectAllParam.mixtureMultivariateNormalClass<-function(object)
    nParam <- (nMean + nVar + nCor + nMixt)*nStates
     Res <- rep(0, nParam)
     k <- 1
-# Les Nmixt x dimObs mean, puis les NMixt*dimObs Var, puis les cor, puis les proba      
+# Les Nmixt x dimObs mean, puis les NMixt*dimObs Var, puis les cor, puis les proba
     for (i in 1:nStates)
     {   for (j in 1:nMixt)
         {   Res[k:(k+dimObs-1)] <- object$mean[[i]][[j]]
@@ -667,7 +667,7 @@ SetVectParam.mixtureMultivariateNormalClass<-function(object, Vect)
     nMixt <- object$nMixt
     k <- 1
     distr <- object
-# Les Nmixt x dimObs mean, puis les NMixt*dimObs Var, puis les cor, puis les proba      
+# Les Nmixt x dimObs mean, puis les NMixt*dimObs Var, puis les cor, puis les proba
     for (i in 1:nStates)
     {   for (j in 1:nMixt)
         {   distr$mean[[i]][[j]] <- Vect[k:(k+dimObs-1)]
@@ -677,7 +677,7 @@ SetVectParam.mixtureMultivariateNormalClass<-function(object, Vect)
         {   distr$cov[[i]][[j]] <- diag(Vect[k:(k+dimObs-1)])
             k <- k + dimObs
         }
-        
+
         for (j in 1:nMixt)
         {   matCor <- diag(rep(1, dimObs))
             for (n in 1:(dimObs-1))
@@ -703,7 +703,7 @@ SetVectAllParam.mixtureMultivariateNormalClass<-function(object, Vect)
     nMixt <- object$nMixt
     k <- 1
     distr <- object
-# Les Nmixt x dimObs mean, puis les NMixt*dimObs Var, puis les cor, puis les proba      
+# Les Nmixt x dimObs mean, puis les NMixt*dimObs Var, puis les cor, puis les proba
     for (i in 1:nStates)
     {   for (j in 1:nMixt)
         {   distr$mean[[i]][[j]] <- Vect[k:(k+dimObs-1)]
@@ -713,7 +713,7 @@ SetVectAllParam.mixtureMultivariateNormalClass<-function(object, Vect)
         {   distr$cov[[i]][[j]] <- diag(Vect[k:(k+dimObs-1)])
             k <- k + dimObs
         }
-        
+
         for (j in 1:nMixt)
         {   matCor <- diag(rep(1, dimObs))
             for (n in 1:(dimObs-1))
@@ -773,7 +773,7 @@ GetVectParam.discreteClass <- function(object)
     Res <- rep(0, nParam)
     k <- 1
     for (i in 1:nStates)
-    {   Res[k:(k+nLevels-2)] <- as.vector(object$proba[[i]][1:(nLevels-1)]) 
+    {   Res[k:(k+nLevels-2)] <- as.vector(object$proba[[i]][1:(nLevels-1)])
         k <- k+nLevels-1
     }
     return(Res)
@@ -786,7 +786,7 @@ GetVectAllParam.discreteClass <- function(object)
     Res <- rep(0, nParam)
     k <- 1
     for (i in 1:nStates)
-    {   Res[k:(k+nLevels-1)] <- as.vector(object$proba[[i]]) 
+    {   Res[k:(k+nLevels-1)] <- as.vector(object$proba[[i]])
         k <- k+nLevels
     }
     return(Res)
@@ -799,7 +799,7 @@ SetVectParam.discreteClass <- function(object, Vect)
     distr <- object
     k <- 1
     for (i in 1:nStates)
-    {   distr$proba[[i]][1:(nLevels-1)] <-  Vect[k:(k+nLevels-2)] 
+    {   distr$proba[[i]][1:(nLevels-1)] <-  Vect[k:(k+nLevels-2)]
         distr$proba[[i]][nLevels] <- 1.0 -sum(distr$proba[[i]][1:(nLevels-1)])
         k <- k+nLevels-1
     }
@@ -813,7 +813,7 @@ SetVectAllParam.discreteClass <- function(object, Vect)
     distr <- object
     k <- 1
     for (i in 1:nStates)
-    {   distr$proba[[i]] <-  Vect[k:(k+nLevels-1)] 
+    {   distr$proba[[i]] <-  Vect[k:(k+nLevels-1)]
         k <- k+nLevels
     }
     return(distr)
@@ -829,7 +829,7 @@ logForwardBackward<-function(HMM, obs)
         stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
     if (class(HMM) == "HMMFitClass")
         HMM <- HMM$HMM
-        
+
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
         if (dimObs == 1)
@@ -862,13 +862,13 @@ NumLLH1 <- function(Teta, HMM, obs, nSample)
     return(-LLH)
 }
 
-optimHessian <- function(par, fn, ...) 
+optimHessian <- function(par, fn, ...)
 {
     fn1 <- function(par) fn(par, ...)
-    con <- list(trace = 0, fnscale = 1, parscale = rep.int(1, 
-        length(par)), ndeps = rep.int(0.001, length(par)), maxit = 100L, 
-        abstol = -Inf, reltol = sqrt(.Machine$double.eps), alpha = 1, 
-        beta = 0.5, gamma = 2, REPORT = 10, type = 1, lmm = 5, 
+    con <- list(trace = 0, fnscale = 1, parscale = rep.int(1,
+        length(par)), ndeps = rep.int(0.001, length(par)), maxit = 100L,
+        abstol = -Inf, reltol = sqrt(.Machine$double.eps), alpha = 1,
+        beta = 0.5, gamma = 2, REPORT = 10, type = 1, lmm = 5,
         factr = 1e+07, pgtol = 0, tmax = 10, temp = 10)
     hess <- try(.Internal(optimhess(par, fn1, NULL, con)), silent=TRUE)
     nParam <- length(par)
@@ -884,7 +884,7 @@ optimHessian <- function(par, fn, ...)
 }
 
 
-nlmeHessian <- function(par, fn, ...) 
+nlmeHessian <- function(par, fn, ...)
 {
     fn1 <- function(par) fn(par, ...)
     hess <- try(fdHess(par, fn1)$Hessian, silent=TRUE)
@@ -904,7 +904,7 @@ ComputeHessian <- function(HMM, obs, asymptMethod)
     else
     {   nSample <- 1
     }
-    
+
     listeParam <- GetNAllParam(HMM)
     Teta0 <- GetVectAllParam(HMM)
 
@@ -931,7 +931,7 @@ ComputeHessian1 <- function(HMM, obs, asymptMethod)
     else
     {   nSample <- 1
     }
-    
+
     listeParam <- GetNParam(HMM)
     Teta0 <- GetVectParam(HMM)
 
@@ -998,45 +998,123 @@ asymptoticSimCovMat <- function(HMM, obs, nSimul, verbose=FALSE, oldCovMat=NULL,
         stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
     if (class(HMM) == "HMMFitClass")
         HMM <- HMM$HMM
-    nParam <- GetNAllParam(HMM)$nParam
-    Teta0 <- GetVectAllParam(HMM)
-    if (oldNSimul==0)
-    {   matCov <- matrix(0, nParam, nParam)
+
+    if (is.null(oldCovMat))
+    {
+        Res <- asymptoticIterSimCovMat(HMM, obs, nSimul, verbose)
     }
     else
-    {   matCov <- oldCovMat
+    {   Teta <- GetVectAllParam(HMM)
+        esp2Mat <- Teta %*% t(Teta)
+        espVect <- Teta
+        nSimul <- oldNSimul
+        old <- list(cov=oldCovMat, esp2Mat=esp2Mat, mean = espVect, nSimul=oldNSimul)
+        Res <- asymptoticIterSimCovMat(HMM, obs, nSimul, verbose, old)
     }
-    
+    warning("asymtoticSimCovMat is deprecated. Use asymptoticIterSimCovMat")
+    return(Res$cov)
+ }
+
+asymptoticIterSimCovMat <- function(HMM, obs, nSimul, verbose=FALSE, oldCovMat=NULL)
+{
+    if ( ( class(HMM) != "HMMFitClass" ) && (class(HMM) != "HMMClass") )
+        stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
+    if (class(HMM) == "HMMFitClass")
+        HMM <- HMM$HMM
+    nParam <- GetNAllParam(HMM)$nParam
+    if (is.null(oldCovMat))
+    {   esp2Mat <- matCov <- matrix(0, nParam, nParam)
+        espVect <- rep(0, nParam)
+        oldNSimul <- 0
+    }
+    else
+    {   matCov <- oldCovMat$cov
+        esp2Mat <- oldCovMat$esp2Mat
+        espVect <- oldCovMat$mean
+        oldNSimul <- oldCovMat$nSimul
+    }
+
     if (is.list(obs))
     {   nList <- length(obs)
         nObs <- rep(0, nList)
         for (j in 1:nList)
         {   nObs[j] <- length(obs[[j]])
-        }   
+        }
     }
     else
     {   nList <- 1
         nObs <- c(length(obs))
     }
-    
-    for (i in oldNSimul:(oldNSimul+nSimul-1))
+
+    i <- oldNSimul
+    while (i < oldNSimul+nSimul)
     {   simObs <- NULL
         for (j in 1:nList)
-        {   simObs <- c(simObs, HMMSim(nObs[j], HMM=HMM))
+        {   simObs <- c(simObs, HMMSim(nObs[j], HMM=HMM)$obs)
         }
         if (HMM$distribution$dis=="NORMAL")
-        {   Res <- HMMFit(simObs$obs, dis="NORMAL", nStates=HMM$distribution$nStates, asymptCov=FALSE, control=list(init="USER", initPoint=HMM))
+        {   Res <- HMMFit(simObs, dis="NORMAL", nStates=HMM$distribution$nStates, asymptCov=FALSE, control=list(init="USER", initPoint=HMM))
             Teta <- GetVectAllParam(Res$HMM)
-            u <- Teta - Teta0
-            matCov <- (i*matCov + u%*%t(u))/(i+1)
-            if (verbose)
-            {   cat(sprintf("iteration %d\n", i+1))
+            if (!any(is.na(Teta)) && !any(is.infinite(Teta)))
+            {   espVect <- (i*espVect + Teta)/(i+1)
+                esp2Mat <- (i*esp2Mat + Teta%*%t(Teta))/(i+1)
+
+                if (verbose)
+                {   cat(sprintf("iteration %d\n", i+1))
+                }
+                i <- i + 1
             }
         }
     }
+    matCov <- esp2Mat - espVect%*%t(espVect)
     colnames(matCov) <- rownames(matCov) <- NomsParamHMM(HMM)
-    return(matCov)
+    return(list(cov=matCov, esp2Mat=esp2Mat, mean = espVect, nSimul=oldNSimul+nSimul))
 }
+
+
+asymptoticCovMat <- function(HMM, obs, asymptMethod=c('nlme', 'optim'))
+{
+    if ( ( class(HMM) != "HMMFitClass" ) && (class(HMM) != "HMMClass") )
+        stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
+    if (class(HMM) == "HMMFitClass")
+        HMM <- HMM$HMM
+    Hh <- ComputeHessian(HMM, obs, asymptMethod[1])
+    nParam <- dim(Hh)[1]
+    K <- GradConstraint(HMM)
+    Dh <- Hh + t(K) %*% K
+    Dm1 <- try(solve(Dh), silent=TRUE)
+    if (class(Dm1)=="try-error")
+    {   asymptMatCov <- matrix(NaN, ncol=nParam, nrow=nParam)
+        colnames(asymptMatCov) <- rownames(asymptMatCov) <- NomsParamHMM(HMM)
+        warning("Hessian matrix is not inversible")
+        return(asymptMatCov)
+    }
+    Aux <- K %*% Dm1 %*% t(K)
+    Auxm1 <- try(solve(Aux), silent=TRUE)
+    if (class(Auxm1)=="try-error")
+    {   asymptMatCov <- matrix(NaN, ncol=nParam, nrow=nParam)
+        colnames(asymptMatCov) <- rownames(asymptMatCov) <- NomsParamHMM(HMM)
+        warning("Hessian matrix is not inversible")
+        return(asymptMatCov)
+    }
+    asymptMatCov <- Dm1 - Dm1 %*% t(K) %*% Auxm1 %*% K %*% Dm1
+    if (is.list(obs))
+    {   nTot <- length(obs[[1]])
+        nSample <- length(obs)
+        if (nSample > 1)
+        {   for (j in 2:nSample)
+                nTot <- nTot + length(obs[[j]])
+        }
+    }
+    else
+        nTot <- length(obs)
+
+    colnames(asymptMatCov) <- rownames(asymptMatCov) <- NomsParamHMM(HMM)
+    return(asymptMatCov)
+}
+
+
+
 
 setAsymptoticCovMat<-function(HMMFit, asymptCovMat)
 {
@@ -1046,12 +1124,12 @@ setAsymptoticCovMat<-function(HMMFit, asymptCovMat)
         stop("asymptCovMat must be a matrix\n")
  #   if (! is_positive_definite(asymptCovMat) )
  #       stop("asymptCovMat must be a definite positive matrix\n")
-    colnames(asymptCovMat) <- rownames(asymptCovMat) <- NomsParamHMM(HMM)
-    HMM$asymptCov <- asymptCovMat
-    return(HMM)
+    colnames(asymptCovMat) <- rownames(asymptCovMat) <- NomsParamHMM(HMMFit)
+    HMMFit$asymptCov <- asymptCovMat
+    return(HMMFit)
 }
-    
- 
+
+
 NomsParamHMM <- function(object) UseMethod("NomsParamHMM")
 
 NomsParamHMM.default <- function(object)
@@ -1074,7 +1152,7 @@ NomsParamHMM.discreteClass <- function(object)
         {   Aux <- sprintf("p[%d]", j)
             namesProba <- c(Res, Aux)
         }
-    }   
+    }
     for (i in 1:nStates)
     {   for (j in 1:nLevels)
         {   Aux <- sprintf("State[%d]-%s", i, namesProba[j])
@@ -1095,7 +1173,7 @@ NomsParamHMM.univariateNormalClass <- function(object)
         Res <- c(Res, Aux)
     }
     return(Res)
-    
+
 }
 
 NomsParamHMM.mixtureUnivariateNormalClass <- function(object)
@@ -1116,9 +1194,9 @@ NomsParamHMM.mixtureUnivariateNormalClass <- function(object)
         {   Aux <- sprintf("state[%d]-prop[%d]", i, j)
             Res <- c(Res, Aux)
         }
-    
+
     }
-    return(Res)   
+    return(Res)
 }
 
 NomsParamHMM.multivariateNormalClass <- function(object)
@@ -1135,7 +1213,7 @@ NomsParamHMM.multivariateNormalClass <- function(object)
         {   Aux <- sprintf("state[%d]-var[%d]", i, j)
             Res <- c(Res, Aux)
         }
-        
+
         for (j in 1:(dimObs-1))
         {   for (k in (j+1):dimObs)
             {   Aux <- sprintf("state[%d]-Cor[%d,%d]", i, j, k)
@@ -1143,7 +1221,7 @@ NomsParamHMM.multivariateNormalClass <- function(object)
             }
         }
     }
-    return(Res)   
+    return(Res)
 }
 
 NomsParamHMM.mixtureMultivariateNormalClass <- function(object)
@@ -1173,9 +1251,9 @@ NomsParamHMM.mixtureMultivariateNormalClass <- function(object)
         {   Aux <- sprintf("state[%d]-prop[%d]", i, j)
             Res <- c(Res, Aux)
         }
-                
+
     }
-    return(Res)   
+    return(Res)
 }
 
 NomsParamHMM.HMMClass <- function(object)
@@ -1202,7 +1280,7 @@ NomsParamHMM.HMMFitClass <- function(object)
     return(NomsParamHMM(object$HMM))
 }
 
-summary.HMMFitClass <-function (object, ...) 
+summary.HMMFitClass <-function (object, ...)
 {
     ans = NULL
     ans$call = object$call
@@ -1223,25 +1301,26 @@ summary.HMMFitClass <-function (object, ...)
         else
             nomloi <- sprintf("mixture of %d %d-d gaussian", y$nMixt, y$dimObs)
     }
-    Model <- sprintf("%d states HMM with %s distribution", y$nStates, nomloi)     
+    Model <- sprintf("%d states HMM with %s distribution", y$nStates, nomloi)
     ans$model <- Model
     ans$LLH = object$LLH
     ans$BIC <- object$BIC
+    ans$AIC <- object$AIC
     if (is.null(object$asymptCov))
     {   cat(sprintf("Computing the asymptotic covariance matrix of estimates\n"))
-        object$asymptCov <- asymptoticCovMat(object, object$obs)     
+        object$asymptCov <- asymptoticCovMat(object, object$obs)
     }
 
     nAllParam <- GetNAllParam(object)
-    Value <- GetVectAllParam(object) 
+    Value <- GetVectAllParam(object)
     asymptVar <- diag(object$asymptCov)
     se.coef <- sqrt(asymptVar)
     tval = Value/se.coef
     prob = 2 * (1 - pnorm(abs(tval)))
-    
+
     Noms <- NomsParamHMM(object$HMM)
     ans$coef = cbind(Value, se.coef, tval, prob)
-    dimnames(ans$coef) = list(Noms, c(" Estimate", 
+    dimnames(ans$coef) = list(Noms, c(" Estimate",
         " Std. Error", " t value", "Pr(>|t|)"))
     class(ans) <- 'summary.HMMFitClass'
     return(ans)
@@ -1250,7 +1329,7 @@ summary.HMMFitClass <-function (object, ...)
 print.summary.HMMFitClass <- function(x, ...)
 {  # Description:
     #   Print summary method for an x of class "HMMFitClass".
-    
+
     # FUNCTION:
 
     # Call and Model:
@@ -1272,14 +1351,259 @@ print.summary.HMMFitClass <- function(x, ...)
     signif.stars = getOption("show.signif.stars")
     digits = max(4, getOption("digits") - 4)
     printCoefmat(x$coef, digits = digits, signif.stars = signif.stars, ...)
-    
-     cat("\nLog Likelihood: ", 
+
+     cat("\nLog Likelihood: ",
         format(round(x$LLH, 2)), "\n")
 
-    cat("BIC Criterion: ", 
+    cat("BIC Criterion: ",
         format(round(x$BIC, 2)), "\n")
-    
+
+    cat("AIC Criterion: ",
+        format(round(x$AIC, 2)), "\n")
+
     # Return Value:
 #    cat("\n")
     invisible()
+}
+
+
+HMMRank <- function(object) UseMethod("HMMRank")
+HMMRank.HMMFitClass <- function(object)
+{
+    return(HMMRank(object$HMM))
+}
+
+HMMRank.HMMClass <- function(object)
+{
+    Mat <- cbind(rank(object$initProb), HMMGetRank(object$distribution))
+    Res <- matrixRank(Mat)
+    return(Res)
+}
+
+HMMGetRank <- function(object) UseMethod("HMMGetRank")
+HMMGetRank.distributionClass <- function(object)
+{
+    return(NextMethod(generic="HMMGetRank", object=object))
+}
+
+HMMGetRank.univariateNormalClass <- function(object)
+{
+
+    return(cbind(rank(object$mean), rank(object$var)))
+
+}
+
+HMMGetRank.multivariateNormalClass <- function(object)
+{   mat <- matrix(0, ncol=2*object$dimObs, nrow=object$nStates)
+    for ( i in 1:object$nStates)
+    {   for (j in 1:object$dimObs)
+        {   mat[i,j] <- object$mean[[i]][j]
+            mat[i, j+object$dimObs] <- object$cov[[i]][j][j]
+        }
+    }
+    for (j in 1:(2*object$dimObs))
+    {   mat[,j] <- rank(mat[,j])
+    }
+    return(mat)
+}
+
+HMMGetRank.mixtureUnivariateNormalClass<-function(object)
+{
+    mat <- matrix(0, ncol = 3, nrow=object$nStates)
+    for (i in 1:object$nStates)
+    {   mat[i,1] <- min(object$proportion[[i]])
+        mat[i,2] <- as.double(t(object$proportion[[i]])%*%object$mean[[i]])
+        mat[i,3] <- as.double(t(object$proportion[[i]])%*%object$var[[i]])
+    }
+    for(i in 1:3)
+        mat[,i] <- rank(mat[,i])
+    return(mat)
+}
+
+HMMGetRank.mixtureMultivariateNormalClass<-function(object)
+{
+    mat <- matrix(0, ncol = 1 + 2*object$dimObs, nrow=object$nStates)
+    for (i in 1:object$nStates)
+    {   mat[i,1] <- min(object$proportion[[i]])
+        esp <- NULL
+        vari <- NULL
+        for (j in 1:object$nMixt)
+        {   esp <- rbind(esp, object$mean[[i]][[j]])
+            vari <- rbind(vari, diag(object$cov[[i]][[j]]))
+        }
+
+        for (j in 1:object$dimObs)
+        {   mat[i,1 + j] <- as.double(t(object$proportion[[i]])%*%esp[,j])
+            mat[i,1 + 2 * j] <- as.double(t(object$proportion[[i]])%*%vari[,j])
+        }
+    }
+
+    for (j in 1:(1+2*object$dimObs))
+    {   mat[,j] <- rank(mat[,j])
+    }
+
+    return(mat)
+}
+
+HMMGetRank.discreteClass<-function(object)
+{
+    Res <- matrix(0, nrow=object$nStates, ncol = object$nLevels)
+    for ( i in 1:object$nStates )
+    {   for (j in 1:object$nLevels)
+        {   Res[i,j] <- object$proba[[i]][j]
+        }
+    }
+    for (j in 1:object$nLevels )
+    {   Res[,j] <- rank(Res[,j])
+    }
+    return(Res)
+}
+
+
+
+
+HMMSort <- function(object, r=NULL) UseMethod("HMMSort")
+HMMSort.HMMFitClass <- function(object, r=NULL)
+{
+    Res <- object
+    object$HMM <- HMMSort(object$HMM, r)
+    return(Res)
+}
+
+HMMSort.HMMClass <- function(object, r=NULL)
+{
+    if (is.null(r))
+        r <- HMMRank(object)
+    initProb <- object$initProb
+    initProb[r] <- object$initProb
+    transMat <- object$transMat
+    transMat[r,r] <- object$transMat
+    distribution <- HMMSort(object$distribution, r=r)
+    return(HMMSet(initProb=initProb, transMat = transMat, distribution=distribution))
+}
+
+HMMSort.distributionClass <- function(object, r)
+{
+    return(NextMethod(generic="HMMSort", object=object, r=r))
+}
+
+HMMSort.univariateNormalClass <- function(object, r)
+{
+    moy <- object$mean
+    vari <- object$var
+    moy[r] <- moy
+    vari[r] <- vari
+    return(distributionSet("NORMAL",mean=moy, var=vari, verif=FALSE))
+}
+
+
+HMMSort.multivariateNormalClass <- function(object, r)
+{
+    moy <- object$mean
+    cova <- object$cov
+    moy[r] <- moy
+    cova[r] <- cova
+    return(distributionSet("NORMAL",mean=moy, cov=cova, verif=FALSE))
+}
+
+HMMSort.mixtureUnivariateNormalClass <- function(object, r)
+{
+    prop <- object$proportion
+    moy <- object$mean
+    vari <- object$var
+
+    for (i in 1:object$nStates)
+    {
+        mat <- cbind(prop[[i]],moy[[i]], vari[[i]])
+        for (j in 1:dim(mat)[2])
+        {    mat[,j] <- rank(mat[,j])
+        }
+        r1 <- matrixRank(mat)
+        prop[[i]][r1] <- prop[[i]]
+        moy[[i]][r1] <- moy[[i]]
+        vari[[i]][r1] <- vari[[i]]
+    }
+    prop[r] <- prop
+    moy[r] <- moy
+    vari[r] <- vari
+
+    return(distributionSet("MIXTURE", proportion=prop, mean=moy, var=vari, verif=FALSE))
+}
+
+HMMSort.mixtureMultivariateNormalClass <- function(object, r)
+{
+    prop <- object$proportion
+    moy <- object$mean
+    cova <- object$cov
+    for (i in 1:object$nStates)
+    {
+        mat <- NULL
+        for (j in 1:object$nMixt)
+        {
+            mat <- rbind(mat,c(prop[[i]][j],moy[[i]][[j]], diag(cova[[i]][[j]])))
+        }
+        for (j in 1:dim(mat)[2])
+        {   mat[,j] <- rank(mat[,j])
+        }
+        r1 <- matrixRank(mat)
+        prop[[i]][r1] <- prop[[i]]
+        moy[[i]][r1] <- moy[[i]]
+        cova[[i]][r1] <- cova[[i]]
+    }
+    prop[r] <- prop
+    moy[r] <- moy
+    cova[r] <- cova
+
+    return(distributionSet(dis="MIXTURE", proportion=prop, mean=moy, cov=cova, verif=FALSE))
+}
+
+
+HMMSort.discreteClass <- function(object, r)
+{
+    proba <- object$proba
+    proba[r] <- proba
+    label <- names(proba[[1]])
+    if ( label[1] == 'p 1')
+    {   label = NULL
+    }
+    return(distributionSet(dis="DISCRETE", proba=proba, labels=label, verif=FALSE))
+}
+
+
+Exaeco <- function(x)
+{   z <- sort(x)
+    n <- length(z)
+    return(any(z[2:n]==z[1:(n-1)]))
+}
+
+
+matrixRank <- function(theMat)
+{
+    if (is.null(theMat))
+        return(NULL)
+    dimens <- dim(theMat)
+    nStates <- dimens[1]
+    nCol <- dimens[2]
+    Res <- rank(theMat[1:nStates,1])
+    isExaeco <- Exaeco(Res)
+    i <- 1
+    while (isExaeco)
+    {   ind <- c(i)
+        for (j in (i+1):nStates)
+        {   if (Res[j]==Res[i])
+            {   ind <- c(ind, j)
+            }
+        }
+        if (length(ind) > 1)
+        {   Mat1 <- as.matrix(theMat[ind,2:nCol])
+            Res1 <- matrixRank(Mat1)
+            Somme <- sum(Res[ind])
+            n <- length(ind)
+            k <- as.integer((Somme - n*(n-1)/2)/n)
+            Res[ind] <- k-1+Res1
+            isExaeco <- Exaeco(Res)
+        }
+        i <- i + 1
+    }
+    return(Res)
 }

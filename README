@@ -1,4 +1,4 @@
-RHmm package version 1.5.0 - May, 12th, 2011
+RHmm package version 1.5.5 - December, 16th, 2011
 
 Make instructions
 -----------------
@@ -6,7 +6,7 @@ Make instructions
 
 RHmm can be used as a standalone library. if R_HOME is R directory, go into RHmm/src and
 1) compile all .cpp using g++ -c *.cpp -I R_HOME/include -w
-2) link the program using 
+2) link the program using
 	On unix system: g++ -o main *.o -W1,-Bstatic -lRlapack -lRblas -L R_HOME/lib
 	On windows system: g++ -o main *.o -W1,-Bstatic -lR -lRlapack -lRblas -L R_HOME/bin
 3) To execute the main program,
@@ -16,11 +16,11 @@ then you can execute the main program by doing ./main in RHmm/src directory. Mai
 or
 1') Use the makefile programe in src/makevar
 
-Thanks to: 
+Thanks to:
 - Mait Raag who found a bug in may Multivariate Normal Density function (version <= 1.03).
 - Tarmo Leinonen who found some problems in the forwardbackward procedure
 - Matteo Re who found bugs in Viterbi path procedure (for discrete distributions)
 - Vince Melfi who found a bug in the ForwardBackward procedure.
-
+- Simon Malinowski who found a bug in LLH computation.
 
 Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> and Sebastian Bauer <mail@sebastianbauer.info>

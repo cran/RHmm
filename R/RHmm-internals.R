@@ -1,5 +1,5 @@
  ###############################################################
- #### RHmm version 1.5.0                             
+ #### RHmm package                             
  ####                                                         
  #### File: RHmm-internals.R 
  ####                                                         
@@ -32,7 +32,7 @@ setStorageMode.paramAlgoBW <- function(object)
     storage.mode(x) <- "list"
     class(x) <- "paramAlgoBW"
     return(x)
-}    
+}
 
 setStorageMode.HMMClass <- function(object)
 {   x <- object
@@ -84,7 +84,7 @@ setStorageMode.mixtureUnivariateNormalClass <- function(object)
     storage.mode(x$proportion) <- "list"
     storage.mode(x) <- "list"
     class(x) <- "mixtureUnivariateNormalClass"
-    return(x)        
+    return(x)
 }
 
 setStorageMode.mixtureMultivariateNormalClass <- function(object)
@@ -96,7 +96,7 @@ setStorageMode.mixtureMultivariateNormalClass <- function(object)
     storage.mode(x$proportion) <- "list"
     storage.mode(x) <- "list"
     class(x) <- "mixtureMultivariateNormalClass"
-    return(x)        
+    return(x)
 }
 
 setStorageMode.discreteClass <- function(object)
@@ -106,8 +106,8 @@ setStorageMode.discreteClass <- function(object)
    storage.mode(x$dimObs) <- "integer"
    storage.mode(x) <- "list"
    class(x) <- "discreteClass"
-   return(x)        
-}    
+   return(x)
+}
 
 GetAllLevels <- function(obs)
 {
@@ -136,7 +136,7 @@ GetAllLevels <- function(obs)
 }
 
 TransformeListe <- function(paramHMM, obs)
-{   
+{
     if (paramHMM$dis=='DISCRETE')
     {   if (is.null(paramHMM$Levels))
             labels <- GetAllLevels(obs)
@@ -158,9 +158,9 @@ TransformeListe <- function(paramHMM, obs)
             Z <- factor(Z, levels=labels)
             Zt <- list(as.double(Z) - 1.0)
         }
-        return(list(Zt=Zt, nLevels=nLevels, labels=labels))         
+        return(list(Zt=Zt, nLevels=nLevels, labels=labels))
     }
-    else 
+    else
     {    if (is.list(obs))
          {   return(list(Zt=obs, nLevels=0, labels=NULL))
          }

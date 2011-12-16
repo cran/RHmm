@@ -1,29 +1,18 @@
 /**************************************************************
  *** RHmm package
  ***                                                         
- *** File: Kmeans.h 
+ *** File: ExitError.h 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  *** Author: Sebastian BAUER <sebastian.bauer@charite.de>
  ***                                                         
  **************************************************************/
 
-#ifndef _KMEANS_H_
-#define _KMEANS_H_
-#pragma once
+#ifndef _EXITERROR_H_
+#define _EXITERROR_H_
 
-#ifndef _RDLL_
+#include "cOTError.h"
 
-#include "OTMathUtil.h"
-#include "REquivalents.h"
-#ifndef uint
-        typedef unsigned int uint ;
-#endif //uint
+inline void myAssert(bool theTest, char* theMess) {if (!theTest) throw cOTError(theMess) ; }
 
-
-void mkmeans(cDVector& theYt, uint theNClass, int* theSeq) ;
-void mkmeans(cDVector& theYt, uint theNClass, uint theDimObs, int* theSeq) ;
-
-#endif //_RDLL_
-
-#endif //_KMEANS_H_
+#endif //_EXITERROR_H_

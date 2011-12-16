@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: StdAfxRHmm.h 
  ***                                                         
@@ -9,7 +9,7 @@
  **************************************************************/
 
 #include "OTMathUtil.h"
-#include "logprob.h"
+#include "LogProb.h"
 #include "SamplesUtil.h"
 #include "MultivariateNormalUtil.h"
 #include "Hmm.h"

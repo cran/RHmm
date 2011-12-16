@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cHmmFit.h 
  ***                                                         
@@ -20,6 +20,7 @@
 class cHmmFit : public cBaumWelch, public cHmm
 {       public :        
                 double  mBic    ;
+				double	mAic	;
                 uint    mNIter  ;
                 double  mTol    ;
                 double  mLLH    ;

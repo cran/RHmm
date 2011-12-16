@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cOTError.cpp 
  ***                                                         
@@ -14,10 +14,10 @@ cOTError::cOTError(const char *theMess)
 {
         if (theMess != (char *)NULL) 
 #ifndef _RDLL_
-			std::cout << theMess << std::endl ;
-			exit(0) ;
+                        std::cout << theMess << std::endl ;
+                        exit(0) ;
 #else
-			error(theMess) ;
+                        error(theMess) ;
 #endif //_RDLL_
 
 }

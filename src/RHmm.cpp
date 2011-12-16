@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: RHmm.cpp 
  ***                                                         
@@ -156,42 +156,14 @@ cHmmFit myParamSortie = cHmmFit(myParamEntree) ;
                 myY[n].Delete() ;
         delete[] myY ;
 
-/*
-#ifdef _DEBOGAGE_
-SEXP myRes1 ;
-SEXP myAux1[6] ;
-uint ourNProtect = 0 ;
-        MESS("JE SUIS ICI 1\n") 
-        myParamSortie.Print() ;
-        SETVECTSEXP(myParamSortie.mInitProba, myAux1[0]) ;      
-        SETMATSEXP(myParamSortie.mTransMat, myAux1[1]) ;
-cDiscrete *myParam = dynamic_cast<cDiscrete *>(myParamSortie.mDistrParam) ;
-        if (myParam == NULL)
-                cOTError("Probleme de casting") ;
-        else
-                MESS("cDiscrete Fait\n") ;
-        SETLISTVECTSEXP(myParam->mProba, myNbClasses, myAux1[2]) ;
-        PROTECT(myAux1[5] = allocVector(REALSXP, 4)) ;
-        REAL(myAux1[5])[0] = myParamSortie.mLLH ;
-        REAL(myAux1[5])[1] = myParamSortie.mBic ;
-        REAL(myAux1[5])[2] = (double)( myParamSortie.mNIter) ;
-        REAL(myAux1[5])[3] =  myParamSortie.mTol ;
-        PROTECT(myRes1 = allocVector(VECSXP, 4)) ;
-        for (register uint i = 0 ; i < 3 ; i++)
-                SET_VECTOR_ELT(myRes1, i, myAux1[i]) ;
-        SET_VECTOR_ELT(myRes1, 3, myAux1[5]) ;
-        MESS("JE SUIS ICI 2\n") 
-        UNPROTECT(2 + ourNProtect) ;
-        MESS("JE SUIS ICI 3\n") 
-        return(myRes1);
-#endif //DEBOGAGE_
-*/
+
 SEXP myRes,
          myAux[6]       ;
 
-        myRUtil.SetVectSexp(myParamSortie.mInitProba, myAux[0]) ;
+myRUtil.SetVectSexp(myParamSortie.mInitProba, myAux[0]) ;
         myRUtil.SetMatSexp(myParamSortie.mTransMatVector[0], myAux[1]) ; // TODO: Do it for the real list
-        switch (myDistrType)
+
+		switch (myDistrType)
         {       case eNormalDistr :
                 {       cUnivariateNormal* myParam =  dynamic_cast<cUnivariateNormal *>(myParamSortie.mDistrParam) ;
                         myRUtil.SetVectSexp(myParam->mMean, myAux[2]) ;
@@ -205,19 +177,19 @@ SEXP myRes,
                 }
                 break ;
                 case eDiscreteDistr :
-                {       cDiscrete *myParam = dynamic_cast<cDiscrete *>(myParamSortie.mDistrParam) ;
-                                myRUtil.SetListVectSexp(myParam->mProbaMatVector[0], myAux[2]); // TODO: Do it for the real list
+                {	cDiscrete *myParam = dynamic_cast<cDiscrete *>(myParamSortie.mDistrParam) ;
+						myRUtil.SetListVectSexp(myParam->mProbaMatVector[0], myAux[2]); // TODO: Do it for the real list
                 }
                 break ;
                 case eMixtUniNormalDistr :
-                {       cMixtUnivariateNormal *myParam = dynamic_cast<cMixtUnivariateNormal *>(myParamSortie.mDistrParam) ;
+                {	cMixtUnivariateNormal *myParam = dynamic_cast<cMixtUnivariateNormal *>(myParamSortie.mDistrParam) ;
                         myRUtil.SetListVectSexp(myParam->mMean, myNbClasses, myAux[2]) ;
                         myRUtil.SetListVectSexp(myParam->mVar, myNbClasses, myAux[3]) ;
                         myRUtil.SetListVectSexp(myParam->mp, myNbClasses,myAux[4]) ;
                 }
                 break ;
                 case eMixtMultiNormalDistr :
-                {       cMixtMultivariateNormal *myParam = dynamic_cast<cMixtMultivariateNormal *>(myParamSortie.mDistrParam) ;
+                {	cMixtMultivariateNormal *myParam = dynamic_cast<cMixtMultivariateNormal *>(myParamSortie.mDistrParam) ;
                         myRUtil.SetListListVectSexp(myParam->mMean, myNbClasses, myNbMixt, myAux[2]) ;
                         myRUtil.SetListListMatSexp(myParam->mCov, myNbClasses, myNbMixt, myAux[3]) ;
                         myRUtil.SetListVectSexp(myParam->mp, myNbClasses, myAux[4]) ;
@@ -226,32 +198,41 @@ SEXP myRes,
                 default :
                 break ;
         }
-        PROTECT(myAux[5] = allocVector(REALSXP, 4)) ;
+
+		PROTECT(myAux[5] = allocVector(REALSXP, 5)) ;
         REAL(myAux[5])[0] = myParamSortie.mLLH ;
         REAL(myAux[5])[1] = myParamSortie.mBic ;
         REAL(myAux[5])[2] = (double)( myParamSortie.mNIter) ;
         REAL(myAux[5])[3] =  myParamSortie.mTol ;
+		REAL(myAux[5])[4] = myParamSortie.mAic ;
 
+	uint myNAlloc ;
         switch (myDistrType)
         {       case eNormalDistr :
                 case eMultiNormalDistr :
-                        PROTECT(myRes = allocVector(VECSXP, 5)) ;
-                break ;
+                    myNAlloc = 5 ;    
+               break ;
                 case eMixtUniNormalDistr :
                 case eMixtMultiNormalDistr :
-                        PROTECT(myRes = allocVector(VECSXP, 6)) ;
-                break ;
+                    myNAlloc = 6 ;    
+              break ;
                 case eDiscreteDistr :
-                        PROTECT(myRes = allocVector(VECSXP, 4)) ;
+                   myNAlloc = 4 ;    
                 break ;
                 case eUnknownDistr :
                 default :
+					myNAlloc = 0 ;
                 break ;
         }
-
+		PROTECT(myRes = allocVector(VECSXP, myNAlloc)) ;
+ 
         for (register uint i = 0 ; i < 3 ; i++)
                 SET_VECTOR_ELT(myRes, i, myAux[i]) ;
-        switch (myDistrType)
+		for ( register uint i = 3 ; i < myNAlloc-1 ; i++)
+			SET_VECTOR_ELT(myRes, i, myAux[i]) ;
+		SET_VECTOR_ELT(myRes, myNAlloc-1, myAux[5]) ;
+
+/*		switch (myDistrType)
         {       case eNormalDistr :
                 case eMultiNormalDistr :
                         SET_VECTOR_ELT(myRes, 3, myAux[3]) ;
@@ -270,7 +251,7 @@ SEXP myRes,
                 default :
                 break ;
         }
-
+*/
         UNPROTECT(2) ;
         myRUtil.EndProtect() ;
         return(myRes) ;
@@ -398,16 +379,14 @@ SEXP myAux[2] ;
 END_EXTERN_C
 
 BEG_EXTERN_C
-DECL_DLL_EXPORT SEXP Rforwardbackward   (       SEXP theHMM, 
-                                                                                        SEXP theYt
-                                                                                )
+DECL_DLL_EXPORT SEXP Rforwardbackward(SEXP theHMM, SEXP theYt)
 {
-distrDefinitionEnum             myDistrType     ;
-uint                                    myDimObs=1,
-                                                myNbClasses,
-                                                myNbProba=0,
-                                                myNbMixt=0      ;
-cRUtil                                  myRUtil                 ;
+distrDefinitionEnum myDistrType ;
+uint  myDimObs=1,
+      myNbClasses,
+      myNbProba=0,
+      myNbMixt=0 ;
+cRUtil myRUtil ;
 
 
 SEXP myDistSEXP ;
@@ -615,6 +594,22 @@ cDVector* myY = new cDVector[myNbSample] ;
 cHmm myHMM = cHmm(myDistrType, myNbClasses, myDimObs, myNbMixt, myNbProba) ;
         myRUtil.GetVectSexp(theHMM, fInitProba, myHMM.mInitProba) ;
         myRUtil.GetMatListSexp(theHMM, fTransMat, myHMM.mTransMatVector) ;
+
+#undef _DEBOGAGE_
+#ifdef _DEBOGAGE_
+        MESS("JE SUIS ICI 1\n") ;
+	uint myNRow = myHMM.mTransMatVector[0].GetNRows() ;
+	uint myNCol = myHMM.mTransMatVector[0].GetNCols() ;
+		for (register uint i = 0 ; i < myNRow ; i++)
+		{	for (register uint j = 0 ; j < myNCol ; j++)
+				Rprintf("%5.4f\t", myHMM.mTransMatVector[0][i][j]) ;
+			Rprintf("\n") ;
+		}
+        MESS("JE SUIS ICI 2\n") ;
+
+	
+#endif //DEBOGAGE_
+
 
         switch (myDistrType)
         {       case eNormalDistr :

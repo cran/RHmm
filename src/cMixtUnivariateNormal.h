@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cMixtUnivariateNormal.h 
  ***                                                         
@@ -25,13 +25,14 @@ class cMixtUnivariateNormal : public cDistribution
         public :
                 cMixtUnivariateNormal(uint theNClass = 0, uint theNMixt = 1) ;
                 virtual ~cMixtUnivariateNormal() ;
-                virtual void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba)  ;
-                virtual void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL)  ;
-                virtual void InitParameters(cBaumWelchInParam &theInParam) ;
-                virtual void Print() ;
-                virtual void CopyDistr(cDistribution *theSrc) ;
-                virtual void GetParam(uint theDeb, cDVector& theParam) ;
-                virtual void SetParam(uint theDeb, cDVector& theParam) ;
+                void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba)  ;
+                void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL)  ;
+                void InitParameters(cBaumWelchInParam &theInParam) ;
+                void Print() ;
+                void CopyDistr(cDistribution *theSrc) ;
+                void GetParam(uint theDeb, cDVector& theParam) ;
+                void SetParam(uint theDeb, cDVector& theParam) ;
                 uint GetNParam(void){ return mvNMixt * 3 - 1  ; }
+                uint GetNFreeParam(void){ return mvNMixt * 3 - 1  ; }
 } ;
 #endif //_CMIXTUNIVARIATENORMAL_H_

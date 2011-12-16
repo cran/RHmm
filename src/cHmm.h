@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cHmm.h 
  ***                                                         
@@ -31,6 +31,7 @@ class cHmm
                 void CopyHmm(cHmm& theSrc) { *this = theSrc ; } ;
                 void Print() ;
                 uint GetNParam(void) ;
+				uint GetNFreeParam(void) ;
                 void SetParam(cDVector& theParam) ;
                 void GetParam(cDVector& theParam) ;            
 } ;

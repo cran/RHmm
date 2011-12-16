@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cOTError.h 
  ***                                                         
@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <iostream>
 #ifdef _RDLL_
-	#include "R_ext/Error.h"
+        #include "R_ext/Error.h"
 #endif // _RDLL_
 
 #ifndef NULL

@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cDiscrete.h 
  ***                                                         
@@ -21,14 +21,15 @@ class cDiscrete : public cDistribution
         public :
                 cDiscrete(uint theNClass, uint theNProba) ;
                 virtual ~cDiscrete() ;
-                virtual void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba)  ;
-                virtual void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL)  ;
-                virtual void InitParameters(cBaumWelchInParam &theInParam) ;
-                virtual void Print() ;
+                void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba)  ;
+                void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL)  ;
+                void InitParameters(cBaumWelchInParam &theInParam) ;
+                void Print() ;
                 uint GetNProba() ;
-                virtual void GetParam(uint theDeb, cDVector& theParam) ;
-                virtual void SetParam(uint theDeb, cDVector& theParam) ;
-                uint GetNParam(void){ return mProbaMatVector[0].mNCol - 1 ; }
+                void GetParam(uint theDeb, cDVector& theParam) ;
+                void SetParam(uint theDeb, cDVector& theParam) ;
+                uint GetNParam(void){ return mProbaMatVector[0].mNCol - 1 ; } ;
+				uint GetNFreeParam(void) { return mProbaMatVector[0].mNCol - 1 ; } ;
                 void CopyDistr(cDistribution *theSrc) ;
 } ;
 

@@ -16,19 +16,19 @@ of the Baum-Welch algorithm for the user's data}
 }
 \arguments{
     \item{obs}{A vector, a matrix, a data frame, a list of vectors or a list of matrices of observations. See section \bold{obs parameter}.}
-    \item{dis}{Distribution name = 'NORMAL', 'DISCRETE' or 'MIXTURE'. Default 'NORMAL'.}
+    \item{dis}{Distribution name. In 'NORMAL', 'DISCRETE' or 'MIXTURE'. Default 'NORMAL'.}
     \item{nStates}{Number of hidden states. Default 2.}
     \item{nMixt}{Number of mixtures of normal distributions if dis ='MIXTURE'}
     \item{levels}{A character vector of all different levels of 'obs'. By Default (levels=NULL), this vector is computed from 'obs'.}
     \item{asymptCov}{A boolean. asymptCov=TRUE if the asymptotic covariance matrix is computed. Default FALSE.}
     \item{asymptMethod}{A string which indicates the numerical method for computing the Hessian of parameters. Default 'nlme'.}
-    \item{...}{optional parameter:\itemize{
-        \item{control}{A list of control parameters for the Baum-Welch algorithm. See \bold{control parameter}}
+    \item{...}{optional parameter:\describe{
+        \item{control: }{A list of control parameters for the Baum-Welch algorithm. See \bold{control parameter}}
         }}
 }
 \value{ a HMMFitClass object:
     \item{HMM}{A HMMClass object with the fitted values of the model}
-    \item{LLH}{log-likelihood}
+    \item{LLH}{Log-likelihood}
     \item{BIC}{BIC criterium}
     \item{nIter}{Number of iterations of the Baum-Welch algorithm}
     \item{relVariation}{last relative variation of the LLH function}
@@ -50,7 +50,7 @@ of the Baum-Welch algorithm for the user's data}
 
 
 \section{control parameter}{
-    \itemize{
+    \describe{
         \item{init}{Kind of initialisation ='KMEANS' (for univariate or multivariate normal distributions), 'RANDOM' or 'USER'. Default 'RANDOM', see \bold{Random Initialization}}
         \item{iter}{Maximum number of iterations for the Baum-Welch algorithm. Default 500}
         \item{tol}{Tolerance of the relative log-likehood augmentation. Default 1e-6}
@@ -62,7 +62,7 @@ of the Baum-Welch algorithm for the user's data}
         }
 }
 
-\section{Random initialization}{
+\section{random initialization}{
     'initProb' and 'transMat' parameters are uniformly drawn.\cr\cr
     For univariate normal distributions, empirical mean \eqn{m}{m} and variance \eqn{\sigma^2}{s^2}
     of all the samples are computed.
@@ -77,9 +77,9 @@ of the Baum-Welch algorithm for the user's data}
     For mixtures of univariate normal distributions, initial values for 'mean' and 'var' parameters are computed
     the same way than for normal distributions. The initial value of 'proportion' parameter is uniformly drawn.
     \cr
-     For mixtures of multivariate normal distributions, the same procedure is applied for each component of the mean vectors, 
-     all the covariance matrices are diagonal and each initial variance is computed as for univariate models. The initial value 
-     of 'proportion' parameter is also uniformly drawn. 
+     For mixtures of multivariate normal distributions, the same procedure is applied for each component of the mean vectors,
+     all the covariance matrices are diagonal and each initial variance is computed as for univariate models. The initial value
+     of 'proportion' parameter is also uniformly drawn.
     \cr
     For discrete distributions, the initial values of 'proba' parameters are uniformly drawn.
     \cr
@@ -87,9 +87,9 @@ of the Baum-Welch algorithm for the user's data}
     ensure that they can represent probabilities vectors or transition matrices.
 }
 
-\section{asymptotic variance}{
-    The asymptotic covariance matrix of estimates is computed by finite difference approximations 
-    using either function 'fdHess' from nlme package if 'asymptMethod=='nlme'' 
+\section{asymptotic covariance matrix}{
+    The asymptotic covariance matrix of estimates is computed by finite difference approximations
+    using either function 'fdHess' from nlme package if 'asymptMethod=='nlme''
     or internal function 'optimhess' of function 'optim' from stat package if 'asymptMethod=='optim''.
     \cr
     The summary and print.summary methods display the results.
@@ -98,7 +98,7 @@ of the Baum-Welch algorithm for the user's data}
 \references{
     Bilmes Jeff A. (1997) \emph{ A Gentle Tutorial of the EM Algorithm and its Application to Parameter
     Estimation for Gaussian Mixture and Hidden Markov Models} \url{http://ssli.ee.washington.edu/people/bilmes/mypapers/em.ps.gz}
-    
+
     Visser Ingmar, Raijmakers Maartje E. J. and  Molenaar Peter C. M.(2000) \emph{Confidence intervals for hidden Markov
     model parameters}, British Journal of Mathematical and Statistical Psychology, 53, 317-327.
  }
@@ -107,27 +107,27 @@ of the Baum-Welch algorithm for the user's data}
     # Fit a 3 states 1D-gaussian model
     data(n1d_3s)
     HMMFit(obs_n1d_3s, nStates=3)
-    
+
     # Fit a 3 states gaussian HMM for obs_n1d_3s
     # with iterations printing and kmeans initialization
-    Res_n1d_3s <- HMMFit(obs=obs_n1d_3s, nStates=3, 
-        control=list(verbose=1, init="KMEANS"), 
+    Res_n1d_3s <- HMMFit(obs=obs_n1d_3s, nStates=3,
+        control=list(verbose=1, init="KMEANS"),
         asymptCov=TRUE, asymptMethod='optim')
     summary(Res_n1d_3s)
-    
+
     # Fit a 2 states 3D-gaussian model
     data(n3d_2s)
-    summary(HMMFit(obs_n3d_2s, asymptCov=TRUE, 
+    summary(HMMFit(obs_n3d_2s, asymptCov=TRUE,
                 asymptMethod='optim'))
-    
+
     # Fit a 2 states mixture of 3 normal distributions HMM
     # for data_mixture
     data(data_mixture)
-    ResMixture <- HMMFit(data_mixture, nStates=2, nMixt=3, 
+    ResMixture <- HMMFit(data_mixture, nStates=2, nMixt=3,
         dis="MIXTURE")
 
     # Fit a 3 states discrete HMM for weather data
     data(weather)
-    ResWeather <- HMMFit(weather, dis='DISCRETE', nStates=3) 
+    ResWeather <- HMMFit(weather, dis='DISCRETE', nStates=3)
  }
 \keyword{htest}

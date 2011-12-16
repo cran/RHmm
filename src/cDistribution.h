@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cDistribution.h 
  ***                                                         
@@ -23,8 +23,9 @@ class cDistribution
                 virtual void Print() = 0 ;
                 virtual void CopyDistr(cDistribution* theSrc)=0 ;
                 virtual uint GetNParam(void)=0;
+                virtual uint GetNFreeParam(void)=0 ;
                 virtual void GetParam(uint theDeb, cDVector& theParam)=0 ;
-                virtual void SetParam(uint theDeb, cDVector& theParam)=0 ;
+				virtual void SetParam(uint theDeb, cDVector& theParam)=0 ;
                 virtual ~cDistribution(){};
 #ifndef _RDLL_
                 void KMeans(cDVector& theYt, uint theNClass, int* theSeq) {

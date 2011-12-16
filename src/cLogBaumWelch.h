@@ -1,5 +1,5 @@
 /**************************************************************
- *** RHmm version 1.5.0
+ *** RHmm package
  ***                                                         
  *** File: cLogBaumWelch.h 
  ***                                                         
@@ -13,7 +13,7 @@
 #pragma once
 #include "cInParam.h"
 #include "cHmm.h"
-#include "logprob.h"
+#include "LogProb.h"
 
 class cLogBaumWelch
 {       private :
