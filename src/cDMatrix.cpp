@@ -82,13 +82,13 @@ cDMatrix::cDMatrix(const cDMatrix& theMatrix)
         Copy(theMatrix.mvV) ;
 }
 
-cDMatrix::cDMatrix(int theNRow, int theNCol, const double& theValue)
+cDMatrix::cDMatrix(uint theNRow, uint theNCol, const double& theValue)
 {
         Initialize(theNRow, theNCol) ;
         Set(theValue) ;
 }
 
-cDMatrix::cDMatrix(int theNRow, int theNCol, const double* theFlatMat)
+cDMatrix::cDMatrix(uint theNRow, uint theNCol, const double* theFlatMat)
 {
         Initialize(theNRow, theNCol) ;
         Copy(theFlatMat) ;
@@ -150,7 +150,6 @@ uint cDMatrix::GetNCols(void) const
 {
         return mvNCol ;
 }
-
 
 double* cDMatrix::GetCol (uint theIndex)
 {
@@ -268,7 +267,27 @@ cDMatrix myTmpMat(1, myNCol) ;
                 myTmpMat[0][i] = theVect[i] ;
     return myTmpMat ;
 }
-    
+
+cDVector AsVector(const cDMatrix& theMat)
+{
+uint n ;
+	myAssert((theMat.GetNCols() == 1) || (theMat.GetNRows() == 1), "AsVector: Matrix must have one row or one column") ;
+	if ( (n = theMat.GetNCols()) == 1 )
+	{	
+	cDVector myVect(n) ;
+		for ( register uint i = 0 ; i < n ; i++)
+			myVect[i] = theMat[i][0] ;
+		return myVect ;
+	}
+	else
+	{	
+	cDVector myVect(n) ;
+		for ( register uint i = 0 ; i < n ; i++)
+			myVect[i] = theMat[0][1] ;
+		return myVect ;
+	}
+}
+
 static cDMatrix MatMult(const cDMatrix  &theLeftMat, const cDMatrix& theRightMat)
 {
 uint myNRow = theLeftMat.GetNRows() ;
@@ -381,6 +400,11 @@ cDMatrix myTempMatrix(theN, theP) ;
         return myTempMatrix ;
 }
 
+double AsDouble(const cDMatrix& theMat)
+{
+	return theMat[0][0] ;
+}
+
 cDMatrix Identity(uint theN)
 {
 cDMatrix myTempMatrix(theN, theN) ;
@@ -409,6 +433,49 @@ double myDet ;
         if (std::fabs(myDet) < MIN_DBLE)
                 throw cOTError("Non inversible matrix") ;
         return myTempMatrix ;
+}
+
+void GetSubMatrix(cDMatrix& theSrcMatrix, uint theSize, cDMatrix& theDestMatrix)
+{
+	GetSubMatrix(theSrcMatrix, theSize, theSize, theDestMatrix) ;
+}
+
+void GetSubMatrix(cDMatrix& theSrcMatrix, uint theNRow, uint theNCol, cDMatrix& theDestMatrix)
+{
+	if ( (theNRow > theSrcMatrix.GetNRows()) || (theNCol > theSrcMatrix.GetNCols()) )
+		throw cOTError("Wrong matrix size in GetSubMatrix") ;
+	theDestMatrix.ReAlloc(theNRow, theNCol) ;
+	
+	for (register uint i = 0 ; i < theNRow ; i++)
+		for (register uint j = 0 ; j < theNCol ; j++)
+			theDestMatrix[i][j] = theSrcMatrix[i][j] ;
+}
+
+void SetSubMatrix(cDMatrix& theSrcMatrix, uint theFirstRow, uint theFirstCol, cDMatrix& theDestMatrix)
+{
+uint myNRows = theSrcMatrix.GetNRows() ;
+uint myNCols = theSrcMatrix.GetNCols() ;
+
+	if ( (theDestMatrix.GetNRows()  < myNRows + theFirstRow) || (theDestMatrix.GetNCols() < myNCols + theFirstCol) )
+		throw cOTError("Wrong matrix size in SetSubMatrix") ;
+
+	for (register uint i = 0 ; i < myNRows ; i++)
+		for (register uint j = 0 ; j < myNCols ; j++)
+			theDestMatrix[i+theFirstRow][j+theFirstCol] = theSrcMatrix[i][j] ;
+}
+
+void AddColRow(const cDVector& theColRow, cDMatrix& theMat) 
+{
+uint myNRow = theMat.GetNRows() ;
+uint myNCol = theMat.GetNCols() ;
+uint mySize = theColRow.GetSize() ;
+	if ( (myNRow != myNCol) || (myNRow + 1 != mySize) )
+		throw cOTError("Wrong sizes in AddColRow") ;
+cDMatrix mySrcMatrix = theMat ;
+	theMat.ReAlloc(mySize, mySize) ;
+	SetSubMatrix(mySrcMatrix, 0, 0, theMat) ;
+	for (register uint i = 0 ; i < mySize  ; i++)
+		theMat[i][mySize-1] = theMat[mySize-1][i] = theColRow[i] ;
 }
 
 void LapackInvAndDet(cDMatrix& theMatrix, cDMatrix& theInvMatrix, double& theDet)
@@ -450,4 +517,39 @@ cDMatrix myAuxMat = myAuxMat1 * myAuxMat2 ;
         delete myW ;
         delete myZ ;
         delete myWork ;
+}
+
+double LapackDet(cDMatrix& theMatrix)
+{
+uint myNCol = theMatrix.GetNCols() ;
+
+double *myAP = new double[myNCol*(myNCol + 1)/2],
+       *myW = new double[myNCol],
+       *myZ = new double[myNCol*myNCol],
+       *myWork = new double[myNCol * 3] ;
+int myInfo,
+    myN = (int)(myNCol),
+    myldz = (int)(myNCol) ;
+
+	for (register int i = 0 ; i < myN ; i++)
+		for (register int j = i ; j < myldz ; j++)
+			myAP[i+(j+1)*j/2]  = theMatrix[i][j] ;
+
+    F77_NAME(dspev)("V", "U", &myN, myAP, myW, myZ, &myldz, myWork, &myInfo) ;
+
+double myDet ;
+	if (myInfo != 0)
+		myDet = 0.0 ;
+	else
+	{	myDet = 1.0L ;
+        for (register uint i = 0 ; i < myNCol ; i++)
+        {	myDet *= myW[i] ;
+        }
+	}        
+    delete myAP ;
+    delete myW ;
+    delete myZ ;
+    delete myWork ;
+
+	return myDet ;
 }

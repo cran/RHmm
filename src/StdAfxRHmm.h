@@ -9,6 +9,7 @@
  **************************************************************/
 
 #include "OTMathUtil.h"
+#include "StatUtil.h"
 #include "LogProb.h"
 #include "SamplesUtil.h"
 #include "MultivariateNormalUtil.h"
@@ -17,6 +18,7 @@
 #include "cInParam.h"
 #include "cBaumWelchInParam.h"
 #include "cHmm.h"
+#include "cDerivative.h"
 #include "cBaumWelch.h"
 #include "cLogBaumWelch.h"
 #include "cDistribution.h"
@@ -29,5 +31,6 @@
 #include "cViterbi.h"
 #include "cRUtils.h"
 #include "REquivalents.h"
+#include "cDerivative.h"
 #include "RHmm.h"
 

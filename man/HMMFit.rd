@@ -7,12 +7,12 @@
 \description{This function returns an HMMFitClass object which contains the results
 of the Baum-Welch algorithm for the user's data}
 \synopsis{
-   HMMFit(obs, dis="NORMAL", nStates=2, asymptCov=FALSE, asymptMethod=c('nlme', 'optim'), ...)
+   HMMFit(obs, dis="NORMAL", nStates=2, asymptCov=FALSE, ...)
 }
 \usage{
-    HMMFit(obs, dis="NORMAL", nStates=, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
-    HMMFit(obs, dis="DISCRETE", nStates=, levels=NULL, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
-    HMMFit(obs, dis="MIXTURE", nStates=, nMixt=, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
+    HMMFit(obs, dis="NORMAL", nStates=, ..., asymptCov=FALSE)
+    HMMFit(obs, dis="DISCRETE", nStates=, levels=NULL, ..., asymptCov=FALSE)
+    HMMFit(obs, dis="MIXTURE", nStates=, nMixt=, ..., asymptCov=FALSE)
 }
 \arguments{
     \item{obs}{A vector, a matrix, a data frame, a list of vectors or a list of matrices of observations. See section \bold{obs parameter}.}
@@ -21,7 +21,6 @@ of the Baum-Welch algorithm for the user's data}
     \item{nMixt}{Number of mixtures of normal distributions if dis ='MIXTURE'}
     \item{levels}{A character vector of all different levels of 'obs'. By Default (levels=NULL), this vector is computed from 'obs'.}
     \item{asymptCov}{A boolean. asymptCov=TRUE if the asymptotic covariance matrix is computed. Default FALSE.}
-    \item{asymptMethod}{A string which indicates the numerical method for computing the Hessian of parameters. Default 'nlme'.}
     \item{...}{optional parameter:\describe{
         \item{control: }{A list of control parameters for the Baum-Welch algorithm. See \bold{control parameter}}
         }}
@@ -88,9 +87,7 @@ of the Baum-Welch algorithm for the user's data}
 }
 
 \section{asymptotic covariance matrix}{
-    The asymptotic covariance matrix of estimates is computed by finite difference approximations
-    using either function 'fdHess' from nlme package if 'asymptMethod=='nlme''
-    or internal function 'optimhess' of function 'optim' from stat package if 'asymptMethod=='optim''.
+    The asymptotic covariance matrix of estimates is computed using the Lystig and Hugues's algorithm.See \bold{asymptoticCov}.
     \cr
     The summary and print.summary methods display the results.
 }
@@ -99,8 +96,6 @@ of the Baum-Welch algorithm for the user's data}
     Bilmes Jeff A. (1997) \emph{ A Gentle Tutorial of the EM Algorithm and its Application to Parameter
     Estimation for Gaussian Mixture and Hidden Markov Models} \url{http://ssli.ee.washington.edu/people/bilmes/mypapers/em.ps.gz}
 
-    Visser Ingmar, Raijmakers Maartje E. J. and  Molenaar Peter C. M.(2000) \emph{Confidence intervals for hidden Markov
-    model parameters}, British Journal of Mathematical and Statistical Psychology, 53, 317-327.
  }
 
 \examples{
@@ -112,13 +107,12 @@ of the Baum-Welch algorithm for the user's data}
     # with iterations printing and kmeans initialization
     Res_n1d_3s <- HMMFit(obs=obs_n1d_3s, nStates=3,
         control=list(verbose=1, init="KMEANS"),
-        asymptCov=TRUE, asymptMethod='optim')
+        asymptCov=TRUE)
     summary(Res_n1d_3s)
 
     # Fit a 2 states 3D-gaussian model
     data(n3d_2s)
-    summary(HMMFit(obs_n3d_2s, asymptCov=TRUE,
-                asymptMethod='optim'))
+    summary(HMMFit(obs_n3d_2s, asymptCov=TRUE))
 
     # Fit a 2 states mixture of 3 normal distributions HMM
     # for data_mixture

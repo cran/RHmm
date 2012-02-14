@@ -17,6 +17,7 @@ cHmmFit::cHmmFit(distrDefinitionEnum theDistrType, uint theNClass, uint theDimOb
 		mBic = 1e100 ;
 		mAic = 1e100 ;
 }
+
 cHmmFit::cHmmFit(cInParam& theInParam):cBaumWelch(theInParam), cHmm(theInParam)
 {	   MESS_CREAT("cHmmFit")
 		mNIter = 0 ;
@@ -219,7 +220,6 @@ register uint   t																					   ;
 		*this = myHMM ;
 }
 
-
 double cHmmFit::ComputeLLH(cBaumWelchInParam &theInParam, cDMatrix* theProbaCond)
 {
 		mDistrParam->ComputeCondProba(theInParam.mY, theInParam.mNSample, theProbaCond) ;
@@ -268,9 +268,6 @@ cDVector myVectCour ;
 				}
 }
 
-
-
-
 void cHmmFit::ComputeGradient(cBaumWelchInParam &theInParam, cDVector& theGrad, double theDelta)
 {
 uint myNParam = GetNParam() ;
@@ -292,7 +289,6 @@ cDVector	   myValFunct(myNParam),
 				myProbaCond[n].Delete() ;
 
 }
-
 
 void cHmmFit::ComputeHessian(cBaumWelchInParam &theInParam, cDMatrix& theHess, double theDelta)
 {

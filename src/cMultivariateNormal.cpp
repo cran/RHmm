@@ -47,7 +47,6 @@ cMultivariateNormal::~cMultivariateNormal()
         }
 }
 
-
 void cMultivariateNormal::ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba) 
 {
 register uint   i,
@@ -64,6 +63,55 @@ double myDet ;
                         MultivariateNormalDensity(theY[k], mMean[i], myInvCov, myDet, theCondProba[k][i]) ;
         }
 
+}
+
+void cMultivariateNormal::ComputeDerivative(cDVector& theY, cDVector** theGrad, cDMatrix** theHess)
+{
+uint myDimObs = GetDimObs() ;
+uint myT = theY.GetSize()/myDimObs ;
+uint myNCovParam = myDimObs * (myDimObs + 1)/2 ;
+uint myNParam = myDimObs + myNCovParam ;
+cDVector* myGrad = new cDVector[myT] ;
+cDMatrix* myHess = new cDMatrix[myT] ;
+
+	for (register uint t = 0 ; t < myT ; t++)
+	{	myGrad[t].ReAlloc(myNParam) ;
+		myHess[t].ReAlloc(myNParam, myNParam) ;
+	}
+
+	for (register uint j = 0 ; j < mvNClass ; j++)
+	{
+	cDMatrix myInvCov(myDimObs, myDimObs) ;
+	double myDeterminant ;
+		LapackInvAndDet(mCov[j], myInvCov, myDeterminant) ;
+		MultivariateNormalDensityDeriv(theY, mMean[j], mCov[j], myInvCov, myDeterminant, myGrad, myHess) ;
+	uint k = (mvNClass - 1)*(mvNClass + 1) + j*myNParam ;
+		for (register uint t = 0 ; t < myT ; t++)
+		{	theGrad[j][t] = 0.0 ;
+			theHess[j][t] = 0.0 ;
+			for (register uint p = 0 ; p < myNParam ; p++)
+			{	theGrad[j][t][p+k] = myGrad[t][p] ;
+				for (register uint q = p ; q < myNParam ; q++)
+					theHess[j][t][p+k][q+k] = theHess[j][t][q+k][p+k] = myHess[t][p][q] ;
+			}
+		}
+	}
+
+	for (register uint t = 0 ; t < myT ; t++)
+	{	myGrad[t].Delete() ;
+		myHess[t].Delete() ;
+	}
+	delete [] myGrad ;
+	delete [] myHess ;
+}
+
+void cMultivariateNormal::ComputeCov(cDMatrix& theCov)
+{
+}
+
+cDVector cMultivariateNormal::GetDistrNumParam(const cDVector& theNumDistrParam, uint& theNextInd)
+{
+	return theNumDistrParam ;
 }
 
 void cMultivariateNormal::UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba)
@@ -201,14 +249,21 @@ double mys = 0.0       ;
 
 void cMultivariateNormal::CopyDistr(cDistribution *theSrc)
 {
-cMultivariateNormal* mySrc ;
-        mySrc = static_cast<cMultivariateNormal *>(theSrc) ;
-        mvNClass = mySrc->mvNClass ;
-
+cMultivariateNormal* mySrc = dynamic_cast<cMultivariateNormal *>(theSrc) ;
+	if (mySrc)
+	{	mvNClass = mySrc->mvNClass ;
         for (register uint i= 0 ; i < mvNClass ; i++)
-        {       mMean[i] = mySrc->mMean[i] ;
-                mCov[i] = mySrc->mCov[i] ;
+        {	mMean[i] = mySrc->mMean[i] ;
+			mCov[i] = mySrc->mCov[i] ;
         }
+	}
+	else
+		cOTError("Wrong distribution in cMultivariateNormal") ;
+}
+
+cMultivariateNormal::cMultivariateNormal(cDistribution& theSrc)
+{
+	CopyDistr(&theSrc) ;
 }
 
 void cMultivariateNormal::Print()
@@ -225,7 +280,6 @@ uint myDimObs = mMean[0].mSize ;
                 }
         }
 }
-
 
 uint cMultivariateNormal::GetDimObs(void)
 {
@@ -247,6 +301,7 @@ register uint k = theDeb ;
                                 theParam[k++] = mCov[n][p][q] ;
         }
 }
+
 void cMultivariateNormal::SetParam(uint theDeb, cDVector& theParam)
 {
 uint myDimObs = GetDimObs() ;

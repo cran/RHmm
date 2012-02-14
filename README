@@ -1,4 +1,10 @@
-RHmm package version 1.5.5 - December, 16th, 2011
+RHmm package version 2.0.0 - February, 15th, 2012
+
+News
+----
+
+A lot of work to compute the asymptotic covariance matrix of the estimates has been made is this new version. It is working much better than in previous versions even if some numerical problems could persist.
+
 
 Make instructions
 -----------------

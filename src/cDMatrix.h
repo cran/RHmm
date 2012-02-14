@@ -54,8 +54,8 @@ public:
     // constructors
     cDMatrix() ;
     cDMatrix(const cDMatrix& theMatrix) ;
-    cDMatrix(int theNRow, int theNCol, const double& theValue = (double)0.0) ;
-    cDMatrix(int theNRow, int theNCol, const double* theFlatMat) ;
+    cDMatrix(uint theNRow, uint theNCol, const double& theValue = (double)0.0) ;
+    cDMatrix(uint theNRow, uint theNCol, const double* theFlatMat) ;
 
     // destructor
     //
@@ -87,19 +87,26 @@ extern cDMatrix operator-(const cDMatrix& theLeftMat, const cDMatrix& theRightMa
 extern cDMatrix operator-=(cDMatrix& theLeftMat, const cDMatrix& theRightMat) ;
 extern cDMatrix Transpose(const cDMatrix& theLeftMat) ;
 extern cDMatrix Transpose(const cDVector& theVect) ;
-extern  cDMatrix operator*(const cDMatrix& theLeftMat, const cDMatrix& theRightMat) ;
-extern  cDMatrix operator*(const cDMatrix& theLeftMat, const double& theVal) ;
-extern  cDMatrix operator*=(cDMatrix& theLeftMat, const double& theVal) ;
-extern  cDMatrix operator/(const cDMatrix& theLeftMat, const double& theVal) ;
-extern  cDMatrix operator/=(cDMatrix& theLeftMat, const double& theVal) ;
-extern  cDMatrix operator*(const double& theVal, const cDMatrix& theLeftMat) ;
-extern  cDMatrix operator*(const cDVector &theVect, const cDMatrix& theLeftMat) ;
-extern  cDVector operator*(const cDMatrix& theMat, const cDVector& theVect) ;
+extern cDMatrix operator*(const cDMatrix& theLeftMat, const cDMatrix& theRightMat) ;
+extern cDMatrix operator*(const cDMatrix& theLeftMat, const double& theVal) ;
+extern cDMatrix operator*=(cDMatrix& theLeftMat, const double& theVal) ;
+extern cDMatrix operator/(const cDMatrix& theLeftMat, const double& theVal) ;
+extern cDMatrix operator/=(cDMatrix& theLeftMat, const double& theVal) ;
+extern cDMatrix operator*(const double& theVal, const cDMatrix& theLeftMat) ;
+extern cDMatrix operator*(const cDVector &theVect, const cDMatrix& theLeftMat) ;
+extern cDVector operator*(const cDMatrix& theMat, const cDVector& theVect) ;
+extern cDVector AsVector(const cDMatrix& theMat) ;
+extern double AsDouble(const cDMatrix& theMat) ;
 extern cDMatrix Zeros(uint theN, uint theP) ;
 extern cDMatrix Identity(uint theN) ;
 extern cDMatrix Diag(cDVector& theVect) ;
 extern cDMatrix Inv(cDMatrix& theMatrix) ;
+extern void GetSubMatrix(cDMatrix& theSrcMatrix, uint theSize, cDMatrix& theDestMatrix) ;
+extern void GetSubMatrix(cDMatrix& theSrcMatrix,  uint theNRow, uint theNCol, cDMatrix& theDestMatrix) ;
+extern void SetSubMatrix(cDMatrix& theSrcMatrix, uint theFirtRow, uint theFirstCol, cDMatrix& theDestMatrix) ;
 extern void LapackInvAndDet(cDMatrix& theMatrix, cDMatrix& theInvMatrix, double& theDet) ;
+extern double LapackDet(cDMatrix& theMatrix) ;
+extern void AddColRow(const cDVector& theColRow, cDMatrix& theMat) ;
 
 #endif // CDMATRIX_H
 

@@ -40,6 +40,7 @@ cHmm::cHmm(distrDefinitionEnum theDistrType, uint theNClass, uint theDimObs, uin
                 break ;
         }
 }
+
 cHmm::cHmm(const cInParam &theInParam)
 {       MESS_CREAT("cHmm")
         mInitProba.ReAlloc(theInParam.mNClass);
@@ -71,6 +72,7 @@ cHmm::cHmm(const cInParam &theInParam)
                 break ;
         }
 }
+
 cHmm::~cHmm()
 {       MESS_DESTR("cHmm")
 
@@ -127,7 +129,7 @@ register uint   i, j, k;
 uint cHmm::GetNParam(void)
 {
 uint myNClass = mInitProba.mSize ;
-        return( -1 + myNClass * (myNClass + mDistrParam->GetNParam()) ) ;
+        return( myNClass * (1 + myNClass + mDistrParam->GetNParam() ) ) ;
 }
 
 uint cHmm::GetNFreeParam(void)
@@ -135,7 +137,6 @@ uint cHmm::GetNFreeParam(void)
 uint myNClass = mInitProba.mSize ;
 	return((myNClass -1)*(myNClass + 1) + myNClass*mDistrParam->GetNFreeParam()) ;
 }
-
 
 void cHmm::SetParam(cDVector& theParam) 
 {

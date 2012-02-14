@@ -17,13 +17,13 @@
 
 class cInParam
 {       public :
-                distrDefinitionEnum     mDistrType              ; // Type de loi de proba
-                uint                            mNClass                 ; // Nombre de classes
-                uint                            mDimObs                 ; // Dimension des observations
-                uint                            mNMixt                  ; // Nombre de lois mélangées
-                uint                            mNProba                 ; // Nombre de proba discrètes
-                uint                            mNSample                ; // Nombre d'échantillons
-                cDVector*                      mY                              ; // Tableau mNSample x mT[i] des observations
+                distrDefinitionEnum mDistrType ; // Type de loi de proba
+                uint mNClass ; // Nombre de classes
+                uint mDimObs ; // Dimension des observations
+                uint mNMixt ; // Nombre de lois mélangées
+                uint mNProba ; // Nombre de proba discrètes
+                uint mNSample ; // Nombre d'échantillons
+                cDVector* mY ; // Tableau mNSample x mT[i] des observations
         public :
                 cInParam(uint theNSample, uint theDimObs, cDVector* theY, distrDefinitionEnum theDistrType=eNormalDistr, uint theNClass=2, uint theNMixt=0, uint theNProba=0) ;
                 virtual ~cInParam() ;

@@ -40,16 +40,15 @@ uint cDiscrete::GetNProba(void)
 
 void cDiscrete::Print()
 {
-        for (uint h = 0; h<mProbaMatVector.size();h++ )
-        {
-                Rprintf("Position %d\n",h);
-        for (register uint i = 0 ; i < mvNClass ; i++)
-        {       Rprintf("State %d :\t", i) ;
-                for (register uint j = 0 ; j < GetNProba() ; j++)
-                        Rprintf("P[%d]=%lf\t", j, mProbaMatVector[h][i][j]) ;
-                Rprintf("\n") ;
-        }
-        }
+	for (uint h = 0; h<mProbaMatVector.size();h++ )
+	{	Rprintf("Position %d\n",h);
+		for (register uint i = 0 ; i < mvNClass ; i++)
+		{	Rprintf("State %d :\t", i) ;
+			for (register uint j = 0 ; j < GetNProba() ; j++)
+				Rprintf("P[%d]=%lf\t", j, mProbaMatVector[h][i][j]) ;
+			Rprintf("\n") ;
+		}
+	}
 }
 
 void cDiscrete::ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba)
@@ -66,6 +65,64 @@ register uint   i,
                                 theCondProba[n][i][t] = mProbaMatVector[t][i][(uint)theY[n][t]];
                 }
         }
+}
+
+void cDiscrete::ComputeDerivative(cDVector& theY, cDVector** theGrad, cDMatrix** theHess)
+{
+uint myT = theY.GetSize() ;
+
+uint myNFreeProba = GetNProba() - 1 ;
+	for (register uint t = 0 ; t < myT ; t++)
+	{	
+	uint myBegIndex = (mvNClass - 1) * (mvNClass + 1) ;
+		for (register uint i = 0 ; i < mvNClass ; i++)
+		{	theHess[i][t] = 0.0 ;
+			theGrad[i][t] = 0.0 ;
+			for (register uint j = 0 ; j < myNFreeProba ; j++)
+			{	if ( (uint)theY[t] == j)
+					theGrad[i][t][myBegIndex + j] = 1.0L ;
+				else
+				{	if ( (uint)theY[t] == myNFreeProba) 
+						theGrad[i][t][myBegIndex + j] = -1.0L ;
+				}
+			}
+			myBegIndex += myNFreeProba ;
+		}
+	}
+}
+
+void cDiscrete::ComputeCov(cDMatrix& theCov)
+{
+uint myBegIndex = (mvNClass - 1) * (mvNClass + 1) ;
+uint myNFreeProba = GetNProba() - 1 ;
+uint mySizeCour = theCov.GetNCols() ;
+cDVector myU(mySizeCour, 0.0) ;
+
+	for (register uint n = 0 ; n < mvNClass ; n++)
+	{
+		for (register uint i = myBegIndex ; i < myBegIndex + myNFreeProba ; i++)
+			myU[i] = -1.0 ;
+		theCov = AddOneVariable(theCov, myU) ;
+		mySizeCour++ ;
+		myU.ReAlloc(mySizeCour, 0.0) ;
+		myBegIndex += myNFreeProba ;
+	}
+}
+
+cDVector cDiscrete::GetDistrNumParam(const cDVector& theNumDistrParam, uint& theNextInd)
+{
+uint myNFreeProba = GetNProba() - 1 ;
+cDVector myNumDistrParam ;
+cDVector myNumProba(myNFreeProba) ;
+uint myIndCour = 0 ;
+	for (register uint j = 0 ; j < mvNClass ; j++)
+	{	GetSubVector(theNumDistrParam, myIndCour, myNFreeProba, myNumProba) ;
+		myNumDistrParam = cat(myNumDistrParam, myNumProba) ;
+		myNumDistrParam = cat(myNumDistrParam, (double)theNextInd) ;
+		theNextInd++ ;
+		myIndCour += myNFreeProba ;
+	}
+	return myNumDistrParam ;
 }
 
 /* FIXME: This doesn't work for variable emissions */
@@ -132,13 +189,23 @@ void cDiscrete::InitParameters(cBaumWelchInParam& theInParam)
         PutRNGstate() ;
 #endif //_RDLL_
 }
+
 void cDiscrete::CopyDistr(cDistribution* theSrc)
 {
-        cDiscrete *mySrc = (cDiscrete *)theSrc;
-        mvNClass = mySrc->mvNClass;
+cDiscrete* mySrc = dynamic_cast<cDiscrete *>(theSrc) ;
+	if (mySrc)
+	{	mvNClass = mySrc->mvNClass;
         mProbaMatVector = mySrc->mProbaMatVector;
+	}
+	else
+		cOTError("Wrong distribution parameter") ;
 }
-                
+
+cDiscrete::cDiscrete(cDistribution& theSrc) 
+{
+	CopyDistr(&theSrc) ;
+}
+
 void cDiscrete::GetParam(uint theDeb, cDVector& theParam)
 {
         uint myNProba = this->GetNProba();

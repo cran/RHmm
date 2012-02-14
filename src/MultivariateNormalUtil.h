@@ -31,10 +31,18 @@
         typedef unsigned int uint ;
 #endif //int
 
-void SymetricInverseAndDet(cDMatrix& theMat, double& theDet, cDMatrix& theInvMat) ;
+extern void SymetricInverseAndDet(cDMatrix& theMat, double& theDet, cDMatrix& theInvMat) ;
 
-void MultivariateNormalDensity(cDVector& thex, cDVector& theMu, cDMatrix& theInvCov, double theDet, double* theDens) ;
+extern void MultivariateNormalDensity(cDVector& thex, cDVector& theMu, cDMatrix& theInvCov, double theDet, double* theDens) ;
 
-void MultivariateNormalDensity(cDVector& thex, cDVector& theMu, cDMatrix& theInvCov, double theDet, cDVector& theDens) ;
+extern void MultivariateNormalDensity(cDVector& thex, cDVector& theMu, cDMatrix& theInvCov, double theDet, cDVector& theDens) ;
+
+extern void SymDetDeriv(cDMatrix& theMat, cDVector& theGrad, cDMatrix& theHess) ;
+
+extern void InvCovMatDeriv(cDMatrix& theInvCov, cDMatrix* theGrad, cDMatrix** theHess) ;
+
+extern void MultivariateNormalDensityDeriv(cDVector& thex, cDVector& theMu, cDMatrix& theCov, cDMatrix& theInvCov, double theDet, cDVector& theDensity, cDVector* theGrad, cDMatrix* theHess) ;
+
+extern void MultivariateNormalDensityDeriv(cDVector& thex, cDVector& theMu, cDMatrix& theCov, cDMatrix& theInvCov, double theDet, cDVector* theGrad, cDMatrix* theHess) ;
 
 #endif //_MULTIVARIATENORMALUTIL_H_

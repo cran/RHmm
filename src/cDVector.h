@@ -47,7 +47,7 @@ private:
     // constructors
     cDVector() ;
     cDVector(const cDVector& theVect) ;
-        cDVector(uint theN, const double& theValue = 0.0) ;
+    cDVector(uint theN, const double& theValue = 0.0) ;
     cDVector(uint theN, const double* theVect) ;
 
     // methods
@@ -92,8 +92,15 @@ extern cDVector operator+(const cDVector& theLeftVect, const cDVector& theRightV
 extern cDVector operator += (cDVector& theVect, const cDVector& theRightVect) ;
 extern cDVector operator-(const cDVector& theVect, const cDVector& theRightVect) ;
 extern cDVector operator-=(cDVector& theVect, const cDVector& theRightVect) ;
+extern double AsDouble(const cDVector& theVect) ;
 extern cDVector Zeros(uint theN) ;
+extern void GetSubVector(const cDVector& theSrcVector, uint theFirstIndex, uint theSize, cDVector& theDestVector) ;
+extern void SetSubVector(const cDVector& theSrcVector, uint theFirtIndex, cDVector& theDestVector) ;
 extern cDVector CopyDouble(double* theVect, uint theSize) ;
+extern double ScalarProduct(cDVector& theVect1, cDVector& theVect2) ;
+extern cDVector cat(const cDVector& theVect1, const cDVector& theVect2) ;
+extern cDVector cat(const cDVector& theVect, double theDouble) ;
+extern cDVector cat(double theDouble, const cDVector& theVect) ;
 #endif // CDVECTOR_H_
 
 

@@ -19,10 +19,10 @@
 class cDistribution ;
 class cHmm
 {       public :
-                distrDefinitionEnum                     mDistrType                      ;
-                cDVector                                       mInitProba                      ;
-                cCyclicVector<cDMatrix>        mTransMatVector         ;
-                cDistribution*                          mDistrParam                     ;
+                distrDefinitionEnum mDistrType  ;
+                cDVector mInitProba ;
+                cCyclicVector<cDMatrix> mTransMatVector ;
+                cDistribution*   mDistrParam ;
         public :
                 cHmm(distrDefinitionEnum theDistrType, uint theNClass , uint theDimObs=1 , uint theNMixt=0, uint theNProba=0) ;
                 cHmm(const cInParam &theInParam) ;

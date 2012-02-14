@@ -38,4 +38,4 @@ and the empirical covariance matrix is computed.}
     summary(Res)
     }
 
-\seealso{\code{\link{asymptoticCovMat}}, \code{\link{setAsymptoticCovMat}}}
+\seealso{\code{\link{setAsymptoticCovMat}}, \code{\link{asymptoticCov}}}

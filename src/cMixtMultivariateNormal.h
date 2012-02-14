@@ -24,15 +24,19 @@ class cMixtMultivariateNormal : public cDistribution
                 cDVector*      mp              ;
         public :
                 cMixtMultivariateNormal(uint theNClass = 0, uint theNMixt = 1, uint theDimObs=1) ;
+				cMixtMultivariateNormal(cDistribution& theSrc) ;
                 virtual ~cMixtMultivariateNormal() ;
                 void ComputeCondProba(cDVector* theY, uint theNSample, cDMatrix* theCondProba)  ;
-                void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL)  ;
+                void ComputeDerivative(cDVector& theY, cDVector** theGrad, cDMatrix** theHess) ;
+				void ComputeCov(cDMatrix& theCov) ;
+				cDVector GetDistrNumParam(const cDVector& theNumDistrParam, uint& theNextInd) ;
+				void UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba=NULL)  ;
                 void InitParameters(cBaumWelchInParam &theInParam) ;
                 void Print() ;
-                void CopyDistr(cDistribution *theSrc) ;
+                void CopyDistr(cDistribution* theSrc) ;
                 void GetParam(uint theDeb, cDVector& theParam) ;
                 void SetParam(uint theDeb, cDVector& theParam) ;
-                uint GetNParam(void){ return mvNMixt* mvDimObs + mvNMixt*mvDimObs*(mvDimObs+1)/2 + mvNMixt - 1 ; } ;
-                uint GetNFreeParam(void){ return mvNMixt* mvDimObs + mvNMixt*mvDimObs*(mvDimObs+1)/2 + mvNMixt - 1 ; } ;
+                uint GetNParam(void){ return mvNMixt* mvDimObs + mvNMixt*mvDimObs*(mvDimObs+1)/2 + mvNMixt ; } ;
+                uint GetNFreeParam(void){ return mvNMixt*mvDimObs + mvNMixt*mvDimObs*(mvDimObs+1)/2 + mvNMixt - 1 ; } ;
 } ;
 #endif //_CMIXTMULTIVARIATENORMAL_H_

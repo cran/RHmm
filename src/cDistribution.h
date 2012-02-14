@@ -26,7 +26,10 @@ class cDistribution
                 virtual uint GetNFreeParam(void)=0 ;
                 virtual void GetParam(uint theDeb, cDVector& theParam)=0 ;
 				virtual void SetParam(uint theDeb, cDVector& theParam)=0 ;
-                virtual ~cDistribution(){};
+				virtual ~cDistribution(){};
+				virtual void ComputeDerivative(cDVector& theY, cDVector** theGrad, cDMatrix** theHess) = 0 ;
+				virtual void ComputeCov(cDMatrix& theCov) = 0 ;
+				virtual cDVector GetDistrNumParam(const cDVector& theNumDistrParam, uint& theNextInd)=0;
 #ifndef _RDLL_
                 void KMeans(cDVector& theYt, uint theNClass, int* theSeq) {
                                 mkmeans(theYt, theNClass, theSeq) ;
@@ -37,4 +40,6 @@ class cDistribution
 #endif // _RDLL_
 
 } ;
+
+
 #endif //_CDISTRIBUTION_H_

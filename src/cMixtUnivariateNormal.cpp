@@ -9,6 +9,7 @@
  **************************************************************/
 
 #include "StdAfxRHmm.h"
+
 static void MixtUnivariateNormalDensity(cDVector& theY, uint theNMixt, cDVector& theMean, cDVector& theVar, cDVector& thep, double* theDens)
 {
 cDVector mySigma(theNMixt) ;
@@ -65,6 +66,91 @@ void cMixtUnivariateNormal::ComputeCondProba(cDVector* theY, uint theNSample, cD
                         MixtUnivariateNormalDensity(theY[n], mvNMixt, mMean[i], mVar[i], mp[i], theCondProba[n][i]) ;
 }
 
+void cMixtUnivariateNormal::ComputeDerivative(cDVector& theY, cDVector** theGrad, cDMatrix** theHess)
+{
+uint myT = theY.GetSize() ;
+	for (register uint t = 0 ; t < myT ; t++)
+	{
+	uint k = (mvNClass - 1)*(mvNClass + 1) ; // premier indice
+		for (register uint j = 0 ; j < mvNClass ; j++)
+		{	theGrad[j][t] = 0.0 ;
+			theHess[j][t] = 0.0 ;
+	
+		double mySigma = sqrt(mVar[j][mvNMixt-1]) ;
+		double myU = (theY[t] - mMean[j][mvNMixt-1])/mySigma ;
+		double myFnMixt = exp(-myU*myU/2.0)/(SQRT_TWO_PI*mySigma) ;
+			for (register uint n = 0 ; n < mvNMixt ; n++)
+			{
+			double mySigma = sqrt(mVar[j][n]) ;
+			double myAux = (theY[t] - mMean[j][n])/mySigma ;
+			double myAux2 = myAux*myAux ;
+			double myDensity = exp(-myAux2/2.0)/(SQRT_TWO_PI*mySigma) ;
+		
+			// d/dm[j][n]
+				theGrad[j][t][k] =  mp[j][n]*myAux/mySigma*myDensity ; 
+			double myAux3 = (myAux2-1)/mVar[j][n]*myDensity ;
+			// d/dVar[j][n]	
+				theGrad[j][t][k+1] = mp[j][n]*myAux3/2.0 ;
+			// d/dp[j][n]
+				if (n < mvNMixt - 1)
+					theGrad[j][t][k+2] = myDensity - myFnMixt ;
+			// d^2/dm[j][n]^2	
+				theHess[j][t][k][k] = mp[j][n]*myAux3 ;
+			// d^2/dm[j][n]*dVar[j][n]
+				theHess[j][t][k][k+1] = theHess[j][t][k+1][k] = mp[j][n]*(myAux*(myAux2-3.0))/(2.0*mySigma)*myDensity ;
+			// d^2/dm[j][n]*dp[j][n]
+				if ( n < mvNMixt - 1)
+					theHess[j][t][k][k+2] = theHess[j][t][k+2][k] = myAux/mySigma*myDensity ;
+			// d^2/dVar[j][n]^2
+				theHess[j][t][k+1][k+1] = mp[j][n]*(myAux2*myAux2*-6*myAux2 + 3)/(4.0*mVar[j][n]*mVar[j][n])*myDensity ;
+			// d^2/dVar[nj][n]*dp[j][n] 
+				if (n < mvNMixt-1)
+					theHess[j][t][k+1][k+2] = theHess[j][t][k+2][k+1] = myAux3/2.0 ;
+				if (n < mvNMixt - 1)
+					k += 3 ;
+				else
+					k += 2 ;
+			}
+		}
+	}
+}
+
+void cMixtUnivariateNormal::ComputeCov(cDMatrix& theCov)
+{
+uint myBegIndex = (mvNClass - 1) * (mvNClass + 1) ;
+uint myNFreeMixt = 3*mvNMixt - 1 ;
+uint mySizeCour = theCov.GetNCols() ;
+cDVector myU(mySizeCour, 0.0) ;
+
+	for (register uint n = 0 ; n < mvNClass ; n++)
+	{
+		for (register uint i = myBegIndex + 2 ; i < myBegIndex + myNFreeMixt ; i+=3)
+			myU[i] = -1.0 ;
+		theCov = AddOneVariable(theCov, myU) ;
+		mySizeCour++ ;
+		myU.ReAlloc(mySizeCour, 0.0) ;
+		myBegIndex += myNFreeMixt ;
+	}
+
+}
+
+cDVector cMixtUnivariateNormal::GetDistrNumParam(const cDVector& theNumDistrParam, uint& theNextInd)
+{
+uint myNFreeParam = mvNMixt * 3 - 1 ;
+cDVector myNumDistrParam ;
+cDVector myNumMixt(myNFreeParam) ;
+uint myIndCour = 0 ;
+	for (register uint j = 0 ; j < mvNClass ; j++)
+	{	GetSubVector(theNumDistrParam, myIndCour, myNFreeParam, myNumMixt) ;
+		myNumDistrParam = cat(myNumDistrParam, myNumMixt) ;
+		myNumDistrParam = cat(myNumDistrParam, (double)theNextInd) ;
+		theNextInd++ ;
+		myIndCour += myNFreeParam ;
+	}
+	return myNumDistrParam ;
+
+}
+
 void cMixtUnivariateNormal::UpdateParameters(cInParam& theInParam, cBaumWelch& theBaumWelch, cDMatrix* theCondProba)
 {       
         for (register uint i = 0 ; i < mvNClass ; i++)
@@ -99,7 +185,6 @@ void cMixtUnivariateNormal::UpdateParameters(cInParam& theInParam, cBaumWelch& t
                 }
         }
 }               
-
 
 void cMixtUnivariateNormal::InitParameters(cBaumWelchInParam &theInParam)
 {
@@ -138,15 +223,23 @@ register uint s = 0 ;
 
 void cMixtUnivariateNormal::CopyDistr(cDistribution* theSrc)
 {
-cMixtUnivariateNormal *mySrc ;
-        mySrc = static_cast<cMixtUnivariateNormal *>(theSrc) ;
-        mvNClass = mySrc->mvNClass ;
+cMixtUnivariateNormal* mySrc = dynamic_cast<cMixtUnivariateNormal *>(theSrc) ;
+	if (mySrc)
+	{	mvNClass = mySrc->mvNClass ;
         mvNMixt = mySrc->mvNMixt ;
         for (register uint i = 0 ; i < mvNClass ; i++)
         {       mMean[i] = mySrc->mMean[i] ;
                 mVar[i] = mySrc->mVar[i] ;
                 mp[i] = mySrc->mp[i] ;
         }
+	}
+	else
+		cOTError("Wrong distribution in cMixtUnivariateNormal") ;
+}
+
+cMixtUnivariateNormal::cMixtUnivariateNormal(cDistribution& theSrc)
+{
+	CopyDistr(&theSrc) ;
 }
 
 void cMixtUnivariateNormal::Print()
@@ -161,7 +254,6 @@ void cMixtUnivariateNormal::Print()
         }
 }
 
-
 void cMixtUnivariateNormal::GetParam(uint theDeb, cDVector& theParam)
 {
 register uint k = theDeb ;
@@ -173,6 +265,7 @@ register uint k = theDeb ;
                                 theParam[k++] = mp[n][p] ;
                 }       
 }
+
 void cMixtUnivariateNormal::SetParam(uint theDeb, cDVector& theParam)
 {
 register uint k = theDeb ;

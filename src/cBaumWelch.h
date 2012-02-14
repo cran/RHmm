@@ -16,22 +16,24 @@
 #include "cHmm.h"
 
 class cBaumWelch
-{       private :
-                        uint    mvNSample               ;
-                        uint*   mvT                             ;
+{       protected :
+                        uint	mtNSample ;
+                        uint*   mtT ;
         public :                                                
-                        cDMatrix*      mAlpha          ;
-                        cDMatrix*      mBeta           ;
-                        cDVector*      mRho            ;
-                        cDMatrix*      mGamma          ;
-                        cDMatrix**     mXsi            ;
-                        cDMatrix*      mSumXsi         ;
-                        cDVector       mLogVrais       ;
+                        cDMatrix*   mAlpha ;
+                        cDMatrix*   mBeta ;
+                        cDVector*	mRho ;
+                        cDMatrix*   mGamma ;
+                        cDMatrix**  mXsi ;
+                        cDMatrix*   mSumXsi ;
+						cDMatrix*	mDelta ;
+                        cDVector    mLogVrais ;
         public :
                 cBaumWelch(uint theNSample, uint* theT, uint theNClass) ;
                 cBaumWelch(const cInParam &theInParam) ;
                 void ForwardBackward(cDMatrix* theCondProba, cHmm& theHMM) ;
-                uint GetSampleSize(uint theN){ return mvT[theN] ;}
+				void OutForwardBackward(cDMatrix* theCondProba, cHmm& theHMM, bool theLogData=true) ;
+                uint GetSampleSize(uint theN){ return mtT[theN] ;}
                 virtual ~cBaumWelch() ;
 } ;
 
