@@ -1,13 +1,13 @@
-ddfed0fae9346df44620201318a7eaf1 *DESCRIPTION
+447d213861c0ed50b493611c5ffe81ae *DESCRIPTION
 90ce47cdcee412daf7e957264599671b *NAMESPACE
 562876279dcf4db8b3862dee7869cc7b *R/RHmm-HyperNew.R
 5baa9bb1c03e8eb1bcaf8ea9fd7b7acb *R/RHmm-internals.R
 49b18fc65a02b5bff6e14bd44cf12f34 *R/RHmm.R
-fea80402a34769e22812bff25eec4bfb *README
-98760d9b5ab4c89c9103c889e7af5b74 *data/data_mixture.rda
+d6647a3754487003303eca125a8b1688 *README
+5aaad785c7a2f3e3a1ed31ad795358cf *data/data_mixture.rda
 1877a377561aa2899859c9c295a639bb *data/n1d_3s.RData
 178507c50991ec59a4a320fbbe081b81 *data/n3d_2s.RData
-d4bfb65cc964a9ca1dffb377a773f4c1 *data/weather.rda
+18527b836d03a061f77b9731e03d6cae *data/weather.rda
 e88b77721f35a8790c569f532d79ce5c *man/HMMFit.rd
 2ff7d1c2b0399c6b681cc2665384b43b *man/HMMGraphicDiag.rd
 126d4b00b1e16bd73925fd8c4ed95554 *man/HMMPlotSerie.rd
@@ -33,7 +33,7 @@ a70a5e6051cf8e52ffa8de4c84e0d2d2 *src/Kmeans.h
 53cb55ce3a3837c188bcf3efa8693c07 *src/LogProb.h
 a8580f314cc3276b2cd01a91dd0930c2 *src/Main.cpp
 d5a09562edcf9d817b44f792d0027746 *src/Makevars
-3c9699f58feb5dd5abcba791083247f5 *src/Makevars.win
+e25901dd40ea04856b6d4ed13a233ea5 *src/Makevars.win
 6a935f6ce9605680dbf5bd8e60d30c4e *src/MultivariateNormalUtil.cpp
 444ca44849ced3dc6ba88295ab866214 *src/MultivariateNormalUtil.h
 889e6843153d396dfca93838c85f6047 *src/OTMathUtil.h
