@@ -6,15 +6,18 @@
 \title{Fit an Hidden Markov Model}
 \description{This function returns an HMMFitClass object which contains the results
 of the Baum-Welch algorithm for the user's data}
-\synopsis{
+\usage{
    HMMFit(obs, dis="NORMAL", nStates=2, asymptCov=FALSE, ...)
 }
-\usage{
-    HMMFit(obs, dis="NORMAL", nStates=, ..., asymptCov=FALSE)
-    HMMFit(obs, dis="DISCRETE", nStates=, levels=NULL, ..., asymptCov=FALSE)
-    HMMFit(obs, dis="MIXTURE", nStates=, nMixt=, ..., asymptCov=FALSE)
+\details{
+Typical usages are:
+\itemize{
+    \item HMMFit(obs, dis="NORMAL", nStates=, ..., asymptCov=FALSE)
+    \item HMMFit(obs, dis="DISCRETE", nStates=, levels=NULL, ..., asymptCov=FALSE)
+    \item HMMFit(obs, dis="MIXTURE", nStates=, nMixt=, ..., asymptCov=FALSE)
 }
-\arguments{
+The differents arguments are:
+    \describe{
     \item{obs}{A vector, a matrix, a data frame, a list of vectors or a list of matrices of observations. See section \bold{obs parameter}.}
     \item{dis}{Distribution name. In 'NORMAL', 'DISCRETE' or 'MIXTURE'. Default 'NORMAL'.}
     \item{nStates}{Number of hidden states. Default 2.}
@@ -24,18 +27,28 @@ of the Baum-Welch algorithm for the user's data}
     \item{...}{optional parameter:\describe{
         \item{control: }{A list of control parameters for the Baum-Welch algorithm. See \bold{control parameter}}
         }}
-}
-\value{ a HMMFitClass object:
-    \item{HMM}{A HMMClass object with the fitted values of the model}
-    \item{LLH}{Log-likelihood}
-    \item{BIC}{BIC criterium}
-    \item{nIter}{Number of iterations of the Baum-Welch algorithm}
-    \item{relVariation}{last relative variation of the LLH function}
-    \item{asymptCov}{Asymptotic covariance matrix of independant parameters. NULL if not computed.}
-    \item{obs}{the observations.}
-    \item{call}{The call object of the function call}
     }
-
+}
+\arguments{
+    \item{obs}{A vector, a matrix, a data frame, a list of vectors or a list of matrices of observations. See section \bold{obs parameter}.}
+    \item{dis}{Distribution name. In 'NORMAL', 'DISCRETE' or 'MIXTURE'. Default 'NORMAL'.}
+    \item{nStates}{Number of hidden states. Default 2.}
+     \item{asymptCov}{A boolean. asymptCov=TRUE if the asymptotic covariance matrix is computed. Default FALSE.}
+    \item{...}{Other parameters. See \bold{Details}.}
+        
+}
+\value{ a \sQuote{HMMFitClass} object with the following elements:
+    \describe{
+        \item{HMM}{A HMMClass object with the fitted values of the model. See \bold{HMMSet.}}
+        \item{LLH}{Log-likelihood}
+        \item{BIC}{BIC criterium}
+        \item{nIter}{Number of iterations of the Baum-Welch algorithm}
+        \item{relVariation}{last relative variation of the LLH function}
+        \item{asymptCov}{Asymptotic covariance matrix of independant parameters. NULL if not computed.}
+        \item{obs}{the observations.}
+        \item{call}{The call object of the function call}
+        }
+    }
 \section{obs parameter}{
         If you fit the model with only one sample, obs is
         either a vector (for univariate distributions) or a matrix (for multivariate distributions) or a data frame.

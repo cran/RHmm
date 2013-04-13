@@ -5,20 +5,28 @@
 \description{This function is used to create a distributionClass object which contains the parameters of the distribution of the observations
     for each hidden state. Since distributions can be univariate or multivariate, discrete or continuous,
     the different values of a distributionClass object depend of the nature of the distribution.}
-\synopsis{
-distributionSet(dis, ...)
 
-}
+
 \usage{
-distributionSet(dis="NORMAL", mean, var)
-distributionSet(dis="NORMAL", mean, cov)
-distributionSet(dis="MIXTURE", mean, var, proportion)
-distributionSet(dis="MIXTURE", mean, cov, proportion)
-distributionSet(dis="DISCRETE", proba, labels=NULL)
+distributionSet(dis, ...)
 }
 
 \arguments{
     \item{dis}{Name of the distribution of observations. In 'NORMAL', 'DISCRETE', 'MIXTURE'.}
+    \item{...}{Other parameters. See details.}
+}
+
+\details{
+Typical usages are:
+\itemize{
+    \item distributionSet(dis="NORMAL", mean, var)
+    \item distributionSet(dis="NORMAL", mean, cov)
+    \item distributionSet(dis="MIXTURE", mean, var, proportion)
+    \item distributionSet(dis="MIXTURE", mean, cov, proportion)
+    \item distributionSet(dis="DISCRETE", proba, labels=NULL)
+}
+The parameters are:
+\describe{
     \item{mean}{
         \emph{- Univariate normal distribution: }a vector of the means for each state of the model.\cr
         \emph{- Multivariate normal distribution: }a list of the mean vectors for each state of the model.\cr
@@ -36,18 +44,21 @@ distributionSet(dis="DISCRETE", proba, labels=NULL)
     \item{proportion}{A list of vector of the mixture proportions for each state of the model.}
     \item{proba}{A list of vector of discrete probabilities for each state of the model.}
     \item{labels}{A vector of the labels of the discrete observations. Default NULL.}
-
+    }
 }
+
 \value{An \sQuote{distributionClass} class object with some of the following elements:
-    \item{dis}{The name of the distribution.}
-    \item{nStates}{Number of hidden states.}
-    \item{dimObs}{Dimension of observations.}
-    \item{nMixt}{Number of mixtures for mixture of normal distributions.}
-    \item{nLevels}{Number of levels for discrete distributions.}
-    \item{mean}{The \sQuote{mean} argument for univariate normal, mixture of univariate normal and multivariate normal distributions.}
-    \item{var}{The \sQuote{var} argument for univariate normal and mixture of univariate normal distributions}
-    \item{cov}{The \sQuote{cov} argument for multivariate normal and mixture of multivaiate normal distributions}
-    \item{proba}{The \sQuote{proba} argument for discrete distributions}
+    \describe{
+        \item{dis}{The name of the distribution.}
+        \item{nStates}{Number of hidden states.}
+        \item{dimObs}{Dimension of observations.}
+        \item{nMixt}{Number of mixtures for mixture of normal distributions.}
+        \item{nLevels}{Number of levels for discrete distributions.}
+        \item{mean}{The \sQuote{mean} argument for univariate normal, mixture of univariate normal and multivariate normal distributions.}
+        \item{var}{The \sQuote{var} argument for univariate normal and mixture of univariate normal distributions}
+        \item{cov}{The \sQuote{cov} argument for multivariate normal and mixture of multivaiate normal distributions}
+        \item{proba}{The \sQuote{proba} argument for discrete distributions}
+        }
     }
 
 

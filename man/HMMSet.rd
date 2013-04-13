@@ -5,21 +5,29 @@
 
 \description{This function is used to create a HMMClass object which contains the parameters of the HMM. An HMM is described by an initial state probability vector,
 transition matrices and a distributionClass object. }
-\synopsis{
-HMMSet(initProb, transMat, ...)
-}
-\usage{
 
-HMMSet(initProb, transMat, distribution)
-HMMSet(initProb, transMat, dis="NORMAL", mean, var)
-HMMSet(initProb, transMat, dis="NORMAL", mean, cov)
-HMMSet(initProb, transMat, dis="MIXTURE", mean, var, proportion)
-HMMSet(initProb, transMat, dis="DISCRETE", proba, labels=NULL)
+\usage{
+    HMMSet(initProb, transMat, ...)
 }
 \arguments{
     \item{initProb}{The vector of probabilities of the initial state}
     \item{transMat}{The transition matrix of the hidden Markov chain. Since version 1.3.4 of RHmm, a list of transition matrices can be specified
-in order to define an inhomogeneous HMM. }
+in order to define an inhomogeneous HMM.}
+    \item{...}{Other parameters. See details.}
+}
+
+\details{
+Typical usages are:\cr
+\itemize{
+    \item HMMSet(initProb, transMat, distribution)
+    \item HMMSet(initProb, transMat, dis="NORMAL", mean, var)
+    \item HMMSet(initProb, transMat, dis="NORMAL", mean, cov)
+    \item HMMSet(initProb, transMat, dis="MIXTURE", mean, var, proportion)
+    \item HMMSet(initProb, transMat, dis="DISCRETE", proba, labels=NULL)
+}
+The different arguments are:
+    
+\describe{
     \item{distribution}{The distributionClass object of the observations}
     \item{dis}{dis parameter. See \bold{distributionSet}}
     \item{mean}{mean parameter. See \bold{distributionSet}}
@@ -28,11 +36,15 @@ in order to define an inhomogeneous HMM. }
     \item{proportion}{proportion parameter. See \bold{distributionSet}}
     \item{proba}{proba parameter. See \bold{distributionSet}}
     \item{labels}{labels parameter. See \bold{distributionSet}}
+    }
 }
-\value{An HMMClass class object:
-    \item{initProb}{Initial state probabilities vector}
-    \item{transMat}{Transition matrix}
-    \item{distribution}{distributionClass object}
+
+\value{An \sQuote{HMMClass} class object with the following elements:
+    \describe{
+        \item{initProb}{Initial state probabilities vector}
+        \item{transMat}{Transition matrix}
+        \item{distribution}{The distributionClass object which describes the conditional distribution. See \bold{distributionSet.}}
+    }
 }
 \examples{
     # 3 hidden states Markov Model with univariate normal distributions
