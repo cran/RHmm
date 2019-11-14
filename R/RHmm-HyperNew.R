@@ -1,11 +1,11 @@
  ###############################################################
- #### RHmm version 1.3.1                                      
+ #### RHmm version 1.3.4                                      
  ####                                                         
  #### File: RHmm-HyperNew.R 
  ####                                                         
  #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ####                                                         
- #### Date: 2009/06/03                                       
+ #### Date: 2010/11/14                                       
  ####                                                         
  ###############################################################
 
@@ -954,6 +954,10 @@ ComputeHessian1 <- function(HMM, obs, asymptMethod)
 
 asymptoticCovMat <- function(HMM, obs, asymptMethod=c('nlme', 'optim'))
 {
+    if ( ( class(HMM) != "HMMFitClass" ) && (class(HMM) != "HMMClass") )
+        stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
+    if (class(HMM) == "HMMFitClass")
+        HMM <- HMM$HMM
     Hh <- ComputeHessian(HMM, obs, asymptMethod[1])
     nParam <- dim(Hh)[1]
     K <- GradConstraint(HMM)
@@ -988,6 +992,59 @@ asymptoticCovMat <- function(HMM, obs, asymptMethod=c('nlme', 'optim'))
     colnames(asymptMatCov) <- rownames(asymptMatCov) <- NomsParamHMM(HMM)
     return(asymptMatCov)
 }
+
+asymptoticSimCovMat <- function(HMM, obs, nSimul, verbose=FALSE)
+{
+    if ( ( class(HMM) != "HMMFitClass" ) && (class(HMM) != "HMMClass") )
+        stop("class(HMM) must be 'HMMClass' or 'HMMFitClass'\n")
+    if (class(HMM) == "HMMFitClass")
+        HMM <- HMM$HMM
+    nParam <- GetNAllParam(HMM)$nParam
+    Teta0 <- GetVectAllParam(HMM)
+    matCov <- matrix(0, nParam, nParam)
+    if (is.list(obs))
+    {   nList <- length(obs)
+        nObs <- rep(0, nList)
+        for (j in 1:nList)
+        {   nObs[j] <- length(obs[[j]])
+        }   
+    }
+    else
+    {   nList <- 1
+        nObs <- c(length(obs))
+    }
+    for (i in 1:nSimul)
+    {   simObs <- NULL
+        for (j in 1:nList)
+        {   simObs <- c(simObs, HMMSim(nObs[j], HMM=HMM))
+        }
+        if (HMM$distribution$dis=="NORMAL")
+        {   Res <- HMMFit(simObs$obs, dis="NORMAL", nStates=HMM$distribution$nStates, asymptCov=FALSE, control=list(init="USER", initPoint=HMM))
+            Teta <- GetVectAllParam(Res$HMM)
+            u <- Teta - Teta0
+            matCov <- (i*matCov + u%*%t(u))/(i+1)
+            if (verbose)
+            {   cat(sprintf("iteration %d\n", i))
+            }
+        }
+    }
+    colnames(matCov) <- rownames(matCov) <- NomsParamHMM(HMM)
+    return(matCov)
+}
+
+setAsymptoticCovMat<-function(HMMFit, asymptCovMat)
+{
+    if ( ( class(HMMFit) != "HMMFitClass" ) )
+        stop("class(HMMFit) must be 'HMMFitClass'\n")
+    if (! is_numeric_matrix(asymptCovMat) )
+        stop("asymptCovMat must be a matrix\n")
+ #   if (! is_positive_definite(asymptCovMat) )
+ #       stop("asymptCovMat must be a definite positive matrix\n")
+    colnames(asymptCovMat) <- rownames(asymptCovMat) <- NomsParamHMM(HMM)
+    HMM$asymptCov <- asymptCovMat
+    return(HMM)
+}
+    
  
 NomsParamHMM <- function(object) UseMethod("NomsParamHMM")
 

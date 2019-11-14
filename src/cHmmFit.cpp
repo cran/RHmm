@@ -1,11 +1,11 @@
 /**************************************************************
- *** RHmm version 1.3.0                                      
+ *** RHmm version 1.3.4                                      
  ***                                                         
  *** File: cHmmFit.cpp 
  ***                                                         
  *** Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ***                                                         
- *** Date: 2009/06/03                                      
+ *** Date: 2010/11/14                                      
  ***                                                         
  **************************************************************/
 
@@ -140,7 +140,7 @@ void cHmmFit::BaumWelchAlgoInit(cBaumWelchInParam &theInParam)
 			for (i = 0 ; i < myTT ; i++)
 				myY[t++] = theInParam.mY[k][i] ;
 		}
-		register uint j ;
+//		register uint j ;
 		
 		mTransMat = 1.0L/(double)(theInParam.mNClass) ;
 		

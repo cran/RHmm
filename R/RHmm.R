@@ -1,11 +1,11 @@
  ###############################################################
- #### RHmm version 1.3.1                                      
+ #### RHmm version 1.3.4                                      
  ####                                                         
  #### File: RHmm.R 
  ####                                                         
  #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ####                                                         
- #### Date: 2009/06/03                                       
+ #### Date: 2010/11/14                                       
  ####                                                         
  ###############################################################
 
@@ -914,7 +914,7 @@ BaumWelch<-function(paramHMM, obs, paramAlgo)
     return(Res)
 }
 
-HMMFit <- function(obs, dis="NORMAL", nStates = 2, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
+HMMFit <- function(obs, dis="NORMAL", nStates = 2, asymptCov=FALSE, asymptMethod=c('nlme', 'optim'), ... )
 {  
     if (is.data.frame(obs))
     {   dimObs <- dim(obs)[2]
@@ -1144,12 +1144,10 @@ HMMFit <- function(obs, dis="NORMAL", nStates = 2, ..., asymptCov=FALSE, asymptM
     {   stop('asymptCov must be a boolean (TRUE if the asymptotic covariance matrix must be computed)')
     } 
     
-    if (! is.null(asymptMethod) && ! is.na(match(asymptMethod, c('nlme', 'optim'))))
-        asymptCov <- TRUE
-    
     if (is.null(asymptMethod))
         asymptMethod <- 'nlme'
-    asymptMethod <- asymptMethod[1]
+    
+     asymptMethod <- asymptMethod[1]
         
     if (is.na(match(asymptMethod, c('nlme', 'optim'))))
         stop("asymptMethod must be in 'nlme', 'optim'")

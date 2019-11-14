@@ -1,15 +1,14 @@
  ###############################################################
- #### RHmm version 1.3.1                                      
+ #### RHmm version 1.3.4                                      
  ####                                                         
  #### File: RHmm-internals.R 
  ####                                                         
  #### Author: Ollivier TARAMASCO <Ollivier.Taramasco@imag.fr> 
  ####                                                         
- #### Date: 2009/06/03                                       
+ #### Date: 2010/11/14                                       
  ####                                                         
  ###############################################################
 
-########## RHmm-Internals
 setStorageMode <- function(object) UseMethod("setStorageMode")
 
 setStorageMode.paramHMM <- function(object)

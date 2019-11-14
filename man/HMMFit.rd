@@ -7,7 +7,7 @@
 \description{This function returns an HMMFitClass object which contains the results
 of the Baum-Welch algorithm for the user's data}
 \synopsis{
-   HMMFit(obs, dis="NORMAL", nStates=2, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
+   HMMFit(obs, dis="NORMAL", nStates=2, asymptCov=FALSE, asymptMethod=c('nlme', 'optim'), ...)
 }
 \usage{
     HMMFit(obs, dis="NORMAL", nStates=, ..., asymptCov=FALSE, asymptMethod=c('nlme', 'optim'))
